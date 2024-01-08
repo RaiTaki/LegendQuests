@@ -14,14 +14,6 @@ public abstract class QuestCheckpoint {
         this.value = value;
     }
 
-
-    /*
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", type.toString());
-        jsonObject.put("value", value);
-        return jsonObject;
-     */
     public abstract JSONObject getAsJSON();
 
     public enum CheckPointType{
