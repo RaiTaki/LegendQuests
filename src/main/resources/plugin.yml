@@ -1,0 +1,4 @@
+name: LegendQuests
+version: '${version}'
+main: xyz.raitaki.legendquests.LegendQuests
+api-version: '1.20'
