@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = 'xyz.raitaki'
@@ -15,10 +16,12 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
+    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
 }
 
 def targetJavaVersion = 17
