@@ -17,6 +17,10 @@ public abstract class PlayerCheckpoint {
         this.completed = completed;
     }
 
+    public void addProgress(){
+        quest.nextCheckPoint();
+    }
+
     public abstract JSONObject getAsJSON();
 
     public PlayerQuest getQuest() {
@@ -34,4 +38,10 @@ public abstract class PlayerCheckpoint {
     public boolean isCompleted() {
         return completed;
     }
+
+    public void setCompleted(boolean completed){
+        this.completed = completed;
+    }
+
+
 }

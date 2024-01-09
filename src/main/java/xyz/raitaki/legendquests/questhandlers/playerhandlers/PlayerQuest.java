@@ -2,6 +2,7 @@ package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import xyz.raitaki.legendquests.events.PlayerNextCheckpointEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestReward;
 
@@ -35,8 +36,12 @@ public class PlayerQuest {
     public void nextCheckPoint() {
         int index = checkpoints.indexOf(checkPoint);
         if (index == checkpoints.size() - 1) {
+            PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkPoint, null);
+            if(event.isCancelled()) return;
             completed = true;
         } else {
+            PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkPoint, checkpoints.get(index + 1));
+            if(event.isCancelled()) return;
             checkPoint = checkpoints.get(index + 1);
         }
     }

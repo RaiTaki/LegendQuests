@@ -2,6 +2,7 @@ package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
 import org.bukkit.entity.Player;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
 
 import java.util.LinkedList;
 import java.util.UUID;
@@ -24,5 +25,14 @@ public class QuestPlayer {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public PlayerQuest getPlayerQuestByCheckpointType(QuestCheckpoint.CheckPointType type){
+        for(PlayerQuest quest : quests){
+            if(quest.getCheckPoint().getType().equals(type)){
+                return quest;
+            }
+        }
+        return null;
     }
 }

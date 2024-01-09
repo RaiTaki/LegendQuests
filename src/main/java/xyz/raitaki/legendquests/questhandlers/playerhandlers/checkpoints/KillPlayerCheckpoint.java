@@ -15,6 +15,10 @@ public class KillPlayerCheckpoint extends PlayerCheckpoint {
         this.counter = counter;
     }
 
+    public void addCounter(){
+        counter++;
+    }
+
     public int getCounter() {
         return counter;
     }

@@ -17,12 +17,13 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.Convers
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.InteractionPlayerCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.KillPlayerCheckpoint;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class QuestManager {
 
     private LinkedList<QuestBase> quests = new LinkedList<>();
-    private LinkedList<QuestPlayer> questPlayers = new LinkedList<>();
+    private static HashMap<Player, QuestPlayer> questPlayers = new HashMap<>();
 
     public QuestBase loadBaseQuestFromJSON(String questJson) throws ParseException {
         JSONParser parser = new JSONParser();
@@ -133,12 +134,25 @@ public class QuestManager {
         return null;
     }
 
-    public QuestPlayer getQuestPlayerFromPlayer(Player player){
-        for (QuestPlayer questPlayer : questPlayers) {
-            if(questPlayer.getPlayer().equals(player)){
-                return questPlayer;
-            }
+    public static QuestPlayer getQuestPlayerFromPlayer(Player player){
+        if (!questPlayers.containsKey(player)) {
+            createQuestPlayer(player);
         }
-        return null;
+        return questPlayers.get(player);
     }
+
+    public static void createQuestPlayer(Player player){
+        //GET PLAYER DATA FROM DATABASE
+        //CREATE QUEST PLAYER
+        //ADD TO questPlayers
+    }
+
+    public void saveQuestPlayer(Player player){
+        //SAVE PLAYER DATA TO DATABASE
+    }
+
+    public void saveQuestPlayer(QuestPlayer questPlayer){
+        //SAVE PLAYER DATA TO DATABASE
+    }
+
 }
