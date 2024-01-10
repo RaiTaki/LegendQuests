@@ -16,9 +16,9 @@ public class PlayerNextCheckpointEvent extends Event implements Cancellable {
     private PlayerCheckpoint currentCheckpoint;
     private PlayerCheckpoint nextCheckpoint;
     private boolean cancelled;
-    private static final HandlerList handlerList = new HandlerList();
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-    public PlayerNextCheckpointEvent(@NotNull QuestPlayer questPlayer, @NotNull PlayerQuest playerQuest, @NotNull PlayerCheckpoint currentCheckpoint, @Nullable PlayerCheckpoint nextCheckpoint) {
+    public PlayerNextCheckpointEvent(@NotNull QuestPlayer questPlayer, @NotNull PlayerQuest playerQuest, @NotNull PlayerCheckpoint currentCheckpoint, @NotNull PlayerCheckpoint nextCheckpoint) {
         this.questPlayer = questPlayer;
         this.playerQuest = playerQuest;
         this.currentCheckpoint = currentCheckpoint;
@@ -27,7 +27,7 @@ public class PlayerNextCheckpointEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return null;
+        return HANDLERS_LIST;
     }
 
     public QuestPlayer getQuestPlayer() {
@@ -54,5 +54,9 @@ public class PlayerNextCheckpointEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean cancel) {
         cancelled = cancel;
+    }
+
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
     }
 }

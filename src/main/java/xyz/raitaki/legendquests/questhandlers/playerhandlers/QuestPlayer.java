@@ -23,6 +23,10 @@ public class QuestPlayer {
         quests.add(quest);
     }
 
+    public LinkedList<PlayerQuest> getQuests() {
+        return quests;
+    }
+
     public Player getPlayer() {
         return player;
     }

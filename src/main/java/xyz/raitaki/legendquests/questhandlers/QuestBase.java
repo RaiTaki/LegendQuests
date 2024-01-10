@@ -17,6 +17,8 @@ public class QuestBase {
         this.description = description;
         rewards = new LinkedList<>();
         checkPoints = new LinkedList<>();
+
+        QuestManager.getBaseQuests().add(this);
     }
 
     public void addReward(QuestReward reward) {

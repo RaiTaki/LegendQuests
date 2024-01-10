@@ -5,12 +5,20 @@ import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointType;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 
-public class InteractionPlayerCheckpoint extends PlayerCheckpoint {
+public class PlayerConversationCheckpoint extends PlayerCheckpoint {
 
     private String npcName;
-    public InteractionPlayerCheckpoint(PlayerQuest quest, CheckPointType type, String text, boolean completed, String npcName) {
+    public PlayerConversationCheckpoint(PlayerQuest quest, CheckPointType type, boolean completed, String text, String npcName) {
         super(quest, type, text, completed);
         this.npcName = npcName;
+    }
+
+    public void sendMessage(){
+        getQuest().getQuestPlayer().getPlayer().sendMessage(getValue());
+    }
+
+    public String getNpcName() {
+        return npcName;
     }
 
     @Override
@@ -21,9 +29,5 @@ public class InteractionPlayerCheckpoint extends PlayerCheckpoint {
         jsonObject.put("npcName", getNpcName());
         jsonObject.put("completed", isCompleted());
         return jsonObject;
-    }
-
-    public String getNpcName() {
-        return npcName;
     }
 }

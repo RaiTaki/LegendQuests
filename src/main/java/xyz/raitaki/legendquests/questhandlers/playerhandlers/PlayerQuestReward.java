@@ -12,16 +12,18 @@ public class PlayerQuestReward {
     private final RewardType type;
     private final String value;
 
-    public PlayerQuestReward(PlayerQuest questBase, RewardType type, String value) {
-        this.quest = questBase;
+    public PlayerQuestReward(PlayerQuest playerQuest, RewardType type, String value) {
+        this.quest = playerQuest;
         this.type = type;
         this.value = value;
     }
 
-    public void giveReward(Player player){
+    public void giveReward(){
+        Player player = quest.getQuestPlayer().getPlayer();
         switch (type){
             case MONEY:
                 EconomyUtils.giveMoney(player, Integer.parseInt(value));
+                player.sendMessage("§a§lQUEST: §r§aYou have been given §e" + value + "§a coins!");
                 break;
             case ITEM:
                 ItemStack itemStack = ItemUtils.deseriliseItemStack(value);

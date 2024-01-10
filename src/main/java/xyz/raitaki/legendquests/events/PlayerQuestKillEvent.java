@@ -9,16 +9,14 @@ import org.jetbrains.annotations.NotNull;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 
-public class PlayerQuestInteractEvent extends Event implements Cancellable {
-
-    private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private boolean cancelled;
+public class PlayerQuestKillEvent extends Event {
 
     private PlayerQuest playerQuest;
     private QuestPlayer questPlayer;
-    private Entity entity;
+    private LivingEntity entity;
+    private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-    public PlayerQuestInteractEvent(@NotNull PlayerQuest playerQuest, @NotNull QuestPlayer questPlayer, @NotNull Entity entity) {
+    public PlayerQuestKillEvent(@NotNull PlayerQuest playerQuest, @NotNull QuestPlayer questPlayer, @NotNull LivingEntity entity) {
         this.playerQuest = playerQuest;
         this.questPlayer = questPlayer;
         this.entity = entity;
@@ -32,18 +30,8 @@ public class PlayerQuestInteractEvent extends Event implements Cancellable {
         return questPlayer;
     }
 
-    public Entity getEntity() {
+    public LivingEntity getEntity() {
         return entity;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        cancelled = cancel;
     }
 
     @Override
@@ -51,5 +39,7 @@ public class PlayerQuestInteractEvent extends Event implements Cancellable {
         return HANDLERS_LIST;
     }
 
-    public static HandlerList getHandlerList() {return HANDLERS_LIST;}
+    public static HandlerList getHandlerList() {
+        return HANDLERS_LIST;
+    }
 }

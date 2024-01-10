@@ -1,8 +1,10 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
+import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.events.PlayerNextCheckpointEvent;
+import xyz.raitaki.legendquests.events.PlayerQuestEndEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestReward;
 
@@ -19,10 +21,11 @@ public class PlayerQuest {
     private String questName;
 
     public PlayerQuest(QuestBase quest, QuestPlayer player) {
+        this.questName = quest.getName();
         this.questBase = quest;
         this.player = player;
         this.checkpoints = new LinkedList<>();
-        this.questName = quest.getName();
+        this.rewards = new LinkedList<>();
     }
 
     public void addCheckpoint(PlayerCheckpoint checkpoint) {
@@ -36,13 +39,18 @@ public class PlayerQuest {
     public void nextCheckPoint() {
         int index = checkpoints.indexOf(checkPoint);
         if (index == checkpoints.size() - 1) {
-            PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkPoint, null);
-            if(event.isCancelled()) return;
+            PlayerQuestEndEvent event = new PlayerQuestEndEvent(player, this);
+            Bukkit.getPluginManager().callEvent(event);
             completed = true;
         } else {
-            PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkPoint, checkpoints.get(index + 1));
-            if(event.isCancelled()) return;
+            checkPoint.setCompleted(true);
             checkPoint = checkpoints.get(index + 1);
+            PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkPoint, checkpoints.get(index + 1));
+            Bukkit.getPluginManager().callEvent(event);
+            if(event.isCancelled()) {
+                checkPoint = checkpoints.get(index);
+                checkPoint.setCompleted(false);
+            }
         }
     }
 
@@ -71,6 +79,12 @@ public class PlayerQuest {
     }
     public LinkedList<PlayerCheckpoint> getCheckpoints() {
         return checkpoints;
+    }
+
+    public void giveReward() {
+        for (PlayerQuestReward reward : rewards) {
+            reward.giveReward();
+        }
     }
 
     public JSONObject getAsJSON(){
