@@ -25,7 +25,6 @@ public class PlayerCheckpointListener implements Listener {
         if(nextCheckpoint instanceof PlayerConversationCheckpoint conversation){
             conversation.sendMessage();
             quest.nextCheckPoint();
-            return;
         }
     }
 }

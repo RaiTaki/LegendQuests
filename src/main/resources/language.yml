@@ -1,0 +1,4 @@
+placeholders:
+  kill: "<SOLID:7d7d7d>Kill {entityName} {counter}/{max}"
+  interact: "<SOLID:7d7d7d>Interact with {entityName}"
+  noquest: "<SOLID:1a1a1a>You don't have any quests."

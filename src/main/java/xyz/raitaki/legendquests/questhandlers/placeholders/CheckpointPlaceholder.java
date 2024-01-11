@@ -1,6 +1,7 @@
 package xyz.raitaki.legendquests.questhandlers.placeholders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
@@ -8,6 +9,7 @@ import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerKillCheckpoint;
+import xyz.raitaki.legendquests.utils.LanguageConfig;
 
 public class CheckpointPlaceholder extends PlaceholderExpansion {
     @Override
@@ -37,7 +39,7 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player p, @NotNull String params){
-        String st = "You don't have any quests";
+        String st = LanguageConfig.getInstance().get("placeholders.noquest", true);
         if(p == null) return st;
         QuestPlayer player = QuestManager.getQuestPlayerFromPlayer(p);
         PlayerQuest quest = player.getQuests().get(0);
@@ -50,14 +52,15 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
                 QuestCheckpoint.CheckPointType type = quest.getCheckPoint().getType();
                 if(type == QuestCheckpoint.CheckPointType.KILL){
                     PlayerKillCheckpoint checkpoint = (PlayerKillCheckpoint) quest.getCheckPoint();
-                    st = "Kill " + checkpoint.getValue() + " " + checkpoint.getCounter() + "/" + checkpoint.getAmount();
+                    String entityName = checkpoint.getValue();
+                    String counter = String.valueOf(checkpoint.getCounter());
+                    String amount = String.valueOf(checkpoint.getAmount());
+                    st = LanguageConfig.getInstance().get("placeholders.kill", true, "{entityName}", entityName, "{counter}", counter, "{max}", amount);
                 }
                 if(type == QuestCheckpoint.CheckPointType.INTERECT){
-                    st = "Interact with " + quest.getCheckPoint().getValue();
+                    st = LanguageConfig.getInstance().get("placeholders.interact", true, "{entityName}", quest.getCheckPoint().getValue());
                 }
             }
-            else
-                st = "";
         }
         return st;
     }
