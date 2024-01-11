@@ -14,7 +14,7 @@ public class PlayerEventListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
-        Bukkit.broadcastMessage(QuestManager.getQuestPlayerFromPlayer(event.getPlayer()).getQuests().get(0).toString());
+        QuestManager.getBaseQuests().getFirst().showGui(event.getPlayer());
     }
 
     @EventHandler

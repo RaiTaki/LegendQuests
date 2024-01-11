@@ -10,7 +10,6 @@ public class PlayerQuestInteractListener implements Listener {
     @EventHandler
     public void onPlayerQuestInteract(PlayerQuestInteractEvent event) {
         if(event.getPlayerQuest().isCompleted()) return;
-        Bukkit.broadcastMessage("PlayerQuestInteractEvent called");
         event.getPlayerQuest().nextCheckPoint();
     }
 }

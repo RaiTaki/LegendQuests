@@ -17,8 +17,6 @@ public class PlayerQuestKillListener implements Listener {
         if(quest.isCompleted()) return;
         if(!(checkpoint instanceof PlayerKillCheckpoint killCheckpoint)) return;
 
-        Bukkit.broadcastMessage("PlayerQuestKillEvent called");
-
         killCheckpoint.incrementProgress();
         if(killCheckpoint.isComplete()) {
             quest.nextCheckPoint();

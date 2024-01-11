@@ -1,5 +1,6 @@
 package xyz.raitaki.legendquests.questhandlers;
 
+import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -11,6 +12,7 @@ public class QuestBase {
     private final String description;
     private final LinkedList<QuestReward> rewards;
     private final LinkedList<QuestCheckpoint> checkPoints;
+    private QuestGUI questGUI;
 
     public QuestBase(String name, String description) {
         this.name = name;
@@ -63,5 +65,13 @@ public class QuestBase {
         jsonObject.put("rewards", rewardsArray);
         jsonObject.put("checkPoints", checkPointsArray);
         return jsonObject.toJSONString();
+    }
+
+    public void buildGUI(){
+        questGUI = new QuestGUI(this);
+    }
+
+    public void showGui(Player player){
+        questGUI.openMainGUI(player);
     }
 }

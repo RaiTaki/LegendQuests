@@ -10,7 +10,6 @@ import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint
 import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.placeholders.CheckpointPlaceholder;
-import xyz.raitaki.legendquests.utils.ConfigManager;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
 import xyz.raitaki.legendquests.utils.LanguageConfig;
 
@@ -29,6 +28,7 @@ public final class LegendQuests extends JavaPlugin {
         questBase.addCheckPoint(new ConversationCheckpoint(questBase, QuestCheckpoint.CheckPointType.CONVERSATION, "Kill zombie completed", "Zombie"));
         questBase.addCheckPoint(new InteractionCheckpoint(questBase, QuestCheckpoint.CheckPointType.INTERECT, "Zombie2", "Skeleton"));
         questBase.addCheckPoint(new ConversationCheckpoint(questBase, QuestCheckpoint.CheckPointType.CONVERSATION, "You are a real skeleton", "Zombie"));
+        questBase.buildGUI();
 
         Bukkit.broadcastMessage(questBase.getAsJSON());
         QuestManager.registerEvents();
