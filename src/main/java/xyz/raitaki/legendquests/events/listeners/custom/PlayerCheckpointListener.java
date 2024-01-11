@@ -27,8 +27,5 @@ public class PlayerCheckpointListener implements Listener {
             quest.nextCheckPoint();
             return;
         }
-
-
-        //TODO: UPDATE SCOREBOARD ETC.
     }
 }

@@ -17,11 +17,17 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven { url 'https://jitpack.io' }
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
     compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    dependencies {
+        compileOnly 'me.clip:placeholderapi:2.11.5'
+    }
 }
 
 def targetJavaVersion = 17

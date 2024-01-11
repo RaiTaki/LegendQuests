@@ -9,6 +9,7 @@ import xyz.raitaki.legendquests.questhandlers.QuestReward;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.placeholders.CheckpointPlaceholder;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
 
 public final class LegendQuests extends JavaPlugin {
@@ -29,6 +30,7 @@ public final class LegendQuests extends JavaPlugin {
 
         Bukkit.broadcastMessage(questBase.getAsJSON());
         QuestManager.registerEvents();
+        CheckpointPlaceholder.registerPlaceholder();
     }
 
     @Override
