@@ -39,4 +39,22 @@ public class QuestPlayer {
         }
         return null;
     }
+
+    public PlayerQuest getPlayerQuestByQuestBase(QuestBase questBase){
+        for(PlayerQuest quest : quests){
+            if(quest.getQuest().equals(questBase)){
+                return quest;
+            }
+        }
+        return null;
+    }
+
+    public PlayerQuest getPlayerQuestByQuestName(String questName){
+        for(PlayerQuest quest : quests){
+            if(quest.getQuestName().equals(questName)){
+                return quest;
+            }
+        }
+        return null;
+    }
 }

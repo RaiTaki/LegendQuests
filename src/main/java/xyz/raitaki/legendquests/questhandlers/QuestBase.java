@@ -3,6 +3,7 @@ package xyz.raitaki.legendquests.questhandlers;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import xyz.raitaki.legendquests.questhandlers.gui.QuestGUI;
 
 import java.util.LinkedList;
 
@@ -69,6 +70,10 @@ public class QuestBase {
 
     public void buildGUI(){
         questGUI = new QuestGUI(this);
+    }
+
+    public QuestGUI getQuestGUI(){
+        return questGUI;
     }
 
     public void showGui(Player player){

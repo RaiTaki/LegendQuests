@@ -1,4 +1,4 @@
-package xyz.raitaki.legendquests.questhandlers;
+package xyz.raitaki.legendquests.questhandlers.gui;
 
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
@@ -8,6 +8,12 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.raitaki.legendquests.LegendQuests;
+import xyz.raitaki.legendquests.questhandlers.QuestBase;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.QuestReward;
+import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
 import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class QuestGUI {
@@ -17,6 +23,9 @@ public class QuestGUI {
     private InventoryGui mainGUI;
     private InventoryGui checkpointGUI;
     private InventoryGui rewardGUI;
+    private Player editor;
+
+    private CheckpointGUI editedCheckpoint;
 
     public QuestGUI(QuestBase questBase) {
         this.questBase = questBase;
@@ -39,6 +48,8 @@ public class QuestGUI {
         };
         mainGUI = new InventoryGui(LegendQuests.getInstance(), "Quest: " + questBase.getName(), guiSetup);
         mainGUI.setFiller(filler);
+
+        //NAME & DESC
         mainGUI.addElement(new StaticGuiElement('a',
                 new ItemStack(Material.PAPER),
                 1,
@@ -49,6 +60,7 @@ public class QuestGUI {
                         TextUtils.replaceColors("<SOLID:7d7d7d>Description: <SOLID:9ADB4F>" + questBase.getDescription())
         ));
 
+        //DETAILS
         mainGUI.addElement(new StaticGuiElement('b',
                 new ItemStack(Material.PAPER),
                 1,
@@ -59,6 +71,7 @@ public class QuestGUI {
                         TextUtils.replaceColors("<SOLID:7d7d7d>Checkpoints: <SOLID:9ADB4F>" + questBase.getCheckPoints().size())
         ));
 
+        //SAVE
         mainGUI.addElement(new StaticGuiElement('i',
                 new ItemStack(Material.GOLD_BLOCK),
                 1,
@@ -68,6 +81,7 @@ public class QuestGUI {
                 TextUtils.replaceColors("<SOLID:00ff08>Save Quest")
         ));
 
+        //CHECKPOINTS
         mainGUI.addElement(new StaticGuiElement('z',
                 new ItemStack(Material.REDSTONE),
                 1,
@@ -78,6 +92,7 @@ public class QuestGUI {
                 TextUtils.replaceColors("<SOLID:00ff08>Checkpoints")
         ));
 
+        //REWARDS
         mainGUI.addElement(new StaticGuiElement('s',
                 new ItemStack(Material.GOLD_INGOT),
                 1,
@@ -87,6 +102,12 @@ public class QuestGUI {
                 },
                 TextUtils.replaceColors("<SOLID:00ff08>Rewards")
         ));
+
+        mainGUI.setCloseAction(close -> {
+            editor = null;
+            mainGUI.close(close.getPlayer());
+            return true;
+        });
     }
 
     public void buildCheckpointGUI(){
@@ -108,6 +129,9 @@ public class QuestGUI {
                     new ItemStack(Material.PAPER),
                     1,
                     click -> {
+                        CheckpointGUI checkpointGUI = new CheckpointGUI(questBase, this, checkPoint);
+                        checkpointGUI.openCheckpointGUI();
+                        setEditedCheckpoint(checkpointGUI);
                         return true;
                     },
                     TextUtils.replaceColors("<SOLID:7d7d7d>Checkpoint " + i),
@@ -137,6 +161,11 @@ public class QuestGUI {
                 },
                 TextUtils.replaceColors("<SOLID:00ff08>Back")
         ));
+
+        checkpointGUI.setCloseAction(close -> {
+            openMainGUI(close.getPlayer());
+            return true;
+        });
     }
 
     public void buildRewardGUI(){
@@ -193,11 +222,13 @@ public class QuestGUI {
     public void openMainGUI(Player player){
         buildMainGUI();
         mainGUI.show(player);
+        editor = player;
     }
 
     public void openMainGUI(HumanEntity player){
         buildMainGUI();
         mainGUI.show(player);
+        editor = (Player) player;
     }
 
     public void openCheckpointGUI(Player player){
@@ -234,5 +265,25 @@ public class QuestGUI {
 
     public InventoryGui getRewardGUI() {
         return rewardGUI;
+    }
+
+    public Player getEditor() {
+        return editor;
+    }
+
+    public void setEditor(Player editor) {
+        this.editor = editor;
+    }
+
+    public ItemStack getfiller() {
+        return filler;
+    }
+
+    public void setEditedCheckpoint(CheckpointGUI checkpoint){
+        editedCheckpoint = checkpoint;
+    }
+
+    public CheckpointGUI getEditedCheckpoint(){
+        return editedCheckpoint;
     }
 }

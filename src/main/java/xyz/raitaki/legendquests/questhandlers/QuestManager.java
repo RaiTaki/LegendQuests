@@ -9,12 +9,12 @@ import xyz.raitaki.legendquests.LegendQuests;
 import xyz.raitaki.legendquests.events.listeners.custom.*;
 import xyz.raitaki.legendquests.events.listeners.vanilla.EntityDamageEventListener;
 import xyz.raitaki.legendquests.events.listeners.vanilla.PlayerEventListener;
-import xyz.raitaki.legendquests.events.listeners.vanilla.PlayerInteractListener;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointType;
 import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardType;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuestReward;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
@@ -104,6 +104,7 @@ public class QuestManager {
                 quest.addCheckpoint(new PlayerInteractionCheckpoint(quest, CheckPointType.valueOf(type), value, completed, npcName));
             }
         }
+        updatePlayerQuest(quest);
         return quest;
     }
 
@@ -172,11 +173,77 @@ public class QuestManager {
         instance.getServer().getPluginManager().registerEvents(new PlayerQuestEndListener(), instance);
         instance.getServer().getPluginManager().registerEvents(new PlayerQuestInteractListener(), instance);
         instance.getServer().getPluginManager().registerEvents(new PlayerQuestKillListener(), instance);
+        instance.getServer().getPluginManager().registerEvents(new QuestUpdateListener(), instance);
 
         //VANILLA EVENTS
         instance.getServer().getPluginManager().registerEvents(new EntityDamageEventListener(), instance);
         instance.getServer().getPluginManager().registerEvents(new PlayerEventListener(), instance);
-        instance.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), instance);
     }
 
+    public static QuestBase getQuestBaseFromEditor(Player player){
+        for (QuestBase quest : quests) {
+            if(quest.getQuestGUI().getEditor() != null && quest.getQuestGUI().getEditor().equals(player)){
+                return quest;
+            }
+        }
+
+        return null;
+    }
+
+    public static void updatePlayerQuests(QuestPlayer questPlayer){
+        for (PlayerQuest playerQuest : questPlayer.getQuests()) {
+            updatePlayerQuest(playerQuest);
+        }
+    }
+
+    public static void updatePlayerQuest(PlayerQuest playerQuest){
+        for(PlayerCheckpoint playerCheckpoint : playerQuest.getCheckpoints()){
+            if(playerCheckpoint.isCompleted()) continue;
+
+            QuestBase questBase = getQuestByName(playerQuest.getQuestName());
+            int index = playerQuest.getCheckpoints().indexOf(playerCheckpoint);
+            QuestCheckpoint questCheckpoint = questBase.getCheckPoints().get(index);
+            PlayerCheckpoint playerCheckpointClone = clonePlayerFromBaseChecpoint(playerQuest, questCheckpoint);
+            playerQuest.getCheckpoints().set(index, playerCheckpointClone);
+        }
+    }
+
+    public static void updatePlayerQuestBaseQuest(QuestPlayer player, QuestBase questBase){
+        PlayerQuest playerQuest = player.getPlayerQuestByQuestName(questBase.getName());
+        if(playerQuest == null) return;
+        for(PlayerCheckpoint playerCheckpoint : playerQuest.getCheckpoints()){
+            if(playerCheckpoint.isCompleted()) continue;
+
+            int index = playerQuest.getCheckpoints().indexOf(playerCheckpoint);
+            QuestCheckpoint questCheckpoint = questBase.getCheckPoints().get(index);
+            PlayerCheckpoint playerCheckpointClone = clonePlayerFromBaseChecpoint(playerQuest, questCheckpoint);
+            playerQuest.getCheckpoints().set(index, playerCheckpointClone);
+        }
+    }
+
+    public static void updatePlayerQuestByName(QuestPlayer player, String questName){
+        PlayerQuest playerQuest = player.getPlayerQuestByQuestName(questName);
+        updatePlayerQuest(playerQuest);
+    }
+
+    public static PlayerCheckpoint clonePlayerFromBaseChecpoint(PlayerQuest quest, QuestCheckpoint checkpoint){
+        PlayerCheckpoint playerCheckpoint = null;
+        if(checkpoint.getType().equals(CheckPointType.KILL)){
+            KillCheckpoint killCheckpoint = (KillCheckpoint) checkpoint;
+            playerCheckpoint = new PlayerKillCheckpoint(quest, killCheckpoint.getType(), killCheckpoint.getValue(), false, killCheckpoint.getAmount(), 0);
+        }
+        else if(checkpoint.getType().equals(CheckPointType.CONVERSATION)){
+            ConversationCheckpoint conversationCheckpoint = (ConversationCheckpoint) checkpoint;
+            playerCheckpoint = new PlayerConversationCheckpoint(quest, conversationCheckpoint.getType(), false, conversationCheckpoint.getValue(), conversationCheckpoint.getNpcName());
+        }
+        else {
+            InteractionCheckpoint interactionCheckpoint = (InteractionCheckpoint) checkpoint;
+            playerCheckpoint = new PlayerInteractionCheckpoint(quest, interactionCheckpoint.getType(), interactionCheckpoint.getValue(), false, interactionCheckpoint.getNpcName());
+        }
+        return playerCheckpoint;
+    }
+
+    public static HashMap<Player, QuestPlayer> getQuestPlayers() {
+        return questPlayers;
+    }
 }
