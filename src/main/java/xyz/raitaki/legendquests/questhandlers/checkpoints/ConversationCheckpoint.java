@@ -9,7 +9,7 @@ public class ConversationCheckpoint extends QuestCheckpoint {
 
     private String npcName;
 
-    public ConversationCheckpoint(QuestBase quest, CheckPointType type, String text, String npcName) {
+    public ConversationCheckpoint(QuestBase quest, CheckPointTypeEnum type, String text, String npcName) {
         super(quest, type, text);
         this.npcName = npcName;
     }

@@ -3,7 +3,7 @@ package xyz.raitaki.legendquests.questhandlers;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import xyz.raitaki.legendquests.questhandlers.gui.QuestGUI;
+import xyz.raitaki.legendquests.questhandlers.gui.QuestGui;
 
 import java.util.LinkedList;
 
@@ -13,7 +13,7 @@ public class QuestBase {
     private final String description;
     private final LinkedList<QuestReward> rewards;
     private final LinkedList<QuestCheckpoint> checkPoints;
-    private QuestGUI questGUI;
+    private QuestGui questGUI;
 
     public QuestBase(String name, String description) {
         this.name = name;
@@ -69,10 +69,10 @@ public class QuestBase {
     }
 
     public void buildGUI(){
-        questGUI = new QuestGUI(this);
+        questGUI = new QuestGui(this);
     }
 
-    public QuestGUI getQuestGUI(){
+    public QuestGui getQuestGUI(){
         return questGUI;
     }
 

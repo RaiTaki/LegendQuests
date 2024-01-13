@@ -31,7 +31,7 @@ public class QuestPlayer {
         return player;
     }
 
-    public PlayerQuest getPlayerQuestByCheckpointType(QuestCheckpoint.CheckPointType type){
+    public PlayerQuest getPlayerQuestByCheckpointType(QuestCheckpoint.CheckPointTypeEnum type){
         for(PlayerQuest quest : quests){
             if(quest.getCheckPoint().getType().equals(type)){
                 return quest;

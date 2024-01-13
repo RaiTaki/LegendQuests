@@ -87,6 +87,14 @@ public class PlayerQuest {
         }
     }
 
+    public void updateCheckpoint(){
+        for(PlayerCheckpoint checkpoint : checkpoints){
+            if(checkpoint.isCompleted()) continue;
+            this.checkPoint = checkpoint;
+            return;
+        }
+    }
+
     public JSONObject getAsJSON(){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("name", questBase.getName());

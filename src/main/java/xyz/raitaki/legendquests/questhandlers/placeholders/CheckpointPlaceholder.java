@@ -4,7 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
@@ -41,23 +41,22 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player p, @NotNull String params){
         String st = LanguageConfig.getInstance().get("placeholders.noquest", true);
         if(p == null) return st;
+
         QuestPlayer player = QuestManager.getQuestPlayerFromPlayer(p);
         PlayerQuest quest = player.getQuests().get(0);
-        if(quest == null){
-            return st;
-        }
+        if(quest == null) return st;
 
         if(params.equalsIgnoreCase("checkpoint")){
             if(quest.getCheckPoint() != null){
-                QuestCheckpoint.CheckPointType type = quest.getCheckPoint().getType();
-                if(type == QuestCheckpoint.CheckPointType.KILL){
+                CheckPointTypeEnum type = quest.getCheckPoint().getType();
+                if(type == CheckPointTypeEnum.KILL){
                     PlayerKillCheckpoint checkpoint = (PlayerKillCheckpoint) quest.getCheckPoint();
                     String entityName = checkpoint.getValue();
                     String counter = String.valueOf(checkpoint.getCounter());
                     String amount = String.valueOf(checkpoint.getAmount());
                     st = LanguageConfig.getInstance().get("placeholders.kill", true, "{entityName}", entityName, "{counter}", counter, "{max}", amount);
                 }
-                if(type == QuestCheckpoint.CheckPointType.INTERECT){
+                if(type == CheckPointTypeEnum.INTERECT){
                     st = LanguageConfig.getInstance().get("placeholders.interact", true, "{entityName}", quest.getCheckPoint().getValue());
                 }
             }

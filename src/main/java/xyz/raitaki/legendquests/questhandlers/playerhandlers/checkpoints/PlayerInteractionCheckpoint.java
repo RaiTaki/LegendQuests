@@ -1,14 +1,14 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints;
 
 import org.json.simple.JSONObject;
-import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointType;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 
 public class PlayerInteractionCheckpoint extends PlayerCheckpoint {
 
     private String npcName;
-    public PlayerInteractionCheckpoint(PlayerQuest quest, CheckPointType type, String text, boolean completed, String npcName) {
+    public PlayerInteractionCheckpoint(PlayerQuest quest, CheckPointTypeEnum type, String text, boolean completed, String npcName) {
         super(quest, type, text, completed);
         this.npcName = npcName;
     }

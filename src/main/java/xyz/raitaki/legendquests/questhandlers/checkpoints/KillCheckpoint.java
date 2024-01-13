@@ -7,7 +7,7 @@ import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
 public class KillCheckpoint extends QuestCheckpoint {
 
     private int amount;
-    public KillCheckpoint(QuestBase quest, CheckPointType type, String targetName, int amount) {
+    public KillCheckpoint(QuestBase quest, CheckPointTypeEnum type, String targetName, int amount) {
         super(quest, type, targetName);
         this.amount = amount;
     }

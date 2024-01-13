@@ -1,5 +1,7 @@
 package xyz.raitaki.legendquests.events.listeners.vanilla;
 
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.*;
+
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
@@ -7,28 +9,27 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.raitaki.legendquests.events.PlayerQuestInteractEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
-import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
-import xyz.raitaki.legendquests.questhandlers.gui.CheckpointGUI;
+import xyz.raitaki.legendquests.questhandlers.gui.CheckpointGui;
+import xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum;
+import xyz.raitaki.legendquests.questhandlers.gui.RewardGui;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerInteractionCheckpoint;
-
-import java.awt.*;
 
 public class PlayerEventListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
-        Bukkit.broadcastMessage(QuestManager.getQuestPlayers().get(event.getPlayer()).getQuests().toString());
+        Bukkit.broadcastMessage(QuestManager.getQuestPlayers().get(event.getPlayer()).getQuests().get(0).getQuestName());
         QuestManager.getBaseQuests().getFirst().showGui(event.getPlayer());
     }
 
@@ -44,11 +45,18 @@ public class PlayerEventListener implements Listener {
         String text = message.content();
         QuestBase quest = QuestManager.getQuestBaseFromEditor(player);
         if(quest == null) return;
-        CheckpointGUI checkpointGUI = quest.getQuestGUI().getEditedCheckpoint();
-        if(checkpointGUI == null) return;
-        checkpointGUI.setChatMessage(text);
+        if(quest.getQuestGUI().getEditGuiType() == null) return;
+        if(quest.getQuestGUI().getEditGuiType() == REWARD){
+            RewardGui rewardGUI = quest.getQuestGUI().getEditedReward();
+            if(rewardGUI == null) return;
+            rewardGUI.setChatMessage(text);
+        }
+        if(quest.getQuestGUI().getEditGuiType() == CHECKPOINT){
+            CheckpointGui checkpointGUI = quest.getQuestGUI().getEditedCheckpoint();
+            if(checkpointGUI == null) return;
+            checkpointGUI.setChatMessage(text);
+        }
         event.setCancelled(true);
-
     }
 
     @EventHandler
@@ -56,7 +64,7 @@ public class PlayerEventListener implements Listener {
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
         QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(player);
-        PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(QuestCheckpoint.CheckPointType.INTERECT);
+        PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(CheckPointTypeEnum.INTERECT);
 
         if(playerQuest == null) return;
 

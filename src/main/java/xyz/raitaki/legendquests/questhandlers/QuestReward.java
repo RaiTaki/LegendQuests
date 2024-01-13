@@ -1,5 +1,7 @@
 package xyz.raitaki.legendquests.questhandlers;
 
+import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.ITEM;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
@@ -9,10 +11,10 @@ import xyz.raitaki.legendquests.utils.ItemUtils;
 public class QuestReward {
 
     private QuestBase questBase;
-    private final RewardType type;
+    private final RewardTypeEnum type;
     private final String value;
 
-    public QuestReward(QuestBase questBase, RewardType type, String value) {
+    public QuestReward(QuestBase questBase, RewardTypeEnum type, String value) {
         this.questBase = questBase;
         this.type = type;
         this.value = value;
@@ -21,10 +23,15 @@ public class QuestReward {
     public void giveReward(Player player){
         switch (type){
             case MONEY:
-                EconomyUtils.giveMoney(player, Integer.parseInt(value));
+                try {
+                    EconomyUtils.giveMoney(player, Integer.parseInt(value));
+                } catch (NumberFormatException e) {
+                    player.sendMessage("§c§lERROR: §r§cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
+                    player.sendMessage("§c§lERROR: §r§cType: QUEST: " + questBase.getName());
+                }
                 break;
             case ITEM:
-                ItemStack itemStack = ItemUtils.deseriliseItemStack(value);
+                ItemStack itemStack = ItemUtils.stringToItem(value);
                 if(itemStack == null) {
                     player.sendMessage("§c§lERROR: §r§cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
                     player.sendMessage("§c§lERROR: §r§cType: QUEST: " + questBase.getName());
@@ -33,7 +40,12 @@ public class QuestReward {
                 player.getInventory().addItem(itemStack);
                 break;
             case XP:
-                player.giveExp(Integer.parseInt(value));
+                try {
+                    player.giveExp(Integer.parseInt(value));
+                } catch (NumberFormatException e) {
+                    player.sendMessage("§c§lERROR: §r§cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
+                    player.sendMessage("§c§lERROR: §r§cType: QUEST: " + questBase.getName());
+                }
                 break;
         }
 
@@ -46,15 +58,17 @@ public class QuestReward {
         return jsonObject;
     }
 
-    public RewardType getType() {
+    public RewardTypeEnum getType() {
         return type;
     }
 
     public String getValue() {
+        if(type == ITEM)
+            return "To see it edit the reward";
         return value;
     }
 
-    public enum RewardType {
+    public enum RewardTypeEnum {
         MONEY,
         ITEM,
         XP,

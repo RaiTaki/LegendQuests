@@ -8,9 +8,9 @@ public class QuestAnswer {
     private QuestBase quest;
     private QuestCheckpoint checkPoint;
     private String answerText;
-    private AnswerType answerType;
+    private AnswerTypeEnum answerType;
 
-    public QuestAnswer(QuestBase quest, QuestCheckpoint checkPoint, String answerText, AnswerType answerType) {
+    public QuestAnswer(QuestBase quest, QuestCheckpoint checkPoint, String answerText, AnswerTypeEnum answerType) {
         this.quest = quest;
         this.checkPoint = checkPoint;
         this.answerText = answerText;
@@ -37,7 +37,7 @@ public class QuestAnswer {
         }
     }
 
-    public enum AnswerType{
+    public enum AnswerTypeEnum {
         BACK,
         NEXT,
         END,

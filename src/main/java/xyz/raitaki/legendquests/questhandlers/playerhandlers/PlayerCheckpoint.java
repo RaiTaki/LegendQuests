@@ -1,16 +1,16 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
 import org.json.simple.JSONObject;
-import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointType;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 
 public abstract class PlayerCheckpoint {
 
     private PlayerQuest quest;
-    private CheckPointType type;
+    private CheckPointTypeEnum type;
     private String value;
     private boolean completed = false;
 
-    public PlayerCheckpoint(PlayerQuest quest, CheckPointType type, String value, boolean completed) {
+    public PlayerCheckpoint(PlayerQuest quest, CheckPointTypeEnum type, String value, boolean completed) {
         this.quest = quest;
         this.type = type;
         this.value = value;
@@ -27,7 +27,7 @@ public abstract class PlayerCheckpoint {
         return quest;
     }
 
-    public CheckPointType getType() {
+    public CheckPointTypeEnum getType() {
         return type;
     }
 

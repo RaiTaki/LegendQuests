@@ -1,5 +1,6 @@
 package xyz.raitaki.legendquests.questhandlers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,8 +10,8 @@ import xyz.raitaki.legendquests.LegendQuests;
 import xyz.raitaki.legendquests.events.listeners.custom.*;
 import xyz.raitaki.legendquests.events.listeners.vanilla.EntityDamageEventListener;
 import xyz.raitaki.legendquests.events.listeners.vanilla.PlayerEventListener;
-import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointType;
-import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardType;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
+import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
@@ -40,7 +41,7 @@ public class QuestManager {
             JSONObject rewardJSON = (JSONObject) reward;
             String type = (String) rewardJSON.get("type");
             String value = (String) rewardJSON.get("value");
-            quest.addReward(new QuestReward(quest, RewardType.valueOf(type), value));
+            quest.addReward(new QuestReward(quest, QuestReward.RewardTypeEnum.valueOf(type), value));
         }
 
         JSONArray checkPoints = (JSONArray) json.get("checkPoints");
@@ -50,15 +51,15 @@ public class QuestManager {
             String value = (String) checkPointJSON.get("value");
             if(type.equals("KILL")) {
                 int amount = Integer.parseInt((String) checkPointJSON.get("amount"));
-                quest.addCheckPoint(new KillCheckpoint(quest, CheckPointType.valueOf(type), value, amount));
+                quest.addCheckPoint(new KillCheckpoint(quest, CheckPointTypeEnum.valueOf(type), value, amount));
             }
             else if(type.equals("CONVERSATION")) {
                 String npcName = (String) checkPointJSON.get("npcName");
-                quest.addCheckPoint(new ConversationCheckpoint(quest, CheckPointType.valueOf(type), value, npcName));
+                quest.addCheckPoint(new ConversationCheckpoint(quest, CheckPointTypeEnum.valueOf(type), value, npcName));
             }
             else {
                 String npcName = (String) checkPointJSON.get("npcName");
-                quest.addCheckPoint(new InteractionCheckpoint(quest, CheckPointType.valueOf(type), value, npcName));
+                quest.addCheckPoint(new InteractionCheckpoint(quest, CheckPointTypeEnum.valueOf(type), value, npcName));
             }
         }
 
@@ -81,7 +82,7 @@ public class QuestManager {
             JSONObject rewardJSON = (JSONObject) reward;
             String type = (String) rewardJSON.get("type");
             String value = (String) rewardJSON.get("value");
-            quest.addReward(new PlayerQuestReward(quest, PlayerQuestReward.RewardType.valueOf(type), value));
+            quest.addReward(new PlayerQuestReward(quest, RewardTypeEnum.valueOf(type), value));
         }
 
         JSONArray checkPoints = (JSONArray) json.get("checkPoints");
@@ -93,15 +94,15 @@ public class QuestManager {
             if(type.equals("KILL")) {
                 int amount = Integer.parseInt((String) checkPointJSON.get("amount"));
                 int counter = Integer.parseInt((String) checkPointJSON.get("counter"));
-                quest.addCheckpoint(new PlayerKillCheckpoint(quest, CheckPointType.valueOf(type), value, completed, amount, counter));
+                quest.addCheckpoint(new PlayerKillCheckpoint(quest, CheckPointTypeEnum.valueOf(type), value, completed, amount, counter));
             }
             else if(type.equals("CONVERSATION")) {
                 String npcName = (String) checkPointJSON.get("npcName");
-                quest.addCheckpoint(new PlayerConversationCheckpoint(quest, CheckPointType.valueOf(type), completed, value, npcName));
+                quest.addCheckpoint(new PlayerConversationCheckpoint(quest, CheckPointTypeEnum.valueOf(type), completed, value, npcName));
             }
             else {
                 String npcName = (String) checkPointJSON.get("npcName");
-                quest.addCheckpoint(new PlayerInteractionCheckpoint(quest, CheckPointType.valueOf(type), value, completed, npcName));
+                quest.addCheckpoint(new PlayerInteractionCheckpoint(quest, CheckPointTypeEnum.valueOf(type), value, completed, npcName));
             }
         }
         updatePlayerQuest(quest);
@@ -112,14 +113,14 @@ public class QuestManager {
         QuestPlayer questPlayer = getQuestPlayerFromPlayer(player);
         PlayerQuest playerQuest = new PlayerQuest(quest, questPlayer);
         for (QuestReward reward : quest.getRewards()) {
-            playerQuest.addReward(new PlayerQuestReward(playerQuest, PlayerQuestReward.RewardType.valueOf(reward.getType().toString()), reward.getValue()));
+            playerQuest.addReward(new PlayerQuestReward(playerQuest, RewardTypeEnum.valueOf(reward.getType().toString()), reward.getValue()));
         }
         for (QuestCheckpoint checkPoint : quest.getCheckPoints()) {
-            if(checkPoint.getType().equals(CheckPointType.KILL)) {
+            if(checkPoint.getType().equals(CheckPointTypeEnum.KILL)) {
                 KillCheckpoint killCheckpoint = (KillCheckpoint) checkPoint;
                 playerQuest.addCheckpoint(new PlayerKillCheckpoint(playerQuest, killCheckpoint.getType(), killCheckpoint.getValue(), false,  killCheckpoint.getAmount(), 0));
             }
-            else if(checkPoint.getType().equals(CheckPointType.CONVERSATION)) {
+            else if(checkPoint.getType().equals(CheckPointTypeEnum.CONVERSATION)) {
                 ConversationCheckpoint conversationCheckpoint = (ConversationCheckpoint) checkPoint;
                 playerQuest.addCheckpoint(new PlayerConversationCheckpoint(playerQuest, conversationCheckpoint.getType(), false, conversationCheckpoint.getValue(), conversationCheckpoint.getNpcName()));
             }
@@ -149,15 +150,15 @@ public class QuestManager {
     }
 
     public static void createQuestPlayer(Player player){
-        //GET PLAYER DATA FROM DATABASE
-        //CREATE QUEST PLAYER
-        //ADD TO questPlayers
+        //TODO: GET PLAYER DATA FROM DATABASE
+        //TODO: CREATE QUEST PLAYER
+        //TODO: ADD TO questPlayers
 
         questPlayers.put(player, new QuestPlayer(player));
     }
 
     public static void saveQuestPlayer(QuestPlayer questPlayer){
-        //SAVE PLAYER DATA TO DATABASE
+        //TODO: SAVE PLAYER DATA TO DATABASE
     }
 
     public static LinkedList<QuestBase> getBaseQuests(){
@@ -197,28 +198,32 @@ public class QuestManager {
     }
 
     public static void updatePlayerQuest(PlayerQuest playerQuest){
-        for(PlayerCheckpoint playerCheckpoint : playerQuest.getCheckpoints()){
-            if(playerCheckpoint.isCompleted()) continue;
+        if(playerQuest == null) return;
+        QuestBase questBase = getQuestByName(playerQuest.getQuestName());
 
-            QuestBase questBase = getQuestByName(playerQuest.getQuestName());
-            int index = playerQuest.getCheckpoints().indexOf(playerCheckpoint);
-            QuestCheckpoint questCheckpoint = questBase.getCheckPoints().get(index);
-            PlayerCheckpoint playerCheckpointClone = clonePlayerFromBaseChecpoint(playerQuest, questCheckpoint);
-            playerQuest.getCheckpoints().set(index, playerCheckpointClone);
+        if(questBase == null) return;
+        if(playerQuest.isCompleted()) return;
+        for(QuestCheckpoint questCheckpoint : questBase.getCheckPoints()){
+            int index = questBase.getCheckPoints().indexOf(questCheckpoint);
+
+            if(index >= playerQuest.getCheckpoints().size()){
+                PlayerCheckpoint playerCheckpoint = clonePlayerFromBaseCheckpoint(playerQuest, questCheckpoint);
+                playerQuest.getCheckpoints().add(playerCheckpoint);
+            }
+            PlayerCheckpoint playerCheckpoint = playerQuest.getCheckpoints().get(index);
+
+            if(playerCheckpoint == null) continue;
+            if(playerCheckpoint.isCompleted()) continue;
+            playerCheckpoint = clonePlayerFromBaseCheckpoint(playerQuest, questCheckpoint);
+            playerQuest.getCheckpoints().set(index, playerCheckpoint);
+            Bukkit.broadcastMessage(index + " " + playerCheckpoint.getType());
         }
+        playerQuest.updateCheckpoint();
     }
 
     public static void updatePlayerQuestBaseQuest(QuestPlayer player, QuestBase questBase){
-        PlayerQuest playerQuest = player.getPlayerQuestByQuestName(questBase.getName());
-        if(playerQuest == null) return;
-        for(PlayerCheckpoint playerCheckpoint : playerQuest.getCheckpoints()){
-            if(playerCheckpoint.isCompleted()) continue;
-
-            int index = playerQuest.getCheckpoints().indexOf(playerCheckpoint);
-            QuestCheckpoint questCheckpoint = questBase.getCheckPoints().get(index);
-            PlayerCheckpoint playerCheckpointClone = clonePlayerFromBaseChecpoint(playerQuest, questCheckpoint);
-            playerQuest.getCheckpoints().set(index, playerCheckpointClone);
-        }
+        PlayerQuest playerQuest = player.getPlayerQuestByQuestBase(questBase);
+        updatePlayerQuest(playerQuest);
     }
 
     public static void updatePlayerQuestByName(QuestPlayer player, String questName){
@@ -226,13 +231,13 @@ public class QuestManager {
         updatePlayerQuest(playerQuest);
     }
 
-    public static PlayerCheckpoint clonePlayerFromBaseChecpoint(PlayerQuest quest, QuestCheckpoint checkpoint){
+    public static PlayerCheckpoint clonePlayerFromBaseCheckpoint(PlayerQuest quest, QuestCheckpoint checkpoint){
         PlayerCheckpoint playerCheckpoint = null;
-        if(checkpoint.getType().equals(CheckPointType.KILL)){
+        if(checkpoint.getType().equals(CheckPointTypeEnum.KILL)){
             KillCheckpoint killCheckpoint = (KillCheckpoint) checkpoint;
             playerCheckpoint = new PlayerKillCheckpoint(quest, killCheckpoint.getType(), killCheckpoint.getValue(), false, killCheckpoint.getAmount(), 0);
         }
-        else if(checkpoint.getType().equals(CheckPointType.CONVERSATION)){
+        else if(checkpoint.getType().equals(CheckPointTypeEnum.CONVERSATION)){
             ConversationCheckpoint conversationCheckpoint = (ConversationCheckpoint) checkpoint;
             playerCheckpoint = new PlayerConversationCheckpoint(quest, conversationCheckpoint.getType(), false, conversationCheckpoint.getValue(), conversationCheckpoint.getNpcName());
         }
@@ -241,6 +246,13 @@ public class QuestManager {
             playerCheckpoint = new PlayerInteractionCheckpoint(quest, interactionCheckpoint.getType(), interactionCheckpoint.getValue(), false, interactionCheckpoint.getNpcName());
         }
         return playerCheckpoint;
+    }
+
+    public static void updatePlayersQuest(){
+        for (QuestPlayer questPlayer : questPlayers.values()) {
+            updatePlayerQuests(questPlayer);
+            Bukkit.broadcastMessage(questPlayer.getQuests().toString());
+        }
     }
 
     public static HashMap<Player, QuestPlayer> getQuestPlayers() {

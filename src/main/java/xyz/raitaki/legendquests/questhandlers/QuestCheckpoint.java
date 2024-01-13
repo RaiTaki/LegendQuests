@@ -5,10 +5,10 @@ import org.json.simple.JSONObject;
 public abstract class QuestCheckpoint {
 
     private QuestBase quest;
-    private CheckPointType type;
+    private CheckPointTypeEnum type;
     private String value;
 
-    public QuestCheckpoint(QuestBase quest, CheckPointType type, String value) {
+    public QuestCheckpoint(QuestBase quest, CheckPointTypeEnum type, String value) {
         this.quest = quest;
         this.type = type;
         this.value = value;
@@ -16,7 +16,7 @@ public abstract class QuestCheckpoint {
 
     public abstract JSONObject getAsJSON();
 
-    public enum CheckPointType{
+    public enum CheckPointTypeEnum {
         INTERECT,
         CONVERSATION,
         KILL,
@@ -26,7 +26,7 @@ public abstract class QuestCheckpoint {
         return quest;
     }
 
-    public CheckPointType getType() {
+    public CheckPointTypeEnum getType() {
         return type;
     }
 
