@@ -54,6 +54,14 @@ public class PlayerQuest {
         }
     }
 
+    public void previousCheckPoint() {
+        int index = checkpoints.indexOf(checkPoint);
+        checkPoint.setCompleted(false);
+        if (index != 0) {
+            checkPoint = checkpoints.get(index - 1);
+            checkPoint.setCompleted(false);
+        }
+    }
     public void addReward(PlayerQuestReward reward) {
         rewards.add(reward);
     }

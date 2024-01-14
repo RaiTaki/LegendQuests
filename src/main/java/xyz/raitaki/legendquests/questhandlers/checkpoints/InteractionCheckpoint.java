@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
+import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class InteractionCheckpoint extends QuestCheckpoint {
 
@@ -12,10 +13,6 @@ public class InteractionCheckpoint extends QuestCheckpoint {
     public InteractionCheckpoint(QuestBase quest, CheckPointTypeEnum type, String text, String npcName) {
         super(quest, type, text);
         this.npcName = npcName;
-    }
-
-    public void sendMessage(Player player){
-        player.sendMessage(getValue());
     }
 
     public String getNpcName() {
@@ -28,6 +25,7 @@ public class InteractionCheckpoint extends QuestCheckpoint {
         jsonObject.put("type", getType().toString());
         jsonObject.put("value", getValue());
         jsonObject.put("npcName", getNpcName());
+
         return jsonObject;
     }
 }

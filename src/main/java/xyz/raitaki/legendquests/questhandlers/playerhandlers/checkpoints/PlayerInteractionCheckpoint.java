@@ -1,9 +1,11 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints;
 
+import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
+import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class PlayerInteractionCheckpoint extends PlayerCheckpoint {
 

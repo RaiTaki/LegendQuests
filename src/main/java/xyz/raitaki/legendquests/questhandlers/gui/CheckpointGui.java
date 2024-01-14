@@ -3,6 +3,7 @@ package xyz.raitaki.legendquests.questhandlers.gui;
 import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -11,11 +12,13 @@ import xyz.raitaki.legendquests.events.QuestUpdateEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.TextTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
 import xyz.raitaki.legendquests.utils.TextUtils;
 
+import static xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.TextTypeEnum.*;
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.*;
 
 public class CheckpointGui {
@@ -32,6 +35,9 @@ public class CheckpointGui {
   private InventoryGui checkpointGUI;
   private boolean saved = false;
   private EditTypeEnum editType;
+  private TextTypeEnum textType;
+  private String newAcceptText = "";
+  private String newDeclineText = "";
 
   public CheckpointGui(QuestBase quest, QuestGui questGUI, QuestCheckpoint checkpoint) {
     this.questBase = quest;
@@ -42,6 +48,7 @@ public class CheckpointGui {
         "         ",
         "  t   v  ",
         "    c    ",
+        "  d   e  ",
         "a       b"
     };
 
@@ -58,6 +65,8 @@ public class CheckpointGui {
     } else {
       ConversationCheckpoint conversation = (ConversationCheckpoint) checkpoint;
       newNpcName = conversation.getNpcName();
+      newAcceptText = conversation.getAcceptText();
+      newDeclineText = conversation.getDeclineText();
     }
 
     buildCheckpointGUI();
@@ -125,9 +134,39 @@ public class CheckpointGui {
           new ItemStack(Material.PAPER),
           1,
           click -> {
+            editType = EditTypeEnum.NPC_NAME;
+            checkpointGUI.close(click.getWhoClicked());
+            questGUI.getEditor().sendMessage(
+                TextUtils.replaceColors("<SOLID:00ff08>Enter new NPC name through chat"));
             return true;
           },
           TextUtils.replaceColors("<SOLID:7d7d7d>NPC Name: <SOLID:9ADB4F>" + newNpcName)
+      ));
+
+      checkpointGUI.addElement(new StaticGuiElement('d',
+          new ItemStack(Material.PAPER),
+          1,
+          click -> {
+            editType = EditTypeEnum.ACCEPT_TEXT;
+            checkpointGUI.close(click.getWhoClicked());
+            questGUI.getEditor().sendMessage(
+                TextUtils.replaceColors("<SOLID:00ff08>Enter new " + textType + " text through chat"));
+            return true;
+          },
+          TextUtils.replaceColors("<SOLID:7d7d7d> ACCEPT" + " Text: <SOLID:9ADB4F>" + newAcceptText)
+      ));
+
+      checkpointGUI.addElement(new StaticGuiElement('e',
+          new ItemStack(Material.PAPER),
+          1,
+          click -> {
+            editType = EditTypeEnum.DECLINE_TEXT;
+            checkpointGUI.close(click.getWhoClicked());
+            questGUI.getEditor().sendMessage(
+                TextUtils.replaceColors("<SOLID:00ff08>Enter new " + textType + " text through chat"));
+            return true;
+          },
+          TextUtils.replaceColors("<SOLID:7d7d7d> DECLINE" + " Text: <SOLID:9ADB4F>" + newDeclineText)
       ));
     }
 
@@ -142,12 +181,13 @@ public class CheckpointGui {
           } else if (newType == CheckPointTypeEnum.INTERECT) {
             newCheckpoint = new InteractionCheckpoint(questBase, newType, newValue, newNpcName);
           } else {
-            newCheckpoint = new ConversationCheckpoint(questBase, newType, newValue, newNpcName);
+            newCheckpoint = new ConversationCheckpoint(questBase, newType, newValue, newNpcName, newAcceptText, newDeclineText);
           }
           checkpointGUI.close(click.getWhoClicked());
 
           int index = questBase.getCheckPoints().indexOf(checkpoint);
           questBase.getCheckPoints().set(index, newCheckpoint);
+          Bukkit.broadcastMessage(questBase.getCheckPoints().get(index).getAsJSON().toJSONString());
           questGUI.openCheckpointGUI(click.getWhoClicked());
           questGUI.setEditedCheckpoint(null);
 
@@ -175,16 +215,13 @@ public class CheckpointGui {
   }
 
   public void setChatMessage(String message) {
-    if (editType == null) {
-      return;
-    }
-    if (editType == EditTypeEnum.VALUE) {
-      newValue = message;
-    } else if (editType == EditTypeEnum.NPC_NAME) {
-      newNpcName = message;
-    } else {
-      newAmount = Integer.parseInt(message);
-    }
+    if (editType == null) return;
+    else if (editType == EditTypeEnum.VALUE) newValue = message;
+    else if (editType == EditTypeEnum.NPC_NAME) newNpcName = message;
+    else if (editType == EditTypeEnum.ACCEPT_TEXT) newAcceptText = message;
+    else if (editType == EditTypeEnum.DECLINE_TEXT) newDeclineText = message;
+    else newAmount = Integer.parseInt(message);
+
     buildCheckpointGUI();
     checkpointGUI.draw();
     openCheckpointGUISync();

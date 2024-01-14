@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
 import xyz.raitaki.legendquests.utils.ItemUtils;
+import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class PlayerQuestReward {
 
@@ -24,13 +25,13 @@ public class PlayerQuestReward {
         switch (type){
             case MONEY:
                 EconomyUtils.giveMoney(player, Integer.parseInt(value));
-                player.sendMessage("§a§lQUEST: §r§aYou have been given §e" + value + "§a coins!");
+                TextUtils.sendCenteredMessage(player, "&a&l+" + value + "$");
                 break;
             case ITEM:
                 ItemStack itemStack = ItemUtils.stringToItem(value);
                 if(itemStack == null) {
-                    player.sendMessage("§c§lERROR: §r§cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
-                    player.sendMessage("§c§lERROR: §r§cType: QUEST: " + quest.getQuestName());
+                    TextUtils.sendCenteredMessage(player, "&c&lERROR: &r&cType: ITEM: " + value);
+                    TextUtils.sendCenteredMessage(player, "&c&lERROR: &r&cQuest name: " + quest.getQuestName());
                     return;
                 }
                 player.getInventory().addItem(itemStack);

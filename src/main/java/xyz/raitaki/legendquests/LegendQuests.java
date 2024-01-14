@@ -24,11 +24,11 @@ public final class LegendQuests extends JavaPlugin {
         QuestBase questBase = new QuestBase("test", "test");
         questBase.addReward(new QuestReward(questBase, RewardTypeEnum.MONEY, "100"));
         questBase.addCheckPoint(new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie", "Zombie"));
-        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "KillZombie", "Zombie"));
+        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "KillZombie", "Zombie", "Accept", "Reject"));
         questBase.addCheckPoint(new KillCheckpoint(questBase, CheckPointTypeEnum.KILL, "Zombie", 2));
-        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "Kill zombie completed", "Zombie"));
+        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "Kill zombie completed", "Zombie", "", ""));
         questBase.addCheckPoint(new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie2", "Skeleton"));
-        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "You are a real skeleton", "Zombie"));
+        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "You are a real skeleton", "Zombie", "", ""));
         questBase.buildGUI();
 
         Bukkit.broadcastMessage(questBase.getAsJSON());

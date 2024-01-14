@@ -151,7 +151,7 @@ public class QuestGui {
 
         checkpointGui.addElement(new StaticGuiElement('b', new ItemStack(Material.GREEN_WOOL), 1,
                 click -> {
-                    ConversationCheckpoint conversationCheckpoint = new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "NPC_TEXT", "NPC_NAME");
+                    ConversationCheckpoint conversationCheckpoint = new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "NPC_TEXT", "NPC_NAME", "ACCEPT_TEXT", "DECLINE_TEXT");
                     questBase.addCheckPoint(conversationCheckpoint);
                     updateCheckpointGUI();
                     return true;
@@ -353,7 +353,9 @@ public class QuestGui {
     enum EditTypeEnum {
         VALUE,
         NPC_NAME,
-        AMOUNT
+        AMOUNT,
+        ACCEPT_TEXT,
+        DECLINE_TEXT
     }
 
     public enum EditGuiTypeEnum {

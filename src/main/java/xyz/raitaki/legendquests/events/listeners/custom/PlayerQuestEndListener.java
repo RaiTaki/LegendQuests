@@ -8,7 +8,6 @@ public class PlayerQuestEndListener implements Listener {
 
     @EventHandler
     public void onQuestEnd(PlayerQuestEndEvent event) {
-        event.getQuestPlayer().getPlayer().sendMessage("You have completed the quest " + event.getPlayerQuest().getQuest().getName());
         event.getPlayerQuest().giveReward();
     }
 }

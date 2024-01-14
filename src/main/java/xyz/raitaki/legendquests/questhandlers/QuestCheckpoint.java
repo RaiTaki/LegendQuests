@@ -22,6 +22,11 @@ public abstract class QuestCheckpoint {
         KILL,
     }
 
+    public enum TextTypeEnum{
+        ACCEPT,
+        DECLINE
+    }
+
     public QuestBase getQuest() {
         return quest;
     }

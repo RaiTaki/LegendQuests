@@ -9,9 +9,11 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import xyz.raitaki.legendquests.events.PlayerQuestInteractEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
@@ -22,6 +24,7 @@ import xyz.raitaki.legendquests.questhandlers.gui.RewardGui;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
+import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerInteractionCheckpoint;
 
 public class PlayerEventListener implements Listener {
@@ -29,7 +32,6 @@ public class PlayerEventListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
-        Bukkit.broadcastMessage(QuestManager.getQuestPlayers().get(event.getPlayer()).getQuests().get(0).getQuestName());
         QuestManager.getBaseQuests().getFirst().showGui(event.getPlayer());
     }
 
@@ -77,5 +79,24 @@ public class PlayerEventListener implements Listener {
 
         PlayerQuestInteractEvent playerQuestInteractEvent = new PlayerQuestInteractEvent(playerQuest, questPlayer, entity);
         Bukkit.getPluginManager().callEvent(playerQuestInteractEvent);
+    }
+
+    @EventHandler
+    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
+        Player player = event.getPlayer();
+        QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(player);
+        PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(CheckPointTypeEnum.CONVERSATION);
+
+        if(playerQuest == null) return;
+        PlayerConversationCheckpoint playerCheckpoint = (PlayerConversationCheckpoint) playerQuest.getCheckPoint();
+        if(playerCheckpoint == null) return;
+
+        if(player.isSneaking()){
+            playerCheckpoint.doAnswer();
+        }else {
+            playerCheckpoint.changeAnswer();
+        }
+
+        event.setCancelled(true);
     }
 }

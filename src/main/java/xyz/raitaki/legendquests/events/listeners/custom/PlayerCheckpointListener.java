@@ -19,12 +19,8 @@ public class PlayerCheckpointListener implements Listener {
         PlayerCheckpoint currentCheckpoint = event.getCurrentCheckpoint();
         PlayerCheckpoint nextCheckpoint = event.getNextCheckpoint();
 
-        player.getPlayer().sendMessage("§cYou have completed the checkpoint " + currentCheckpoint.getType().name() + " for the quest " + quest.getQuest().getName());
-        player.getPlayer().sendMessage("");
-
         if(nextCheckpoint instanceof PlayerConversationCheckpoint conversation){
             conversation.sendMessage();
-            quest.nextCheckPoint();
         }
     }
 }
