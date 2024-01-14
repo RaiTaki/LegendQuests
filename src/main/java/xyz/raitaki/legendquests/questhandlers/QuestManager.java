@@ -1,5 +1,7 @@
 package xyz.raitaki.legendquests.questhandlers;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
@@ -7,7 +9,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import xyz.raitaki.legendquests.LegendQuests;
-import xyz.raitaki.legendquests.events.listeners.custom.*;
+import xyz.raitaki.legendquests.events.listeners.custom.EntityKillListener;
+import xyz.raitaki.legendquests.events.listeners.custom.PlayerAnswerListener;
+import xyz.raitaki.legendquests.events.listeners.custom.PlayerCheckpointListener;
+import xyz.raitaki.legendquests.events.listeners.custom.PlayerQuestEndListener;
+import xyz.raitaki.legendquests.events.listeners.custom.PlayerQuestInteractListener;
+import xyz.raitaki.legendquests.events.listeners.custom.PlayerQuestKillListener;
+import xyz.raitaki.legendquests.events.listeners.custom.QuestUpdateListener;
 import xyz.raitaki.legendquests.events.listeners.vanilla.EntityDamageEventListener;
 import xyz.raitaki.legendquests.events.listeners.vanilla.PlayerEventListener;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
@@ -22,9 +30,6 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerInteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerKillCheckpoint;
-
-import java.util.HashMap;
-import java.util.LinkedList;
 
 public class QuestManager {
 

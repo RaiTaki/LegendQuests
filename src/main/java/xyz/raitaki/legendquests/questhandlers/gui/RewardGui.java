@@ -1,5 +1,10 @@
 package xyz.raitaki.legendquests.questhandlers.gui;
 
+import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.ITEM;
+import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.MONEY;
+import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.XP;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum;
+
 import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -18,9 +23,6 @@ import xyz.raitaki.legendquests.questhandlers.QuestReward;
 import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum;
 import xyz.raitaki.legendquests.utils.ItemUtils;
 import xyz.raitaki.legendquests.utils.TextUtils;
-
-import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.*;
-import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.*;
 
 public class RewardGui {
 
@@ -78,9 +80,9 @@ public class RewardGui {
 
     if (newType == ITEM) {
       ItemStack itemStack = null;
-      try{
+      try {
         itemStack = ItemUtils.stringToItem(newValue);
-      }catch (Exception e){
+      } catch (Exception e) {
         Bukkit.getLogger().warning("Invalid item: " + newValue);
       }
 
@@ -106,7 +108,8 @@ public class RewardGui {
 
             return true;
           },
-          TextUtils.replaceColors("<SOLID:7d7d7d>Item: <SOLID:9ADB4F>" + itemStack.getItemMeta().getDisplayName())
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d>Item: <SOLID:9ADB4F>" + itemStack.getItemMeta().getDisplayName())
       ));
     } else {
       rewardGui.addElement(new StaticGuiElement('c',
@@ -189,9 +192,11 @@ public class RewardGui {
     };
   }
 
-  public void setChatMessage(String message){
-    if(editTypeEnum == null) return;
-    if(editTypeEnum == EditTypeEnum.VALUE){
+  public void setChatMessage(String message) {
+    if (editTypeEnum == null) {
+      return;
+    }
+    if (editTypeEnum == EditTypeEnum.VALUE) {
       newValue = message;
     }
     updateRewardGuiSync();
@@ -206,7 +211,7 @@ public class RewardGui {
     openRewardGUI(questGui.getEditor());
   }
 
-  public void updateRewardGuiSync(){
+  public void updateRewardGuiSync() {
     new BukkitRunnable() {
       @Override
       public void run() {

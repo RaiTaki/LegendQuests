@@ -13,20 +13,25 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 
 public class EntityKillListener implements Listener {
 
-    @EventHandler
-    public void onEntityKill(PlayerKillEntityEvent event){
-        Player player = event.getPlayer();
-        QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(player);
-        PlayerQuest quest = questPlayer.getPlayerQuestByCheckpointType(CheckPointTypeEnum.KILL);
+  @EventHandler
+  public void onEntityKill(PlayerKillEntityEvent event) {
+    Player player = event.getPlayer();
+    QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(player);
+    PlayerQuest quest = questPlayer.getPlayerQuestByCheckpointType(CheckPointTypeEnum.KILL);
 
-        if(quest == null) return;
-
-        String entityName = event.getEntity().getName();
-        String questEntityName = quest.getCheckPoint().getValue();
-
-        if(!entityName.equals(questEntityName)) return;
-
-        PlayerQuestKillEvent playerQuestKillEvent = new PlayerQuestKillEvent(quest, questPlayer, event.getEntity());
-        Bukkit.getPluginManager().callEvent(playerQuestKillEvent);
+    if (quest == null) {
+      return;
     }
+
+    String entityName = event.getEntity().getName();
+    String questEntityName = quest.getCheckPoint().getValue();
+
+    if (!entityName.equals(questEntityName)) {
+      return;
+    }
+
+    PlayerQuestKillEvent playerQuestKillEvent = new PlayerQuestKillEvent(quest, questPlayer,
+        event.getEntity());
+    Bukkit.getPluginManager().callEvent(playerQuestKillEvent);
+  }
 }

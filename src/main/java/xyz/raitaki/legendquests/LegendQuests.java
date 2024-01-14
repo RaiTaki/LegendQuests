@@ -16,34 +16,41 @@ import xyz.raitaki.legendquests.utils.LanguageConfig;
 
 public final class LegendQuests extends JavaPlugin {
 
-    private static LegendQuests instance;
-    @Override
-    public void onEnable() {
-        instance = this;
-        EconomyUtils.setupEconomy();
-        QuestBase questBase = new QuestBase("test", "test");
-        questBase.addReward(new QuestReward(questBase, RewardTypeEnum.MONEY, "100"));
-        questBase.addCheckPoint(new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie", "Zombie"));
-        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "KillZombie", "Zombie", "Accept", "Reject"));
-        questBase.addCheckPoint(new KillCheckpoint(questBase, CheckPointTypeEnum.KILL, "Zombie", 2));
-        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "Kill zombie completed", "Zombie", "", ""));
-        questBase.addCheckPoint(new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie2", "Skeleton"));
-        questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "You are a real skeleton", "Zombie", "", ""));
-        questBase.buildGUI();
+  private static LegendQuests instance;
 
-        Bukkit.broadcastMessage(questBase.getAsJSON());
-        QuestManager.registerEvents();
-        CheckpointPlaceholder.registerPlaceholder();
+  @Override
+  public void onEnable() {
+    instance = this;
+    EconomyUtils.setupEconomy();
+    QuestBase questBase = new QuestBase("test", "test");
+    questBase.addReward(new QuestReward(questBase, RewardTypeEnum.MONEY, "100"));
+    questBase.addCheckPoint(
+        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie", "Zombie"));
+    questBase.addCheckPoint(
+        new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "KillZombie",
+            "Zombie", "Accept", "Reject"));
+    questBase.addCheckPoint(new KillCheckpoint(questBase, CheckPointTypeEnum.KILL, "Zombie", 2));
+    questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION,
+        "Kill zombie completed", "Zombie", "", ""));
+    questBase.addCheckPoint(
+        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie2", "Skeleton"));
+    questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION,
+        "You are a real skeleton", "Zombie", "", ""));
+    questBase.buildGUI();
 
-        new LanguageConfig("language.yml");
-    }
+    Bukkit.broadcastMessage(questBase.getAsJSON());
+    QuestManager.registerEvents();
+    CheckpointPlaceholder.registerPlaceholder();
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+    new LanguageConfig("language.yml");
+  }
 
-    public static LegendQuests getInstance() {
-        return instance;
-    }
+  @Override
+  public void onDisable() {
+    // Plugin shutdown logic
+  }
+
+  public static LegendQuests getInstance() {
+    return instance;
+  }
 }

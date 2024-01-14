@@ -3,7 +3,6 @@ package xyz.raitaki.legendquests.events;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 

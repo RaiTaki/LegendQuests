@@ -7,38 +7,40 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 
 public class PlayerKillCheckpoint extends PlayerCheckpoint {
 
-    int counter = 0;
-    int amount = 0;
-    public PlayerKillCheckpoint(PlayerQuest quest, CheckPointTypeEnum type, String targetName, boolean completed, int amount, int counter) {
-        super(quest, type, targetName, completed);
-        this.amount = amount;
-        this.counter = counter;
-    }
+  int counter = 0;
+  int amount = 0;
 
-    public void incrementProgress(){
-        counter++;
-    }
+  public PlayerKillCheckpoint(PlayerQuest quest, CheckPointTypeEnum type, String targetName,
+      boolean completed, int amount, int counter) {
+    super(quest, type, targetName, completed);
+    this.amount = amount;
+    this.counter = counter;
+  }
 
-    public int getCounter() {
-        return counter;
-    }
+  public void incrementProgress() {
+    counter++;
+  }
 
-    public int getAmount() {
-        return amount;
-    }
+  public int getCounter() {
+    return counter;
+  }
 
-    public boolean isComplete(){
-        return counter >= amount;
-    }
+  public int getAmount() {
+    return amount;
+  }
 
-    @Override
-    public JSONObject getAsJSON() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", getType().toString());
-        jsonObject.put("value", getValue());
-        jsonObject.put("amount", amount);
-        jsonObject.put("counter", counter);
-        jsonObject.put("completed", isCompleted());
-        return jsonObject;
-    }
+  public boolean isComplete() {
+    return counter >= amount;
+  }
+
+  @Override
+  public JSONObject getAsJSON() {
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("type", getType().toString());
+    jsonObject.put("value", getValue());
+    jsonObject.put("amount", amount);
+    jsonObject.put("counter", counter);
+    jsonObject.put("completed", isCompleted());
+    return jsonObject;
+  }
 }

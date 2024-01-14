@@ -6,8 +6,8 @@ import xyz.raitaki.legendquests.events.PlayerQuestEndEvent;
 
 public class PlayerQuestEndListener implements Listener {
 
-    @EventHandler
-    public void onQuestEnd(PlayerQuestEndEvent event) {
-        event.getPlayerQuest().giveReward();
-    }
+  @EventHandler
+  public void onQuestEnd(PlayerQuestEndEvent event) {
+    event.getPlayerQuest().giveReward();
+  }
 }

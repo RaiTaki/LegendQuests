@@ -5,62 +5,65 @@ import xyz.raitaki.legendquests.LegendQuests;
 
 public abstract class ConfigManager {
 
-    private YamlConfiguration config;
-    private LegendQuests plugin;
-    private String configName;
-    public ConfigManager(String configName){
-        plugin = LegendQuests.getInstance();
-        plugin.saveResource(configName, false);
-        this.configName = configName;
-        config = YamlConfiguration.loadConfiguration(plugin.getDataFolder().toPath().resolve(configName).toFile());
-    }
+  private YamlConfiguration config;
+  private LegendQuests plugin;
+  private String configName;
 
-    public YamlConfiguration getConfig() {
-        return config;
-    }
+  public ConfigManager(String configName) {
+    plugin = LegendQuests.getInstance();
+    plugin.saveResource(configName, false);
+    this.configName = configName;
+    config = YamlConfiguration.loadConfiguration(
+        plugin.getDataFolder().toPath().resolve(configName).toFile());
+  }
 
-    public void saveConfig() {
-        try {
-            config.save(plugin.getDataFolder().toPath().resolve(configName).toFile());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+  public YamlConfiguration getConfig() {
+    return config;
+  }
 
-    public void reloadConfig() {
-        config = YamlConfiguration.loadConfiguration(plugin.getDataFolder().toPath().resolve(configName).toFile());
+  public void saveConfig() {
+    try {
+      config.save(plugin.getDataFolder().toPath().resolve(configName).toFile());
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 
-    public void set(String path, Object value) {
-        config.set(path, value);
-    }
+  public void reloadConfig() {
+    config = YamlConfiguration.loadConfiguration(
+        plugin.getDataFolder().toPath().resolve(configName).toFile());
+  }
 
-    public Object get(String path) {
-        return config.get(path);
-    }
+  public void set(String path, Object value) {
+    config.set(path, value);
+  }
 
-    public String getString(String path) {
-        String value = config.getString(path);
-        if(value == null) {
-            return "";
-        }
-        return config.getString(path);
-    }
+  public Object get(String path) {
+    return config.get(path);
+  }
 
-    public int getInt(String path) {
-        int value = config.getInt(path);
-        return config.getInt(path);
+  public String getString(String path) {
+    String value = config.getString(path);
+    if (value == null) {
+      return "";
     }
+    return config.getString(path);
+  }
 
-    public double getDouble(String path) {
-        return config.getDouble(path);
-    }
+  public int getInt(String path) {
+    int value = config.getInt(path);
+    return config.getInt(path);
+  }
 
-    public boolean getBoolean(String path) {
-        return config.getBoolean(path);
-    }
+  public double getDouble(String path) {
+    return config.getDouble(path);
+  }
 
-    public long getLong(String path) {
-        return config.getLong(path);
-    }
+  public boolean getBoolean(String path) {
+    return config.getBoolean(path);
+  }
+
+  public long getLong(String path) {
+    return config.getLong(path);
+  }
 }

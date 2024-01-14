@@ -7,29 +7,30 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 
 public class PlayerQuestEndEvent extends Event {
-    private QuestPlayer questPlayer;
-    private PlayerQuest playerQuest;
-    private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-    public PlayerQuestEndEvent(@NotNull QuestPlayer questPlayer, @NotNull PlayerQuest playerQuest) {
-        this.questPlayer = questPlayer;
-        this.playerQuest = playerQuest;
-    }
+  private QuestPlayer questPlayer;
+  private PlayerQuest playerQuest;
+  private static final HandlerList HANDLERS_LIST = new HandlerList();
 
-    public QuestPlayer getQuestPlayer() {
-        return questPlayer;
-    }
+  public PlayerQuestEndEvent(@NotNull QuestPlayer questPlayer, @NotNull PlayerQuest playerQuest) {
+    this.questPlayer = questPlayer;
+    this.playerQuest = playerQuest;
+  }
 
-    public PlayerQuest getPlayerQuest() {
-        return playerQuest;
-    }
+  public QuestPlayer getQuestPlayer() {
+    return questPlayer;
+  }
 
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return HANDLERS_LIST;
-    }
+  public PlayerQuest getPlayerQuest() {
+    return playerQuest;
+  }
 
-    public static HandlerList getHandlerList() {
-        return HANDLERS_LIST;
-    }
+  @Override
+  public @NotNull HandlerList getHandlers() {
+    return HANDLERS_LIST;
+  }
+
+  public static HandlerList getHandlerList() {
+    return HANDLERS_LIST;
+  }
 }

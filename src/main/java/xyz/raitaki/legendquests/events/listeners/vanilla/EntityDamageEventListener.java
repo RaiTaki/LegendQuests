@@ -10,13 +10,19 @@ import xyz.raitaki.legendquests.events.PlayerKillEntityEvent;
 
 public class EntityDamageEventListener implements Listener {
 
-    @EventHandler
-    public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player player)) return;
-        if (!(event.getEntity() instanceof LivingEntity entity)) return;
-        if(entity.getHealth() - event.getFinalDamage() > 0) return;
-
-        PlayerKillEntityEvent killEvent = new PlayerKillEntityEvent(player, entity);
-        Bukkit.getPluginManager().callEvent(killEvent);
+  @EventHandler
+  public void onEntityDamage(EntityDamageByEntityEvent event) {
+    if (!(event.getDamager() instanceof Player player)) {
+      return;
     }
+    if (!(event.getEntity() instanceof LivingEntity entity)) {
+      return;
+    }
+    if (entity.getHealth() - event.getFinalDamage() > 0) {
+      return;
+    }
+
+    PlayerKillEntityEvent killEvent = new PlayerKillEntityEvent(player, entity);
+    Bukkit.getPluginManager().callEvent(killEvent);
+  }
 }

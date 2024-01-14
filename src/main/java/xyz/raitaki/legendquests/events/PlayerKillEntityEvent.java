@@ -8,30 +8,30 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerKillEntityEvent extends Event {
 
-    private Player player;
-    private LivingEntity entity;
+  private Player player;
+  private LivingEntity entity;
 
-    private static final HandlerList handlerList = new HandlerList();
+  private static final HandlerList handlerList = new HandlerList();
 
-    public PlayerKillEntityEvent(@NotNull Player player, @NotNull LivingEntity entity) {
-        this.player = player;
-        this.entity = entity;
-    }
+  public PlayerKillEntityEvent(@NotNull Player player, @NotNull LivingEntity entity) {
+    this.player = player;
+    this.entity = entity;
+  }
 
-    public Player getPlayer() {
-        return player;
-    }
+  public Player getPlayer() {
+    return player;
+  }
 
-    public LivingEntity getEntity() {
-        return entity;
-    }
+  public LivingEntity getEntity() {
+    return entity;
+  }
 
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlerList;
-    }
+  @Override
+  public @NotNull HandlerList getHandlers() {
+    return handlerList;
+  }
 
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
+  public static HandlerList getHandlerList() {
+    return handlerList;
+  }
 }

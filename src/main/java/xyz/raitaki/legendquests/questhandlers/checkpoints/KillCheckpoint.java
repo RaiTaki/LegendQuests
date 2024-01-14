@@ -6,22 +6,23 @@ import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
 
 public class KillCheckpoint extends QuestCheckpoint {
 
-    private int amount;
-    public KillCheckpoint(QuestBase quest, CheckPointTypeEnum type, String targetName, int amount) {
-        super(quest, type, targetName);
-        this.amount = amount;
-    }
+  private int amount;
 
-    public int getAmount() {
-        return amount;
-    }
+  public KillCheckpoint(QuestBase quest, CheckPointTypeEnum type, String targetName, int amount) {
+    super(quest, type, targetName);
+    this.amount = amount;
+  }
 
-    @Override
-    public JSONObject getAsJSON() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", getType().toString());
-        jsonObject.put("value", getValue());
-        jsonObject.put("amount", getAmount());
-        return jsonObject;
-    }
+  public int getAmount() {
+    return amount;
+  }
+
+  @Override
+  public JSONObject getAsJSON() {
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("type", getType().toString());
+    jsonObject.put("value", getValue());
+    jsonObject.put("amount", getAmount());
+    return jsonObject;
+  }
 }

@@ -1,5 +1,7 @@
 package xyz.raitaki.legendquests.questhandlers.gui;
 
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum;
+
 import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -17,9 +19,6 @@ import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint
 import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
 import xyz.raitaki.legendquests.utils.TextUtils;
-
-import static xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.TextTypeEnum.*;
-import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.*;
 
 public class CheckpointGui {
 
@@ -150,7 +149,8 @@ public class CheckpointGui {
             editType = EditTypeEnum.ACCEPT_TEXT;
             checkpointGUI.close(click.getWhoClicked());
             questGUI.getEditor().sendMessage(
-                TextUtils.replaceColors("<SOLID:00ff08>Enter new " + textType + " text through chat"));
+                TextUtils.replaceColors(
+                    "<SOLID:00ff08>Enter new " + textType + " text through chat"));
             return true;
           },
           TextUtils.replaceColors("<SOLID:7d7d7d> ACCEPT" + " Text: <SOLID:9ADB4F>" + newAcceptText)
@@ -163,10 +163,12 @@ public class CheckpointGui {
             editType = EditTypeEnum.DECLINE_TEXT;
             checkpointGUI.close(click.getWhoClicked());
             questGUI.getEditor().sendMessage(
-                TextUtils.replaceColors("<SOLID:00ff08>Enter new " + textType + " text through chat"));
+                TextUtils.replaceColors(
+                    "<SOLID:00ff08>Enter new " + textType + " text through chat"));
             return true;
           },
-          TextUtils.replaceColors("<SOLID:7d7d7d> DECLINE" + " Text: <SOLID:9ADB4F>" + newDeclineText)
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d> DECLINE" + " Text: <SOLID:9ADB4F>" + newDeclineText)
       ));
     }
 
@@ -181,7 +183,8 @@ public class CheckpointGui {
           } else if (newType == CheckPointTypeEnum.INTERECT) {
             newCheckpoint = new InteractionCheckpoint(questBase, newType, newValue, newNpcName);
           } else {
-            newCheckpoint = new ConversationCheckpoint(questBase, newType, newValue, newNpcName, newAcceptText, newDeclineText);
+            newCheckpoint = new ConversationCheckpoint(questBase, newType, newValue, newNpcName,
+                newAcceptText, newDeclineText);
           }
           checkpointGUI.close(click.getWhoClicked());
 
@@ -215,12 +218,19 @@ public class CheckpointGui {
   }
 
   public void setChatMessage(String message) {
-    if (editType == null) return;
-    else if (editType == EditTypeEnum.VALUE) newValue = message;
-    else if (editType == EditTypeEnum.NPC_NAME) newNpcName = message;
-    else if (editType == EditTypeEnum.ACCEPT_TEXT) newAcceptText = message;
-    else if (editType == EditTypeEnum.DECLINE_TEXT) newDeclineText = message;
-    else newAmount = Integer.parseInt(message);
+    if (editType == null) {
+      return;
+    } else if (editType == EditTypeEnum.VALUE) {
+      newValue = message;
+    } else if (editType == EditTypeEnum.NPC_NAME) {
+      newNpcName = message;
+    } else if (editType == EditTypeEnum.ACCEPT_TEXT) {
+      newAcceptText = message;
+    } else if (editType == EditTypeEnum.DECLINE_TEXT) {
+      newDeclineText = message;
+    } else {
+      newAmount = Integer.parseInt(message);
+    }
 
     buildCheckpointGUI();
     checkpointGUI.draw();
