@@ -32,6 +32,7 @@ public class PlayerEventListener implements Listener {
   public void onPlayerJoin(PlayerJoinEvent event) {
     QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
     QuestManager.getBaseQuests().getFirst().showGui(event.getPlayer());
+    QuestManager.getQuestPlayerFromPlayer(event.getPlayer()).sendQuestInfoChat();
   }
 
   @EventHandler

@@ -39,7 +39,11 @@ public class QuestManager {
   public static QuestBase loadBaseQuestFromJSON(String questJson) throws ParseException {
     JSONParser parser = new JSONParser();
     JSONObject json = (JSONObject) parser.parse(questJson);
-    QuestBase quest = new QuestBase((String) json.get("name"), (String) json.get("description"));
+
+    String name = (String) json.get("name");
+    String description = (String) json.get("description");
+    Long time = (Long) json.get("time");
+    QuestBase quest = new QuestBase(name, description, time);
 
     JSONArray rewards = (JSONArray) json.get("rewards");
     for (Object reward : rewards) {
@@ -87,7 +91,9 @@ public class QuestManager {
     }
     String name = (String) json.get("name");
     String description = (String) json.get("description");
-    PlayerQuest quest = new PlayerQuest(getQuestByName(name), getQuestPlayerFromPlayer(player));
+    Long remainingTime = (Long) json.get("remainingTime");
+    PlayerQuest quest = new PlayerQuest(getQuestByName(name), getQuestPlayerFromPlayer(player),
+        remainingTime);
     JSONArray rewards = (JSONArray) json.get("rewards");
     for (Object reward : rewards) {
       JSONObject rewardJSON = (JSONObject) reward;
@@ -124,13 +130,16 @@ public class QuestManager {
                 completed, npcName));
       }
     }
+
+    boolean completed = (boolean) json.get("completed");
+    quest.setCompleted(completed);
     updatePlayerQuest(quest);
     return quest;
   }
 
   public static void addBaseQuestToPlayer(Player player, QuestBase quest) {
     QuestPlayer questPlayer = getQuestPlayerFromPlayer(player);
-    PlayerQuest playerQuest = new PlayerQuest(quest, questPlayer);
+    PlayerQuest playerQuest = new PlayerQuest(quest, questPlayer, quest.getTime());
     for (QuestReward reward : quest.getRewards()) {
       playerQuest.addReward(
           new PlayerQuestReward(playerQuest, RewardTypeEnum.valueOf(reward.getType().toString()),
@@ -253,7 +262,7 @@ public class QuestManager {
       int index = questBase.getCheckPoints().indexOf(questCheckpoint);
 
       if (index >= playerQuest.getCheckpoints().size()) {
-        PlayerCheckpoint playerCheckpoint = clonePlayerFromBaseCheckpoint(playerQuest,
+        PlayerCheckpoint playerCheckpoint = clonePlayerFromBase(playerQuest,
             questCheckpoint);
         playerQuest.getCheckpoints().add(playerCheckpoint);
       }
@@ -265,7 +274,7 @@ public class QuestManager {
       if (playerCheckpoint.isCompleted()) {
         continue;
       }
-      playerCheckpoint = clonePlayerFromBaseCheckpoint(playerQuest, questCheckpoint);
+      playerCheckpoint = clonePlayerFromBase(playerQuest, questCheckpoint);
       playerQuest.getCheckpoints().set(index, playerCheckpoint);
     }
     playerQuest.updateCheckpoint();
@@ -281,7 +290,7 @@ public class QuestManager {
     updatePlayerQuest(playerQuest);
   }
 
-  public static PlayerCheckpoint clonePlayerFromBaseCheckpoint(PlayerQuest quest,
+  public static PlayerCheckpoint clonePlayerFromBase(PlayerQuest quest,
       QuestCheckpoint checkpoint) {
     PlayerCheckpoint playerCheckpoint = null;
     if (checkpoint.getType().equals(CheckPointTypeEnum.KILL)) {

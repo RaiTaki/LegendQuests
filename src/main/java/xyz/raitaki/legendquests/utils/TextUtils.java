@@ -1,6 +1,11 @@
 package xyz.raitaki.legendquests.utils;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import org.bukkit.entity.Player;
 
 public class TextUtils {
@@ -63,4 +68,21 @@ public class TextUtils {
     player.sendMessage(sb.toString() + message);
   }
 
+  public static String formatDateTime(long durationMillis) {
+    long hours = TimeUnit.MILLISECONDS.toHours(durationMillis);
+    long minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60;
+    long seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis) % 60;
+
+    String hourText = hours == 1 ? "hour" : "hours";
+    String minuteText = minutes == 1 ? "minute" : "minutes";
+    String secondText = seconds == 1 ? "second" : "seconds";
+
+    if (hours > 0) {
+      return String.format("%02d %s %02d %s %02d %s", hours, hourText, minutes, minuteText, seconds, secondText);
+    } else if (minutes > 0) {
+      return String.format("%02d %s %02d %s", minutes, minuteText, seconds, secondText);
+    } else {
+      return String.format("%02d %s", seconds, secondText);
+    }
+  }
 }

@@ -22,7 +22,7 @@ public final class LegendQuests extends JavaPlugin {
   public void onEnable() {
     instance = this;
     EconomyUtils.setupEconomy();
-    QuestBase questBase = new QuestBase("test", "test");
+    QuestBase questBase = new QuestBase("test", "test", 20 * 60 * 1000);
     questBase.addReward(new QuestReward(questBase, RewardTypeEnum.MONEY, "100"));
     questBase.addCheckPoint(
         new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie", "Zombie"));

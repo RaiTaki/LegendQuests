@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.events.PlayerNextCheckpointEvent;
 import xyz.raitaki.legendquests.events.PlayerQuestEndEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
+import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class PlayerQuest {
 
@@ -17,13 +18,19 @@ public class PlayerQuest {
   private LinkedList<PlayerQuestReward> rewards;
   private boolean completed;
   private String questName;
+  private String description;
+  private long remainingTime;
+  private long startTime;
 
-  public PlayerQuest(QuestBase quest, QuestPlayer player) {
+  public PlayerQuest(QuestBase quest, QuestPlayer player, long remainingTime) {
     this.questName = quest.getName();
+    this.description = quest.getDescription();
     this.questBase = quest;
     this.player = player;
     this.checkpoints = new LinkedList<>();
     this.rewards = new LinkedList<>();
+    this.remainingTime = remainingTime;
+    this.startTime = System.currentTimeMillis();
   }
 
   public void addCheckpoint(PlayerCheckpoint checkpoint) {
@@ -110,6 +117,8 @@ public class PlayerQuest {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("name", questBase.getName());
     jsonObject.put("description", questBase.getDescription());
+    jsonObject.put("completed", completed);
+    jsonObject.put("remainingTime", getCalculatedRemainingTime());
 
     JSONArray rewardsArray = new JSONArray();
     for (PlayerQuestReward reward : rewards) {
@@ -126,5 +135,34 @@ public class PlayerQuest {
     return jsonObject;
   }
 
+  public void setCompleted(boolean completed) {
+    this.completed = completed;
+  }
 
+  public String getDescription(){
+    return description;
+  }
+
+  public String getRemainingTimeFormatted() {
+    return TextUtils.formatDateTime(getCalculatedRemainingTime());
+  }
+
+  public long getCalculatedRemainingTime() {
+    long time = remainingTime - (System.currentTimeMillis() - startTime);
+    if(time < 0){
+      resetQuest();
+      return 0;
+    }
+    return time;
+  }
+
+  public void resetQuest() {
+    this.startTime = System.currentTimeMillis();
+    this.remainingTime = questBase.getTime();
+    this.completed = false;
+    this.checkPoint = checkpoints.get(0);
+    for (PlayerCheckpoint checkpoint : checkpoints) {
+      checkpoint.setCompleted(false);
+    }
+  }
 }

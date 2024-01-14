@@ -13,12 +13,14 @@ public class QuestBase {
   private final LinkedList<QuestReward> rewards;
   private final LinkedList<QuestCheckpoint> checkPoints;
   private QuestGui questGUI;
+  private long time;
 
-  public QuestBase(String name, String description) {
+  public QuestBase(String name, String description, long time) {
     this.name = name;
     this.description = description;
     rewards = new LinkedList<>();
     checkPoints = new LinkedList<>();
+    this.time = time;
 
     QuestManager.getBaseQuests().add(this);
   }
@@ -77,5 +79,9 @@ public class QuestBase {
 
   public void showGui(Player player) {
     questGUI.openMainGUI(player);
+  }
+
+  public long getTime() {
+    return time;
   }
 }

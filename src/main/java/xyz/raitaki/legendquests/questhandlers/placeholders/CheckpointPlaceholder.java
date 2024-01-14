@@ -68,6 +68,15 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
         }
       }
     }
+    if (params.equalsIgnoreCase("questname")) {
+      st = quest.getQuestName();
+    }
+    if (params.equalsIgnoreCase("questdescription")) {
+      st = quest.getDescription();
+    }
+    if (params.equalsIgnoreCase("remainingtime")) {
+      st = quest.getRemainingTimeFormatted();
+    }
     return st;
   }
 

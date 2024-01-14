@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
 import xyz.raitaki.legendquests.utils.ItemUtils;
+import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class QuestReward {
 
@@ -26,17 +27,19 @@ public class QuestReward {
         try {
           EconomyUtils.giveMoney(player, Integer.parseInt(value));
         } catch (NumberFormatException e) {
-          player.sendMessage(
-              "§c§lERROR: §r§cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
-          player.sendMessage("§c§lERROR: §r§cType: QUEST: " + questBase.getName());
+          TextUtils.sendCenteredMessage(player,
+              "&c&lERROR: &r&cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
+          TextUtils.sendCenteredMessage(player,
+              "&c&lERROR: &r&cType: QUEST: " + questBase.getName());
         }
         break;
       case ITEM:
         ItemStack itemStack = ItemUtils.stringToItem(value);
         if (itemStack == null) {
-          player.sendMessage(
-              "§c§lERROR: §r§cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
-          player.sendMessage("§c§lERROR: §r§cType: QUEST: " + questBase.getName());
+          TextUtils.sendCenteredMessage(player,
+              "&c&lERROR: &r&cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
+          TextUtils.sendCenteredMessage(player,
+              "&c&lERROR: &r&cType: QUEST: " + questBase.getName());
           return;
         }
         player.getInventory().addItem(itemStack);
@@ -45,9 +48,10 @@ public class QuestReward {
         try {
           player.giveExp(Integer.parseInt(value));
         } catch (NumberFormatException e) {
-          player.sendMessage(
-              "§c§lERROR: §r§cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
-          player.sendMessage("§c§lERROR: §r§cType: QUEST: " + questBase.getName());
+          TextUtils.sendCenteredMessage(player,
+              "&c&lERROR: &r&cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
+          TextUtils.sendCenteredMessage(player,
+              "&c&lERROR: &r&cType: QUEST: " + questBase.getName());
         }
         break;
     }
