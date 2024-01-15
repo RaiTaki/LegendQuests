@@ -6,6 +6,7 @@ import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum;
 
 import de.themoep.inventorygui.DynamicGuiElement;
+import de.themoep.inventorygui.GuiElement.Action;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import java.util.LinkedList;
@@ -84,6 +85,7 @@ public class RewardGui {
         itemStack = ItemUtils.stringToItem(newValue);
       } catch (Exception e) {
         Bukkit.getLogger().warning("Invalid item: " + newValue);
+        sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Invalid item!"));
       }
 
       if (itemStack == null) {
@@ -93,64 +95,51 @@ public class RewardGui {
         itemStack.setItemMeta(itemMeta);
       }
 
-      rewardGui.addElement(new StaticGuiElement('c',
-          itemStack,
-          1,
-          click -> {
-            if (click.getCursor() == null) {
-              click.getWhoClicked().sendMessage(
-                  TextUtils.replaceColors("<SOLID:ff0000>Invalid item! Hold Item on cursor!"));
-              return false;
-            }
-            newValue = ItemUtils.itemToString(click.getCursor());
-            Bukkit.broadcastMessage(newValue);
-            updateRewardGui();
+      addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
+        if (click.getCursor() == null) {
+          sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Invalid item! Hold Item on cursor!"));
+          return false;
+        }
+        newValue = ItemUtils.itemToString(click.getCursor());
+        updateRewardGui();
+        return true;
+      }, TextUtils.replaceColors(
+          "<SOLID:7d7d7d>Item: <SOLID:9ADB4F>" + itemStack.getItemMeta().getDisplayName()));
 
-            return true;
-          },
-          TextUtils.replaceColors(
-              "<SOLID:7d7d7d>Item: <SOLID:9ADB4F>" + itemStack.getItemMeta().getDisplayName())
-      ));
     } else {
-      rewardGui.addElement(new StaticGuiElement('c',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            editTypeEnum = EditTypeEnum.VALUE;
-            rewardGui.close(click.getWhoClicked());
-            questGui.getEditor()
-                .sendMessage(TextUtils.replaceColors("<SOLID:00ff08>Enter new value through chat"));
-            return true;
-          },
-          TextUtils.replaceColors("<SOLID:7d7d7d>Value: <SOLID:9ADB4F>" + newValue)
-      ));
+      addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
+        setChangeType(click.getWhoClicked(), EditTypeEnum.VALUE);
+        return true;
+
+      }, TextUtils.replaceColors("<SOLID:7d7d7d>Value: <SOLID:9ADB4F>" + newValue));
+
+      addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
+        setChangeType(click.getWhoClicked(), EditTypeEnum.VALUE);
+        return true;
+
+      }, TextUtils.replaceColors("<SOLID:7d7d7d>Value: <SOLID:9ADB4F>" + newValue));
     }
 
-    rewardGui.addElement(new StaticGuiElement('b',
-        new ItemStack(Material.GREEN_WOOL),
-        1,
-        click -> {
-          saved = true;
-          int index = questBase.getRewards().indexOf(reward);
-          QuestReward newReward = new QuestReward(questBase, newType, newValue);
+    addStaticElement(new ItemStack(Material.GREEN_WOOL), 'b', click -> {
+      saved = true;
+      int index = questBase.getRewards().indexOf(reward);
+      QuestReward newReward = new QuestReward(questBase, newType, newValue);
 
-          questBase.getRewards().set(index, newReward);
-          questGui.openRewardGUI(click.getWhoClicked());
-          questGui.setEditedReward(null);
+      questBase.getRewards().set(index, newReward);
+      questGui.openRewardGUI(click.getWhoClicked());
+      questGui.setEditedReward(null);
 
-          QuestUpdateEvent event = new QuestUpdateEvent(questBase);
-          LegendQuests.getInstance().getServer().getPluginManager().callEvent(event);
+      QuestUpdateEvent event = new QuestUpdateEvent(questBase);
+      LegendQuests.getInstance().getServer().getPluginManager().callEvent(event);
 
-          rewardGui.close(click.getWhoClicked());
-          questGui.setEditGuiType(null);
-          return true;
-        },
-        TextUtils.replaceColors("<SOLID:00ff08>Save")
-    ));
+      rewardGui.close(click.getWhoClicked());
+      questGui.setEditGuiType(null);
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Save"));
 
     rewardGui.setCloseAction(close -> {
       if (!saved) {
-        close.getPlayer().sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Reward not saved!"));
+        sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Reward not saved!"));
         questGui.setEditGuiType(null);
       }
       questGui.openCheckpointGUI(close.getPlayer());
@@ -158,6 +147,14 @@ public class RewardGui {
       questGui.setEditGuiType(null);
       return true;
     });
+  }
+
+  public void sendMessage(String message) {
+    questGui.getEditor().sendMessage(message);
+  }
+
+  public void addStaticElement(ItemStack item, char slot, Action action, String... text) {
+    rewardGui.addElement(new StaticGuiElement(slot, item, 1, action, text));
   }
 
   public void openRewardGUI(Player player) {
@@ -168,20 +165,11 @@ public class RewardGui {
     rewardGui.show(player);
   }
 
-  private <T> void moveBack(LinkedList<T> list, int selectedIndex) {
-    if (selectedIndex > 0 && selectedIndex < list.size()) {
-      T temp = list.get(selectedIndex);
-      list.set(selectedIndex, list.get(selectedIndex - 1));
-      list.set(selectedIndex - 1, temp);
-    }
-  }
-
-  public static <T> void moveForward(LinkedList<T> list, int selectedIndex) {
-    if (selectedIndex >= 0 && selectedIndex < list.size() - 1) {
-      T temp = list.get(selectedIndex);
-      list.set(selectedIndex, list.get(selectedIndex + 1));
-      list.set(selectedIndex + 1, temp);
-    }
+  public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
+    this.editTypeEnum = editType;
+    rewardGui.close(clicker);
+    sendMessage(
+        TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
   }
 
   private RewardTypeEnum nextType(RewardTypeEnum type) {

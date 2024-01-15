@@ -1,5 +1,6 @@
 package xyz.raitaki.legendquests.questhandlers.gui;
 
+import de.themoep.inventorygui.GuiElement.Action;
 import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -55,50 +56,39 @@ public class QuestGui {
     mainGui.setFiller(filler);
 
     //NAME & DESC
-    mainGui.addElement(new StaticGuiElement('a', new ItemStack(Material.PAPER), 1,
-        click -> true,
+    addStaticElement(mainGui, new ItemStack(Material.PAPER), 'a', click -> true,
         TextUtils.replaceColors("<SOLID:7d7d7d>Quest: <SOLID:9ADB4F>" + questBase.getName()),
         TextUtils.replaceColors(
             "<SOLID:7d7d7d>Description: <SOLID:9ADB4F>" + questBase.getDescription())
-    ));
+    );
 
     //DETAILS
-    mainGui.addElement(new StaticGuiElement('b', new ItemStack(Material.PAPER), 1,
-        click -> true,
+
+    addStaticElement(mainGui, new ItemStack(Material.PAPER), 'b', action -> true,
         TextUtils.replaceColors(
             "<SOLID:7d7d7d>Rewards: <SOLID:9ADB4F>" + questBase.getRewards().size()),
         TextUtils.replaceColors(
             "<SOLID:7d7d7d>Checkpoints: <SOLID:9ADB4F>" + questBase.getCheckPoints().size())
-    ));
+    );
 
     //SAVE
-    mainGui.addElement(new StaticGuiElement('i', new ItemStack(Material.BARRIER), 1,
-        click -> {
-          QuestManager.updatePlayersQuest();
-          mainGui.close(click.getWhoClicked());
-          return true;
-        },
-        TextUtils.replaceColors("<SOLID:00ff08>Close")
-    ));
+    addStaticElement(mainGui, new ItemStack(Material.PAPER), 'i', click -> {
+      QuestManager.updatePlayersQuest();
+      mainGui.close(click.getWhoClicked());
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Close"));
 
     //CHECKPOINTS
-    mainGui.addElement(new StaticGuiElement('z', new ItemStack(Material.REDSTONE), 1,
-        click -> {
-          openCheckpointGUI(click.getWhoClicked());
-          return true;
-        },
-        TextUtils.replaceColors("<SOLID:00ff08>Checkpoints")
-    ));
+    addStaticElement(mainGui, new ItemStack(Material.PAPER), 'z', click -> {
+      openCheckpointGUI(click.getWhoClicked());
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Checkpoints"));
 
     //REWARDS
-    mainGui.addElement(new StaticGuiElement('s',
-        new ItemStack(Material.GOLD_INGOT), 1,
-        click -> {
-          openRewardGUI(click.getWhoClicked());
-          return true;
-        },
-        TextUtils.replaceColors("<SOLID:00ff08>Rewards")
-    ));
+    addStaticElement(mainGui, new ItemStack(Material.GOLD_INGOT), 's', click -> {
+      openRewardGUI(click.getWhoClicked());
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Rewards"));
 
     mainGui.setCloseAction(close -> {
       editor = null;
@@ -139,6 +129,9 @@ public class QuestGui {
             } else if (click.getType() == ClickType.SHIFT_RIGHT) {
               moveForward(questBase.getCheckPoints(), finalI);
               updateCheckpointGUI();
+            } else if (click.getType() == ClickType.MIDDLE) {
+              questBase.getCheckPoints().remove(finalI);
+              updateCheckpointGUI();
             }
             return true;
           },
@@ -150,30 +143,27 @@ public class QuestGui {
           TextUtils.replaceColors(
               "<SOLID:7d7d7d>To cycle back through list, <SOLID:eaff00>RIGHT CLICK"),
           TextUtils.replaceColors(
-              "<SOLID:7d7d7d>To cycle forward through list, <SOLID:eaff00>SHIFT + RIGHT CLICK")
+              "<SOLID:7d7d7d>To cycle forward through list, <SOLID:eaff00>SHIFT + RIGHT CLICK"),
+          TextUtils.replaceColors("<SOLID:7d7d7d>To delete, <SOLID:eaff00>MIDDLE CLICK")
       ));
       i++;
     }
     checkpointGui.addElement(group);
 
-    checkpointGui.addElement(new StaticGuiElement('b', new ItemStack(Material.GREEN_WOOL), 1,
-        click -> {
-          ConversationCheckpoint conversationCheckpoint = new ConversationCheckpoint(questBase,
-              CheckPointTypeEnum.CONVERSATION, "NPC_TEXT", "NPC_NAME", "ACCEPT_TEXT",
-              "DECLINE_TEXT");
-          questBase.addCheckPoint(conversationCheckpoint);
-          updateCheckpointGUI();
-          return true;
-        }, TextUtils.replaceColors("<SOLID:00ff08>Add Checkpoint")
-    ));
+    addStaticElement(checkpointGui, new ItemStack(Material.GREEN_WOOL), 'b', action -> {
+      ConversationCheckpoint conversationCheckpoint = new ConversationCheckpoint(questBase,
+          CheckPointTypeEnum.CONVERSATION, "NPC_TEXT", "NPC_NAME", "ACCEPT_TEXT",
+          "DECLINE_TEXT");
+      questBase.addCheckPoint(conversationCheckpoint);
+      updateCheckpointGUI();
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Add Checkpoint"));
 
-    checkpointGui.addElement(new StaticGuiElement('a', new ItemStack(Material.ARROW), 1,
-        click -> {
-          checkpointGui.close(click.getWhoClicked());
-          openMainGUI(click.getWhoClicked());
-          return true;
-        }, TextUtils.replaceColors("<SOLID:00ff08>Back")
-    ));
+    addStaticElement(checkpointGui, new ItemStack(Material.ARROW), 'a', action -> {
+      checkpointGui.close(action.getWhoClicked());
+      openMainGUI(action.getWhoClicked());
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Back"));
 
     checkpointGui.setCloseAction(close -> {
       openMainGUI(close.getPlayer());
@@ -240,26 +230,22 @@ public class QuestGui {
       ));
       i++;
     }
-
     rewardGui.addElement(group);
 
-    rewardGui.addElement(new StaticGuiElement('b', new ItemStack(Material.GREEN_WOOL), 1,
-        click -> {
-          QuestReward questReward = new QuestReward(questBase, QuestReward.RewardTypeEnum.MONEY,
-              "0");
-          questBase.addReward(questReward);
-          updateRewardGUI();
-          return true;
-        }, TextUtils.replaceColors("<SOLID:00ff08>Add Reward")
-    ));
+    addStaticElement(rewardGui, new ItemStack(Material.GOLD_INGOT), 'b', action -> {
+      QuestReward questReward = new QuestReward(questBase, QuestReward.RewardTypeEnum.MONEY,
+          "0");
+      questBase.addReward(questReward);
+      updateRewardGUI();
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Add Reward"));
 
-    rewardGui.addElement(new StaticGuiElement('a', new ItemStack(Material.ARROW), 1,
-        click -> {
-          rewardGui.close(click.getWhoClicked());
-          openMainGUI(click.getWhoClicked());
-          return true;
-        }, TextUtils.replaceColors("<SOLID:00ff08>Back")
-    ));
+    addStaticElement(rewardGui, new ItemStack(Material.ARROW), 'a', action -> {
+      rewardGui.close(action.getWhoClicked());
+      openMainGUI(action.getWhoClicked());
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Back"));
+
   }
 
   public void openMainGUI(Player player) {
@@ -292,6 +278,11 @@ public class QuestGui {
   public void openRewardGUI(HumanEntity player) {
     buildRewardGUI();
     rewardGui.show(player);
+  }
+
+  public void addStaticElement(InventoryGui gui, ItemStack item, char slot, Action action,
+      String... text) {
+    gui.addElement(new StaticGuiElement(slot, item, 1, action, text));
   }
 
   public QuestBase getQuestBase() {
@@ -363,11 +354,21 @@ public class QuestGui {
   }
 
   enum EditTypeEnum {
-    VALUE,
-    NPC_NAME,
-    AMOUNT,
-    ACCEPT_TEXT,
-    DECLINE_TEXT
+    VALUE("Value"),
+    NPC_NAME("NPC Name"),
+    AMOUNT("Amount"),
+    ACCEPT_TEXT("Accept Text"),
+    DECLINE_TEXT("Decline Text");
+
+    String text;
+
+    EditTypeEnum(String text) {
+      this.text = text;
+    }
+
+    public String getText() {
+      return text;
+    }
   }
 
   public enum EditGuiTypeEnum {

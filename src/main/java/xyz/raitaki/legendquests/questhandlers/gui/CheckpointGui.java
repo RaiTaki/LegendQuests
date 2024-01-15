@@ -1,12 +1,18 @@
 package xyz.raitaki.legendquests.questhandlers.gui;
 
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.ACCEPT_TEXT;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.AMOUNT;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.DECLINE_TEXT;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.NPC_NAME;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.VALUE;
 
 import de.themoep.inventorygui.DynamicGuiElement;
+import de.themoep.inventorygui.GuiElement.Action;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.raitaki.legendquests.LegendQuests;
@@ -89,124 +95,72 @@ public class CheckpointGui {
       );
     }));
 
-    checkpointGUI.addElement(new StaticGuiElement('v',
-        new ItemStack(Material.PAPER),
-        1,
-        click -> {
-          editType = EditTypeEnum.VALUE;
-          checkpointGUI.close(click.getWhoClicked());
-          questGUI.getEditor()
-              .sendMessage(TextUtils.replaceColors("<SOLID:00ff08>Enter new value through chat"));
-          return true;
-        },
-        TextUtils.replaceColors("<SOLID:7d7d7d>Value: <SOLID:9ADB4F>" + newValue)
-    ));
+    addStaticElement(new ItemStack(Material.PAPER), 'v', click -> {
+      setChangeType(click.getWhoClicked(), VALUE);
+      return true;
+
+    }, TextUtils.replaceColors("<SOLID:7d7d7d>Text: <SOLID:9ADB4F>" + newValue));
 
     if (newType == CheckPointTypeEnum.KILL) {
-      checkpointGUI.addElement(new StaticGuiElement('c',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            editType = EditTypeEnum.AMOUNT;
-            checkpointGUI.close(click.getWhoClicked());
-            questGUI.getEditor().sendMessage(
-                TextUtils.replaceColors("<SOLID:00ff08>Enter new amount through chat"));
-            return true;
-          },
-          TextUtils.replaceColors("<SOLID:7d7d7d>Amount: <SOLID:9ADB4F>" + newAmount)
-      ));
+      addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
+        setChangeType(click.getWhoClicked(), AMOUNT);
+        return true;
+
+      }, TextUtils.replaceColors("<SOLID:7d7d7d>Amount: <SOLID:9ADB4F>" + newValue));
     } else if (newType == CheckPointTypeEnum.INTERECT) {
-      checkpointGUI.addElement(new StaticGuiElement('c',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            editType = EditTypeEnum.NPC_NAME;
-            checkpointGUI.close(click.getWhoClicked());
-            questGUI.getEditor().sendMessage(
-                TextUtils.replaceColors("<SOLID:00ff08>Enter new NPC name through chat"));
-            return true;
-          },
-          TextUtils.replaceColors("<SOLID:7d7d7d>NPC Name: <SOLID:9ADB4F>" + newNpcName)
-      ));
+      addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
+        setChangeType(click.getWhoClicked(), NPC_NAME);
+        return true;
+
+      }, TextUtils.replaceColors("<SOLID:7d7d7d>NPC Name: <SOLID:9ADB4F>" + newNpcName));
     } else {
-      checkpointGUI.addElement(new StaticGuiElement('c',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            editType = EditTypeEnum.NPC_NAME;
-            checkpointGUI.close(click.getWhoClicked());
-            questGUI.getEditor().sendMessage(
-                TextUtils.replaceColors("<SOLID:00ff08>Enter new NPC name through chat"));
-            return true;
-          },
-          TextUtils.replaceColors("<SOLID:7d7d7d>NPC Name: <SOLID:9ADB4F>" + newNpcName)
-      ));
+      addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
+        setChangeType(click.getWhoClicked(), NPC_NAME);
+        return true;
 
-      checkpointGUI.addElement(new StaticGuiElement('d',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            editType = EditTypeEnum.ACCEPT_TEXT;
-            checkpointGUI.close(click.getWhoClicked());
-            questGUI.getEditor().sendMessage(
-                TextUtils.replaceColors(
-                    "<SOLID:00ff08>Enter new " + textType + " text through chat"));
-            return true;
-          },
-          TextUtils.replaceColors("<SOLID:7d7d7d> ACCEPT" + " Text: <SOLID:9ADB4F>" + newAcceptText)
-      ));
+      }, TextUtils.replaceColors("<SOLID:7d7d7d>NPC Name: <SOLID:9ADB4F>" + newNpcName));
 
-      checkpointGUI.addElement(new StaticGuiElement('e',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            editType = EditTypeEnum.DECLINE_TEXT;
-            checkpointGUI.close(click.getWhoClicked());
-            questGUI.getEditor().sendMessage(
-                TextUtils.replaceColors(
-                    "<SOLID:00ff08>Enter new " + textType + " text through chat"));
-            return true;
-          },
-          TextUtils.replaceColors(
-              "<SOLID:7d7d7d> DECLINE" + " Text: <SOLID:9ADB4F>" + newDeclineText)
-      ));
+      addStaticElement(new ItemStack(Material.PAPER), 'd', click -> {
+        setChangeType(click.getWhoClicked(), ACCEPT_TEXT);
+        return true;
+
+      }, TextUtils.replaceColors("<SOLID:7d7d7d>ACCEPT" + " Text: <SOLID:9ADB4F>" + newAcceptText));
+
+      addStaticElement(new ItemStack(Material.PAPER), 'e', click -> {
+        setChangeType(click.getWhoClicked(), DECLINE_TEXT);
+        return true;
+
+      }, TextUtils.replaceColors(
+          "<SOLID:7d7d7d>DECLINE" + " Text: <SOLID:9ADB4F>" + newDeclineText));
     }
 
-    checkpointGUI.addElement(new StaticGuiElement('b',
-        new ItemStack(Material.GREEN_WOOL),
-        1,
-        click -> {
-          saved = true;
+    addStaticElement(new ItemStack(Material.GREEN_WOOL), 'b', click -> {
+      saved = true;
 
-          if (newType == CheckPointTypeEnum.KILL) {
-            newCheckpoint = new KillCheckpoint(questBase, newType, newValue, newAmount);
-          } else if (newType == CheckPointTypeEnum.INTERECT) {
-            newCheckpoint = new InteractionCheckpoint(questBase, newType, newValue, newNpcName);
-          } else {
-            newCheckpoint = new ConversationCheckpoint(questBase, newType, newValue, newNpcName,
-                newAcceptText, newDeclineText);
-          }
-          checkpointGUI.close(click.getWhoClicked());
+      if (newType == CheckPointTypeEnum.KILL) {
+        newCheckpoint = new KillCheckpoint(questBase, newType, newValue, newAmount);
+      } else if (newType == CheckPointTypeEnum.INTERECT) {
+        newCheckpoint = new InteractionCheckpoint(questBase, newType, newValue, newNpcName);
+      } else {
+        newCheckpoint = new ConversationCheckpoint(questBase, newType, newValue, newNpcName,
+            newAcceptText, newDeclineText);
+      }
+      checkpointGUI.close(click.getWhoClicked());
 
-          int index = questBase.getCheckPoints().indexOf(checkpoint);
-          questBase.getCheckPoints().set(index, newCheckpoint);
-          Bukkit.broadcastMessage(questBase.getCheckPoints().get(index).getAsJSON().toJSONString());
-          questGUI.openCheckpointGUI(click.getWhoClicked());
-          questGUI.setEditedCheckpoint(null);
+      int index = questBase.getCheckPoints().indexOf(checkpoint);
+      questBase.getCheckPoints().set(index, newCheckpoint);
+      questGUI.openCheckpointGUI(click.getWhoClicked());
+      questGUI.setEditedCheckpoint(null);
 
-          QuestUpdateEvent event = new QuestUpdateEvent(questBase);
-          LegendQuests.getInstance().getServer().getPluginManager().callEvent(event);
-          questGUI.setEditGuiType(null);
-
-          return true;
-        },
-        TextUtils.replaceColors("<SOLID:00ff08>Save")
-    ));
+      QuestUpdateEvent event = new QuestUpdateEvent(questBase);
+      LegendQuests.getInstance().getServer().getPluginManager().callEvent(event);
+      questGUI.setEditGuiType(null);
+      return true;
+    }, TextUtils.replaceColors("<SOLID:00ff08>Save"));
 
     checkpointGUI.setCloseAction(close -> {
       if (!saved) {
-        close.getPlayer()
-            .sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Checkpoint not saved!"));
+        sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Checkpoint not saved!"));
         questGUI.setEditGuiType(null);
       }
       questGUI.openCheckpointGUI(close.getPlayer());
@@ -217,16 +171,24 @@ public class CheckpointGui {
     });
   }
 
+  public void addStaticElement(ItemStack item, char slot, Action action, String... text) {
+    checkpointGUI.addElement(new StaticGuiElement(slot, item, 1, action, text));
+  }
+
+  public void sendMessage(String message) {
+    questGUI.getEditor().sendMessage(message);
+  }
+
   public void setChatMessage(String message) {
     if (editType == null) {
       return;
-    } else if (editType == EditTypeEnum.VALUE) {
+    } else if (editType == VALUE) {
       newValue = message;
-    } else if (editType == EditTypeEnum.NPC_NAME) {
+    } else if (editType == NPC_NAME) {
       newNpcName = message;
-    } else if (editType == EditTypeEnum.ACCEPT_TEXT) {
+    } else if (editType == ACCEPT_TEXT) {
       newAcceptText = message;
-    } else if (editType == EditTypeEnum.DECLINE_TEXT) {
+    } else if (editType == DECLINE_TEXT) {
       newDeclineText = message;
     } else {
       newAmount = Integer.parseInt(message);
@@ -237,6 +199,13 @@ public class CheckpointGui {
     openCheckpointGUISync();
 
     editType = null;
+  }
+
+  public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
+    this.editType = editType;
+    checkpointGUI.close(clicker);
+    sendMessage(
+        TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
   }
 
   public void openCheckpointGUI() {

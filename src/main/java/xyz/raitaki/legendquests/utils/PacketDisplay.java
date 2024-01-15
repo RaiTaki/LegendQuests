@@ -56,8 +56,6 @@ public class PacketDisplay {
     this.text = text;
     textDisplay.setText(Component.empty().append(text));
     sendDataPacket(false);
-
-    Bukkit.broadcastMessage("flags: " + textDisplay.getFlags());
   }
 
   public void sendDataPacket(boolean spawn){
