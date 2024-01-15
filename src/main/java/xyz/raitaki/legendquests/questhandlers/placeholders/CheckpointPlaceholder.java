@@ -8,7 +8,7 @@ import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerKillCheckpoint;
-import xyz.raitaki.legendquests.utils.LanguageConfig;
+import xyz.raitaki.legendquests.utils.config.LanguageConfig;
 
 public class CheckpointPlaceholder extends PlaceholderExpansion {
 

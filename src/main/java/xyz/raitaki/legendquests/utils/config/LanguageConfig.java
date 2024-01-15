@@ -1,4 +1,6 @@
-package xyz.raitaki.legendquests.utils;
+package xyz.raitaki.legendquests.utils.config;
+
+import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class LanguageConfig extends ConfigManager {
 

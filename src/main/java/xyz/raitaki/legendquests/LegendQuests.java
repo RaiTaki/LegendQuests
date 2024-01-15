@@ -12,7 +12,8 @@ import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.placeholders.CheckpointPlaceholder;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
-import xyz.raitaki.legendquests.utils.LanguageConfig;
+import xyz.raitaki.legendquests.utils.config.LanguageConfig;
+import xyz.raitaki.legendquests.utils.config.SettingsConfig;
 
 public final class LegendQuests extends JavaPlugin {
 
@@ -43,6 +44,7 @@ public final class LegendQuests extends JavaPlugin {
     CheckpointPlaceholder.registerPlaceholder();
 
     new LanguageConfig("language.yml");
+    new SettingsConfig("settings.yml");
   }
 
   @Override

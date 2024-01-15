@@ -1,4 +1,4 @@
-package xyz.raitaki.legendquests.utils;
+package xyz.raitaki.legendquests.utils.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.raitaki.legendquests.LegendQuests;
@@ -36,6 +36,7 @@ public abstract class ConfigManager {
 
   public void set(String path, Object value) {
     config.set(path, value);
+    saveConfig();
   }
 
   public Object get(String path) {

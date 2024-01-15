@@ -46,7 +46,7 @@ tasks {
     }
     shadowJar{
         relocate("com.iridium", "xyz.raitaki.iridium")
-        relocate("de.theemoep", "xyz.raitaki.theemoep")
+        relocate("de.themoep.inventorygui", "xyz.raitaki.inventorygui")
     }
     compileJava {
         options.encoding = Charsets.UTF_8.name()

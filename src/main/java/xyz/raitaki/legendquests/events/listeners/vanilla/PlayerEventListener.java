@@ -4,10 +4,23 @@ import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnu
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.REWARD;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.kyori.adventure.text.TextComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Display.BillboardConstraints;
+import net.minecraft.world.entity.Display.TextDisplay;
+import net.minecraft.world.entity.EntityType;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay.TextAlignment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -25,6 +38,9 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerInteractionCheckpoint;
+import xyz.raitaki.legendquests.utils.PacketDisplay;
+import xyz.raitaki.legendquests.utils.PacketUtils;
+import xyz.raitaki.legendquests.utils.config.SettingsConfig;
 
 public class PlayerEventListener implements Listener {
 
@@ -33,6 +49,17 @@ public class PlayerEventListener implements Listener {
     QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
     QuestManager.getBaseQuests().getFirst().showGui(event.getPlayer());
     QuestManager.getQuestPlayerFromPlayer(event.getPlayer()).sendQuestInfoChat();
+
+    World world = event.getPlayer().getWorld();
+    ServerLevel level = ((CraftWorld) world).getHandle();
+
+    SettingsConfig.getInstance().setLocation("questtracker.location", event.getPlayer().getLocation());
+
+    PacketDisplay packetDisplay = new PacketDisplay(event.getPlayer(), "Test");
+    packetDisplay.setText("Test2\nASDASDASD\nAASDASDwwss");
+
+    //packetDisplay.setAlignment(TextAlignment.LEFT);
+
   }
 
   @EventHandler
