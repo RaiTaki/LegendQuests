@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -19,18 +18,20 @@ public class EditQuestCompleter implements TabCompleter {
       String[] args) {
     List<String> completions = new ArrayList<>();
     List<String> questNames = getQuestNames();
-    if(!sender.hasPermission("legendquests.edit")) return null;
-    if(args.length == 1) {
-      StringUtil.copyPartialMatches(args[0],questNames,completions);
+    if (!sender.hasPermission("legendquests.edit")) {
+      return null;
+    }
+    if (args.length == 1) {
+      StringUtil.copyPartialMatches(args[0], questNames, completions);
     }
 
     Collections.sort(completions);
     return completions;
   }
 
-  public LinkedList<String> getQuestNames(){
+  public LinkedList<String> getQuestNames() {
     LinkedList<String> questNames = new LinkedList<>();
-    for(QuestBase quest : QuestManager.getBaseQuests()) {
+    for (QuestBase quest : QuestManager.getBaseQuests()) {
       questNames.add(quest.getName());
     }
     return questNames;

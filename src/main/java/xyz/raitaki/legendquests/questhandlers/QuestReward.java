@@ -2,12 +2,7 @@ package xyz.raitaki.legendquests.questhandlers;
 
 import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.ITEM;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
-import xyz.raitaki.legendquests.utils.EconomyUtils;
-import xyz.raitaki.legendquests.utils.ItemUtils;
-import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class QuestReward {
 

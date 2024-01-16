@@ -93,36 +93,42 @@ public class QuestGui {
 
     //TRACKER
     Location location = SettingsConfig.getInstance().getLocationValue("questtracker.location");
-    if(location != null) {
+    if (location != null) {
       addStaticElement(mainGui, new ItemStack(Material.COMPASS), 'g', click -> {
 
-        if(click.getType() == ClickType.LEFT) {
-          setChangeType(click.getWhoClicked(), EditTypeEnum.X_VALUE);
-          editGuiType = EditGuiTypeEnum.TRACKER;
-        }
-        else if (click.getType() == ClickType.RIGHT) {
-          setChangeType(click.getWhoClicked(), EditTypeEnum.Y_VALUE);
-          editGuiType = EditGuiTypeEnum.TRACKER;
-        }
-        else if (click.getType() == ClickType.SHIFT_LEFT) {
-          setChangeType(click.getWhoClicked(), EditTypeEnum.Z_VALUE);
-          editGuiType = EditGuiTypeEnum.TRACKER;
-        }
-        else if (click.getType() == ClickType.SHIFT_RIGHT) {
-          setChangeType(click.getWhoClicked(), EditTypeEnum.YAW_VALUE);
-          editGuiType = EditGuiTypeEnum.TRACKER;
-        }
-        else if (click.getType() == ClickType.MIDDLE) {
-          setChangeType(click.getWhoClicked(), EditTypeEnum.PITCH_VALUE);
-          editGuiType = EditGuiTypeEnum.TRACKER;
-        }
+            if (click.getType() == ClickType.LEFT) {
+              setChangeType(click.getWhoClicked(), EditTypeEnum.X_VALUE);
+              editGuiType = EditGuiTypeEnum.TRACKER;
+            } else if (click.getType() == ClickType.RIGHT) {
+              setChangeType(click.getWhoClicked(), EditTypeEnum.Y_VALUE);
+              editGuiType = EditGuiTypeEnum.TRACKER;
+            } else if (click.getType() == ClickType.SHIFT_LEFT) {
+              setChangeType(click.getWhoClicked(), EditTypeEnum.Z_VALUE);
+              editGuiType = EditGuiTypeEnum.TRACKER;
+            } else if (click.getType() == ClickType.SHIFT_RIGHT) {
+              setChangeType(click.getWhoClicked(), EditTypeEnum.YAW_VALUE);
+              editGuiType = EditGuiTypeEnum.TRACKER;
+            } else if (click.getType() == ClickType.MIDDLE) {
+              setChangeType(click.getWhoClicked(), EditTypeEnum.PITCH_VALUE);
+              editGuiType = EditGuiTypeEnum.TRACKER;
+            }
             return true;
           }, TextUtils.replaceColors("<SOLID:00ff08>Tracker"),
-          TextUtils.replaceColors("<SOLID:7d7d7d>Left click to set tracker X pos: <SOLID:00ff08>" + formatDouble(location.getX())),
-          TextUtils.replaceColors("<SOLID:7d7d7d>Right click to set tracker Y pos: <SOLID:00ff08>" + formatDouble(location.getY())),
-          TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Left click to set tracker Z pos: <SOLID:00ff08>" + formatDouble(location.getZ())),
-          TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Right click to set tracker Yaw: <SOLID:00ff08>" + formatDouble(location.getYaw())),
-          TextUtils.replaceColors("<SOLID:7d7d7d>Middle click to set tracker Pitch: <SOLID:00ff08>" + formatDouble(location.getPitch())));
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d>Left click to set tracker X pos: <SOLID:00ff08>" + formatDouble(
+                  location.getX())),
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d>Right click to set tracker Y pos: <SOLID:00ff08>" + formatDouble(
+                  location.getY())),
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d>Shift + Left click to set tracker Z pos: <SOLID:00ff08>"
+                  + formatDouble(location.getZ())),
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d>Shift + Right click to set tracker Yaw: <SOLID:00ff08>" + formatDouble(
+                  location.getYaw())),
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d>Middle click to set tracker Pitch: <SOLID:00ff08>" + formatDouble(
+                  location.getPitch())));
     }
 
     mainGui.setCloseAction(close -> {
@@ -219,32 +225,28 @@ public class QuestGui {
         TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
   }
 
-  public String formatDouble(double value){
+  public String formatDouble(double value) {
     return String.format("%.2f", value);
   }
 
-  public void doTrackerText(String text){
+  public void doTrackerText(String text) {
     double value = 0;
-    try{
+    try {
       value = Double.parseDouble(text);
-    } catch (NumberFormatException e){
+    } catch (NumberFormatException e) {
       sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Invalid number!"));
       return;
     }
     Location loc = SettingsConfig.getInstance().getLocationValue("questtracker.location");
-    if(editType == EditTypeEnum.X_VALUE){
+    if (editType == EditTypeEnum.X_VALUE) {
       loc.setX(value);
-    }
-    else if(editType == EditTypeEnum.Y_VALUE){
+    } else if (editType == EditTypeEnum.Y_VALUE) {
       loc.setY(value);
-    }
-    else if(editType == EditTypeEnum.Z_VALUE){
+    } else if (editType == EditTypeEnum.Z_VALUE) {
       loc.setZ(value);
-    }
-    else if(editType == EditTypeEnum.YAW_VALUE){
+    } else if (editType == EditTypeEnum.YAW_VALUE) {
       loc.setYaw((float) value);
-    }
-    else if(editType == EditTypeEnum.PITCH_VALUE){
+    } else if (editType == EditTypeEnum.PITCH_VALUE) {
       loc.setPitch((float) value);
     }
 
@@ -336,8 +338,8 @@ public class QuestGui {
     editor = player;
   }
 
-  public void openMainGuiSynced(HumanEntity player){
-    new BukkitRunnable(){
+  public void openMainGuiSynced(HumanEntity player) {
+    new BukkitRunnable() {
       @Override
       public void run() {
         buildMainGUI();

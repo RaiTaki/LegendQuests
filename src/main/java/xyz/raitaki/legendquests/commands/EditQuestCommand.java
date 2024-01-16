@@ -12,16 +12,20 @@ public class EditQuestCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    if(!(sender instanceof Player player)) return false;
-    if(!player.hasPermission("legendquests.edit")) return false;
-    if(args.length == 0) {
-      TextUtils.sendCenteredMessage(player,"&cUsage: /editquest <quest>");
+    if (!(sender instanceof Player player)) {
+      return false;
+    }
+    if (!player.hasPermission("legendquests.edit")) {
+      return false;
+    }
+    if (args.length == 0) {
+      TextUtils.sendCenteredMessage(player, "&cUsage: /editquest <quest>");
       return false;
     }
     String questName = args[0];
     QuestBase quest = QuestManager.getQuestBaseByName(questName);
-    if(quest == null) {
-      TextUtils.sendCenteredMessage(player,"&cQuest not found!");
+    if (quest == null) {
+      TextUtils.sendCenteredMessage(player, "&cQuest not found!");
       return false;
     }
     quest.showGui(player);

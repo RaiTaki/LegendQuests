@@ -62,7 +62,7 @@ public final class LegendQuests extends JavaPlugin {
     return instance;
   }
 
-  public void registerCommands(){
+  public void registerCommands() {
     getCommand("editquest").setExecutor(new EditQuestCommand());
     getCommand("editquest").setTabCompleter(new EditQuestCompleter());
   }

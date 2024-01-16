@@ -105,9 +105,9 @@ public class PlayerQuest {
 
   public void updateCheckpoint() {
     for (PlayerCheckpoint checkpoint : checkpoints) {
-        if (checkpoint.isCompleted()) {
-            continue;
-        }
+      if (checkpoint.isCompleted()) {
+        continue;
+      }
       this.checkPoint = checkpoint;
       return;
     }
@@ -139,7 +139,7 @@ public class PlayerQuest {
     this.completed = completed;
   }
 
-  public String getDescription(){
+  public String getDescription() {
     return description;
   }
 
@@ -149,7 +149,7 @@ public class PlayerQuest {
 
   public long getCalculatedRemainingTime() {
     long time = remainingTime - (System.currentTimeMillis() - startTime);
-    if(time < 0){
+    if (time < 0) {
       resetQuest();
       return 0;
     }

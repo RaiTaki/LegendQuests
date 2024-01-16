@@ -68,16 +68,17 @@ public class QuestPlayer {
       TextUtils.sendCenteredMessage(player, "&7" + quest.getDescription());
       TextUtils.sendCenteredMessage(player,
           "&7" + PlaceholderAPI.setPlaceholders(player, "%legendquest_checkpoint%"));
-      TextUtils.sendCenteredMessage(player, "&7 Remaining time: " + quest.getRemainingTimeFormatted());
+      TextUtils.sendCenteredMessage(player,
+          "&7 Remaining time: " + quest.getRemainingTimeFormatted());
       TextUtils.sendCenteredMessage(player, "&8&m                                         ");
     }
   }
 
-  public void setPacketDisplay(PacketDisplay packetDisplay){
+  public void setPacketDisplay(PacketDisplay packetDisplay) {
     this.packetDisplay = packetDisplay;
   }
 
-  public PacketDisplay getPacketDisplay(){
+  public PacketDisplay getPacketDisplay() {
     return packetDisplay;
   }
 }
