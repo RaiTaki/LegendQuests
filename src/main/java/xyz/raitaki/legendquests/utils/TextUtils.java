@@ -9,6 +9,14 @@ public class TextUtils {
 
   private final static int CENTER_PX = 154;
 
+  /**
+   * replace strings in a string
+   *
+   * @param text         the text to replace in
+   * @param colorize     if the text should be colorized
+   * @param replacements the replacements, in the format of "to replace", "replacement"
+   * @return the replaced string
+   */
   public static String replaceStrings(String text, boolean colorize, String... replacements) {
     for (int i = 0; i < replacements.length; i += 2) {
       text = text.replace(replacements[i], replacements[i + 1]);
@@ -19,11 +27,23 @@ public class TextUtils {
     return text;
   }
 
+  /**
+   * replace colors in a string
+   *
+   * @param text the text to replace in
+   * @return the replaced string
+   */
   public static String replaceColors(String text) {
     return IridiumColorAPI.process(text);
   }
 
   //https://www.spigotmc.org/threads/free-code-sending-perfectly-centered-chat-message.95872/page-2
+  /**
+   * send a centered message to a player
+   *
+   * @param player  the player to send the message to
+   * @param message the message to send
+   */
   public static void sendCenteredMessage(Player player, String message) {
     if (message == null || message.isEmpty()) {
       player.sendMessage("");
@@ -65,6 +85,12 @@ public class TextUtils {
     player.sendMessage(sb + message);
   }
 
+  /**
+   * format a duration in milliseconds to a string
+   *
+   * @param durationMillis the duration in milliseconds
+   * @return the formatted string
+   */
   public static String formatDateTime(long durationMillis) {
     long years = TimeUnit.MILLISECONDS.toDays(durationMillis) / 365;
     long days = TimeUnit.MILLISECONDS.toDays(durationMillis);

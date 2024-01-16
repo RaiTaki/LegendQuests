@@ -44,7 +44,7 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
       return st;
     }
 
-    QuestPlayer player = QuestManager.getQuestPlayerFromPlayer(p);
+    QuestPlayer player = QuestManager.getQuestPlayerByPlayer(p);
     PlayerQuest quest = player.getQuests().get(0);
     if (quest == null) {
       return st;

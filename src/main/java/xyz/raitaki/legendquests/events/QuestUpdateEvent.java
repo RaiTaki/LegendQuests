@@ -14,6 +14,9 @@ public class QuestUpdateEvent extends Event {
     this.questBase = questBase;
   }
 
+  /**
+   * @return the quest that was updated
+   */
   public QuestBase getQuestBase() {
     return questBase;
   }

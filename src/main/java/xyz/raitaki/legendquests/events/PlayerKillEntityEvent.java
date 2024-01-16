@@ -18,10 +18,16 @@ public class PlayerKillEntityEvent extends Event {
     this.entity = entity;
   }
 
+  /**
+   * @return the player that killed the entity
+   */
   public Player getPlayer() {
     return player;
   }
 
+  /**
+   * @return the entity that was killed
+   */
   public LivingEntity getEntity() {
     return entity;
   }

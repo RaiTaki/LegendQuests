@@ -77,6 +77,9 @@ public class CheckpointGui {
     buildCheckpointGUI();
   }
 
+  /**
+   * builds the reward gui based on the selected reward
+   */
   public void buildCheckpointGUI() {
     checkpointGUI.setFiller(questGUI.getFiller());
 
@@ -171,14 +174,29 @@ public class CheckpointGui {
     });
   }
 
+  /**
+   * adds a static element to the gui
+   * @param item the item of the element
+   * @param slot the slot of the element
+   * @param action the action of the element
+   * @param text the text of the element
+   */
   public void addStaticElement(ItemStack item, char slot, Action action, String... text) {
     checkpointGUI.addElement(new StaticGuiElement(slot, item, 1, action, text));
   }
 
+  /**
+   * send message to the player
+   * @param message the message to send
+   */
   public void sendMessage(String message) {
     questGUI.getEditor().sendMessage(message);
   }
 
+  /**
+   * sets the value of based on message
+   * @param message the message to set
+   */
   public void setChatMessage(String message) {
     if (editType == null) {
       return;
@@ -201,6 +219,11 @@ public class CheckpointGui {
     editType = null;
   }
 
+  /**
+   * sets the type of the value
+   * @param clicker the player who clicked
+   * @param editType the edit type to change to
+   */
   public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
     this.editType = editType;
     checkpointGUI.close(clicker);
@@ -208,10 +231,16 @@ public class CheckpointGui {
         TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
   }
 
+  /**
+   * open the reward gui to the player
+   */
   public void openCheckpointGUI() {
     checkpointGUI.show(questGUI.getEditor());
   }
 
+  /**
+   * open the reward gui to the player synchronized
+   */
   public void openCheckpointGUISync() {
     new BukkitRunnable() {
       @Override
@@ -221,14 +250,11 @@ public class CheckpointGui {
     }.runTask(LegendQuests.getInstance());
   }
 
-  public EditTypeEnum getEditType() {
-    return editType;
-  }
-
-  public void setEditType(EditTypeEnum editType) {
-    this.editType = editType;
-  }
-
+  /**
+   * get the next checkpoint type
+   * @param type the current type
+   * @return the next type
+   */
   private CheckPointTypeEnum nextType(CheckPointTypeEnum type) {
     return switch (type) {
       case CONVERSATION -> CheckPointTypeEnum.INTERECT;

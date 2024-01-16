@@ -21,6 +21,9 @@ public class PlayerQuestReward {
     this.value = value;
   }
 
+  /**
+   * give the reward to the player
+   */
   public void giveReward() {
     Player player = quest.getQuestPlayer().getPlayer();
     LanguageConfig languageConfig = LanguageConfig.getInstance();
@@ -58,6 +61,9 @@ public class PlayerQuestReward {
 
   }
 
+  /**
+   * @return JSON representation of the reward
+   */
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("type", type.toString());

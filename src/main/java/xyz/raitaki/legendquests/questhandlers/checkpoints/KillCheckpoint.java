@@ -13,10 +13,16 @@ public class KillCheckpoint extends QuestCheckpoint {
     this.amount = amount;
   }
 
+  /**
+   * @return the amount of the target to kill
+   */
   public int getAmount() {
     return amount;
   }
 
+  /**
+   * @return JSON representation of the checkpoint
+   */
   @Override
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();

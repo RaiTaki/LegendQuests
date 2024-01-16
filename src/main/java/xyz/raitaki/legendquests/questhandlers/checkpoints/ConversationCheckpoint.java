@@ -20,20 +20,16 @@ public class ConversationCheckpoint extends QuestCheckpoint {
     this.declineText = declineText;
   }
 
-  public void sendMessage(Player player) {
-    TextUtils.sendCenteredMessage(player,
-        "&m                                                                    ");
-    TextUtils.sendCenteredMessage(player, "&a&l" + npcName);
-    TextUtils.sendCenteredMessage(player, "<SOLID:7d7d7d> " + getValue());
-    TextUtils.sendCenteredMessage(player, "&a&l " + acceptText + "      &c&l" + declineText);
-    TextUtils.sendCenteredMessage(player,
-        "&m                                                                    ");
-  }
-
+  /**
+   * @return the name of the npc
+   */
   public String getNpcName() {
     return npcName;
   }
 
+  /**
+   * @return JSON representation of the checkpoint
+   */
   @Override
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();
@@ -43,10 +39,16 @@ public class ConversationCheckpoint extends QuestCheckpoint {
     return jsonObject;
   }
 
+  /**
+   * @return the accept text
+   */
   public String getAcceptText() {
     return acceptText;
   }
 
+  /**
+   * @return the decline text
+   */
   public String getDeclineText() {
     return declineText;
   }

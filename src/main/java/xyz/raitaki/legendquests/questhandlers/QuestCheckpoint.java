@@ -14,6 +14,9 @@ public abstract class QuestCheckpoint {
     this.value = value;
   }
 
+  /**
+   * @return JSON representation of the checkpoint
+   */
   public abstract JSONObject getAsJSON();
 
   public enum CheckPointTypeEnum {
@@ -27,14 +30,23 @@ public abstract class QuestCheckpoint {
     DECLINE
   }
 
+  /**
+   * @return QuestBase of the checkpoint
+   */
   public QuestBase getQuest() {
     return quest;
   }
 
+  /**
+   * @return the type of the checkpoint
+   */
   public CheckPointTypeEnum getType() {
     return type;
   }
 
+  /**
+   * @return the value of the checkpoint
+   */
   public String getValue() {
     return value;
   }

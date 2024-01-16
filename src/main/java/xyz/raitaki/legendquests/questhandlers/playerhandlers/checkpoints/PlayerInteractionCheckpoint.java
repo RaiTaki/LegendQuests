@@ -15,6 +15,9 @@ public class PlayerInteractionCheckpoint extends PlayerCheckpoint {
     this.npcName = npcName;
   }
 
+  /**
+   * @return JSON representation of the checkpoint
+   */
   @Override
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();
@@ -25,6 +28,9 @@ public class PlayerInteractionCheckpoint extends PlayerCheckpoint {
     return jsonObject;
   }
 
+  /**
+   * @return the name of the npc
+   */
   public String getNpcName() {
     return npcName;
   }

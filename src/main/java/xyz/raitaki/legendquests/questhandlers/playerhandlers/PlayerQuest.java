@@ -33,14 +33,23 @@ public class PlayerQuest {
     this.startTime = System.currentTimeMillis();
   }
 
+  /**
+   * @param checkpoint add the checkpoint to the quest
+   */
   public void addCheckpoint(PlayerCheckpoint checkpoint) {
     checkpoints.add(checkpoint);
   }
 
+  /**
+   * @param checkPoint set the checkpoint of the quest
+   */
   public void setCheckPoint(PlayerCheckpoint checkPoint) {
     this.checkPoint = checkPoint;
   }
 
+  /**
+   * move the player to the next checkpoint
+   */
   public void nextCheckPoint() {
     int index = checkpoints.indexOf(checkPoint);
     if (index == checkpoints.size() - 1) {
@@ -60,6 +69,9 @@ public class PlayerQuest {
     }
   }
 
+  /**
+   * move the player to the previous checkpoint
+   */
   public void previousCheckPoint() {
     int index = checkpoints.indexOf(checkPoint);
     checkPoint.setCompleted(false);
@@ -69,40 +81,67 @@ public class PlayerQuest {
     }
   }
 
+  /**
+   * @param reward add the reward to the quest
+   */
   public void addReward(PlayerQuestReward reward) {
     rewards.add(reward);
   }
 
+  /**
+   * @return the quest base of the quest
+   */
   public QuestBase getQuest() {
     return questBase;
   }
 
+  /**
+   * @return the player of the quest
+   */
   public QuestPlayer getQuestPlayer() {
     return player;
   }
 
+  /**
+   * @return the checkpoint of the quest
+   */
   public PlayerCheckpoint getCheckPoint() {
     return checkPoint;
   }
 
+  /**
+   * @return true if the quest is completed
+   */
   public boolean isCompleted() {
     return completed;
   }
 
+  /**
+   * @return the name of the quest
+   */
   public String getQuestName() {
     return questName;
   }
 
+  /**
+   * @return the checkpoints of the quest
+   */
   public LinkedList<PlayerCheckpoint> getCheckpoints() {
     return checkpoints;
   }
 
+  /**
+   * give the reward to the player
+   */
   public void giveReward() {
     for (PlayerQuestReward reward : rewards) {
       reward.giveReward();
     }
   }
 
+  /**
+   * update the checkpoint of the quest
+   */
   public void updateCheckpoint() {
     for (PlayerCheckpoint checkpoint : checkpoints) {
       if (checkpoint.isCompleted()) {
@@ -113,6 +152,9 @@ public class PlayerQuest {
     }
   }
 
+  /**
+   * @return JSON representation of the quest
+   */
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("name", questBase.getName());
@@ -135,18 +177,30 @@ public class PlayerQuest {
     return jsonObject;
   }
 
+  /**
+   * @param completed set if the quest is completed
+   */
   public void setCompleted(boolean completed) {
     this.completed = completed;
   }
 
+  /**
+   * @return the description of the quest
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * @return the formatted remaining time of the quest
+   */
   public String getRemainingTimeFormatted() {
     return TextUtils.formatDateTime(getCalculatedRemainingTime());
   }
 
+  /**
+   * @return the remaining time of the quest in milliseconds
+   */
   public long getCalculatedRemainingTime() {
     long time = remainingTime - (System.currentTimeMillis() - startTime);
     if (time < 0) {
@@ -156,6 +210,9 @@ public class PlayerQuest {
     return time;
   }
 
+  /**
+   * reset the quest
+   */
   public void resetQuest() {
     this.startTime = System.currentTimeMillis();
     this.remainingTime = questBase.getTime();

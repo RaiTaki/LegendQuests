@@ -21,14 +21,23 @@ public class PlayerQuestKillEvent extends Event {
     this.entity = entity;
   }
 
+  /**
+   * @return the quest that was updated
+   */
   public PlayerQuest getPlayerQuest() {
     return playerQuest;
   }
 
+  /**
+   * @return the quest player
+   */
   public QuestPlayer getQuestPlayer() {
     return questPlayer;
   }
 
+  /**
+   * @return the entity that was killed
+   */
   public LivingEntity getEntity() {
     return entity;
   }

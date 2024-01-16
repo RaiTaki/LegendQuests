@@ -14,10 +14,16 @@ public class InteractionCheckpoint extends QuestCheckpoint {
     this.npcName = npcName;
   }
 
+  /**
+   * @return the name of the npc
+   */
   public String getNpcName() {
     return npcName;
   }
 
+  /**
+   * @return JSON representation of the checkpoint
+   */
   @Override
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();

@@ -33,12 +33,12 @@ public class PlayerEventListener implements Listener {
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
     QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
-    QuestManager.getQuestPlayerFromPlayer(event.getPlayer()).sendQuestInfoChat();
+    QuestManager.getQuestPlayerByPlayer(event.getPlayer()).sendQuestInfoChat();
 
     PacketDisplay packetDisplay = new PacketDisplay(event.getPlayer(),
         "%legendquest_questname%\n%legendquest_questdescription%\n%legendquest_checkpoint%\n%legendquest_remainingtime%");
 
-    QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(event.getPlayer());
+    QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(event.getPlayer());
     questPlayer.setPacketDisplay(packetDisplay);
     //packetDisplay.setAlignment(TextAlignment.LEFT);
 
@@ -83,7 +83,7 @@ public class PlayerEventListener implements Listener {
   public void onPlayerInteract(PlayerInteractAtEntityEvent event) {
     Player player = event.getPlayer();
     Entity entity = event.getRightClicked();
-    QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(player);
+    QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
     PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(
         CheckPointTypeEnum.INTERECT);
 
@@ -110,7 +110,7 @@ public class PlayerEventListener implements Listener {
   @EventHandler
   public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
     Player player = event.getPlayer();
-    QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(player);
+    QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
     PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(
         CheckPointTypeEnum.CONVERSATION);
 

@@ -12,6 +12,9 @@ public class EconomyUtils {
 
   private static Economy econ = null;
 
+  /**
+   * setup the economy
+   */
   public static void setupEconomy() {
     if (getServer().getPluginManager().getPlugin("Vault") == null) {
       Bukkit.getLogger().severe("Vault not found!");
@@ -28,6 +31,11 @@ public class EconomyUtils {
     econ = rsp.getProvider();
   }
 
+  /**
+   * add money to a player
+   * @param player the player to check
+   * @param amount the amount to give
+   */
   public static void giveMoney(Player player, double amount) {
     econ.depositPlayer(player, amount);
   }

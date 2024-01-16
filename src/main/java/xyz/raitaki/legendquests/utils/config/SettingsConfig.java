@@ -12,14 +12,29 @@ public class SettingsConfig extends ConfigManager {
     instance = this;
   }
 
+  /**
+   * @return the instance of the config
+   */
   public static SettingsConfig getInstance() {
     return instance;
   }
 
-  public @Nullable Location getLocationValue(String location) {
-    return (Location) get(location);
+  /**
+   * get a location from the config
+   *
+   * @param locationPath the path to the location
+   * @return the location
+   */
+  public @Nullable Location getLocationValue(String locationPath) {
+    return (Location) get(locationPath);
   }
 
+  /**
+   * set a location in the config
+   *
+   * @param locationPath the path to the location
+   * @param location     the location to set
+   */
   public void setLocation(String locationPath, Location location) {
     instance.set(locationPath, location);
   }

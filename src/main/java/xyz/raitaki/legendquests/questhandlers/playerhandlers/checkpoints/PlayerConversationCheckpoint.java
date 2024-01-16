@@ -24,6 +24,9 @@ public class PlayerConversationCheckpoint extends PlayerCheckpoint {
     answer = AnswerEnum.ACCEPT;
   }
 
+  /**
+   * send conversation message to the player
+   */
   public void sendMessage() {
     Player player = getQuest().getQuestPlayer().getPlayer();
     TextUtils.sendCenteredMessage(player,
@@ -43,10 +46,16 @@ public class PlayerConversationCheckpoint extends PlayerCheckpoint {
     }
   }
 
+  /**
+   * @return the name of the npc
+   */
   public String getNpcName() {
     return npcName;
   }
 
+  /**
+   * @return JSON representation of the checkpoint
+   */
   @Override
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();
@@ -59,6 +68,9 @@ public class PlayerConversationCheckpoint extends PlayerCheckpoint {
     return jsonObject;
   }
 
+  /**
+   * does the answer based on the answer type
+   */
   public void doAnswer() {
     Player player = getQuest().getQuestPlayer().getPlayer();
     if (answer == AnswerEnum.ACCEPT) {
@@ -82,14 +94,23 @@ public class PlayerConversationCheckpoint extends PlayerCheckpoint {
     }
   }
 
+  /**
+   * @return the accept text of the checkpoint
+   */
   public String getAcceptText() {
     return acceptText;
   }
 
+  /**
+   * @return the decline text of the checkpoint
+   */
   public String getDeclineText() {
     return declineText;
   }
 
+  /**
+   * change the answer of the checkpoint
+   */
   public void changeAnswer() {
     answer = answer == AnswerEnum.ACCEPT ? AnswerEnum.DECLINE : AnswerEnum.ACCEPT;
     sendMessage();

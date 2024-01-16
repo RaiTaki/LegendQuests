@@ -16,6 +16,9 @@ public class QuestReward {
     this.value = value;
   }
 
+  /**
+   * @return JSON representation of the reward
+   */
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("type", type.toString());
@@ -23,10 +26,16 @@ public class QuestReward {
     return jsonObject;
   }
 
+  /**
+   * @return the type of the reward
+   */
   public RewardTypeEnum getType() {
     return type;
   }
 
+  /**
+   * @return the value of the reward
+   */
   public String getValue() {
     if (type == ITEM) {
       return "To see it edit the reward";

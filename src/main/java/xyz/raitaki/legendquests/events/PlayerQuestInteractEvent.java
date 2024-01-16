@@ -24,23 +24,39 @@ public class PlayerQuestInteractEvent extends Event implements Cancellable {
     this.entity = entity;
   }
 
+  /**
+   * @return the quest that was updated
+   */
   public PlayerQuest getPlayerQuest() {
     return playerQuest;
   }
 
+  /**
+   * @return the quest player
+   */
   public QuestPlayer getQuestPlayer() {
     return questPlayer;
   }
 
+  /**
+   * @return the entity that was interacted with
+   */
   public Entity getEntity() {
     return entity;
   }
 
+  /**
+   * @return whether the event is cancelled
+   */
   @Override
   public boolean isCancelled() {
     return cancelled;
   }
 
+  /**
+   * sets whether the event is cancelled
+   * @param cancel whether to cancel the event
+   */
   @Override
   public void setCancelled(boolean cancel) {
     cancelled = cancel;

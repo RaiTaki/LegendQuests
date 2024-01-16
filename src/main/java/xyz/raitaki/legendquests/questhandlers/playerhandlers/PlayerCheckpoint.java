@@ -18,28 +18,42 @@ public abstract class PlayerCheckpoint {
     this.completed = completed;
   }
 
-  public void addProgress() {
-    quest.nextCheckPoint();
-  }
-
+  /**
+   * @return JSON representation of the checkpoint
+   */
   public abstract JSONObject getAsJSON();
 
+  /**
+   * @return PlayerQuest of the checkpoint
+   */
   public PlayerQuest getQuest() {
     return quest;
   }
 
+  /**
+   * @return the type of the checkpoint
+   */
   public CheckPointTypeEnum getType() {
     return type;
   }
 
+  /**
+   * @return the value of the checkpoint
+   */
   public String getValue() {
     return value;
   }
 
+  /**
+   * @return true if the checkpoint is completed
+   */
   public boolean isCompleted() {
     return completed;
   }
 
+  /**
+   * @param completed set the checkpoint to completed
+   */
   public void setCompleted(boolean completed) {
     this.completed = completed;
   }

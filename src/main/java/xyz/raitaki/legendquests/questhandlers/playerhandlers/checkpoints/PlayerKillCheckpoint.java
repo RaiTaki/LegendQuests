@@ -17,22 +17,37 @@ public class PlayerKillCheckpoint extends PlayerCheckpoint {
     this.counter = counter;
   }
 
+  /**
+   * increment the progress of the checkpoint
+   */
   public void incrementProgress() {
     counter++;
   }
 
+  /**
+   * @return the counter of the checkpoint
+   */
   public int getCounter() {
     return counter;
   }
 
+  /**
+   * @return the amount of the checkpoint
+   */
   public int getAmount() {
     return amount;
   }
 
+  /**
+   * @return true if the checkpoint is completed
+   */
   public boolean isComplete() {
     return counter >= amount;
   }
 
+  /**
+   * @return JSON representation of the checkpoint
+   */
   @Override
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();

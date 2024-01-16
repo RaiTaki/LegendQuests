@@ -18,10 +18,16 @@ public class PlayerAnswerEvent extends Event {
     this.playerQuest = playerQuest;
   }
 
+  /**
+   * @return the quest player
+   */
   public QuestPlayer getQuestPlayer() {
     return questPlayer;
   }
 
+  /**
+   * @return the quest that was updated
+   */
   public PlayerQuest getPlayerQuest() {
     return playerQuest;
   }

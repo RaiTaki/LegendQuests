@@ -16,7 +16,7 @@ public class EntityKillListener implements Listener {
   @EventHandler
   public void onEntityKill(PlayerKillEntityEvent event) {
     Player player = event.getPlayer();
-    QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(player);
+    QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
     PlayerQuest quest = questPlayer.getPlayerQuestByCheckpointType(CheckPointTypeEnum.KILL);
 
     if (quest == null) {

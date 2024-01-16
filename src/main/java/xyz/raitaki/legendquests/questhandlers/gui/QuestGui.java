@@ -44,6 +44,9 @@ public class QuestGui {
     filler.getItemMeta().setDisplayName("");
   }
 
+  /**
+   * Build the main gui
+   */
   public void buildMainGUI() {
     String[] guiSetup = {
         "    g    ",
@@ -139,6 +142,9 @@ public class QuestGui {
     });
   }
 
+  /**
+   * Build the checkpoint gui
+   */
   public void buildCheckpointGUI() {
     String[] guiSetup = {
         "ggggggggg",
@@ -212,12 +218,11 @@ public class QuestGui {
     });
   }
 
-  public void updateMainGUI() {
-    mainGui.close(editor);
-    buildMainGUI();
-    mainGui.show(editor);
-  }
-
+  /**
+   * Set the type of the change
+   * @param clicker who clicked
+   * @param editType type of the change
+   */
   public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
     this.editType = editType;
     mainGui.close(clicker);
@@ -225,10 +230,19 @@ public class QuestGui {
         TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
   }
 
+  /**
+   * Format double to 2 decimal places
+   * @param value the value to format
+   * @return the formatted value
+   */
   public String formatDouble(double value) {
     return String.format("%.2f", value);
   }
 
+  /**
+   * Do the change based on the string
+   * @param text the text to change to
+   */
   public void doTrackerText(String text) {
     double value = 0;
     try {
@@ -257,22 +271,9 @@ public class QuestGui {
     openMainGuiSynced(editor);
   }
 
-  public void sendMessage(String message) {
-    editor.sendMessage(message);
-  }
-
-  public void updateCheckpointGUI() {
-    checkpointGui.close(editor);
-    buildCheckpointGUI();
-    checkpointGui.show(editor);
-  }
-
-  public void updateRewardGUI() {
-    rewardGui.close(editor);
-    buildRewardGUI();
-    rewardGui.show(editor);
-  }
-
+  /**
+   * Build the reward gui
+   */
   public void buildRewardGUI() {
     String[] guiSetup = {
         "ggggggggg",
@@ -332,12 +333,46 @@ public class QuestGui {
 
   }
 
+  /**
+   * open the main gui
+   * @param player the player to open the gui to
+   */
   public void openMainGUI(Player player) {
     buildMainGUI();
     mainGui.show(player);
     editor = player;
   }
 
+  /**
+   * Send message to the player
+   * @param message the message to send
+   */
+  public void sendMessage(String message) {
+    editor.sendMessage(message);
+  }
+
+  /**
+   * Update the checkpoint gui
+   */
+  public void updateCheckpointGUI() {
+    checkpointGui.close(editor);
+    buildCheckpointGUI();
+    checkpointGui.show(editor);
+  }
+
+  /**
+   * Update the reward gui
+   */
+  public void updateRewardGUI() {
+    rewardGui.close(editor);
+    buildRewardGUI();
+    rewardGui.show(editor);
+  }
+
+  /**
+   * Open the main gui synced
+   * @param player the player to open the gui to
+   */
   public void openMainGuiSynced(HumanEntity player) {
     new BukkitRunnable() {
       @Override
@@ -349,89 +384,112 @@ public class QuestGui {
     }.runTask(LegendQuests.getInstance());
   }
 
+  /**
+   * Open the main gui synced
+   * @param player the player to open the gui to
+   */
   public void openMainGUI(HumanEntity player) {
     buildMainGUI();
     mainGui.show(player);
     editor = (Player) player;
   }
 
-  public void openCheckpointGUI(Player player) {
-    buildCheckpointGUI();
-    checkpointGui.show(player);
-  }
-
+  /**
+   * Open the checkpoint gui
+   * @param player the player to open the gui to
+   */
   public void openCheckpointGUI(HumanEntity player) {
     buildCheckpointGUI();
     checkpointGui.show(player);
   }
 
-  public void openRewardGUI(Player player) {
-    buildRewardGUI();
-    rewardGui.show(player);
-  }
-
+  /**
+   * Open the reward gui
+   * @param player the player to open the gui to
+   */
   public void openRewardGUI(HumanEntity player) {
     buildRewardGUI();
     rewardGui.show(player);
   }
 
+  /**
+   * Add static element to the gui
+   * @param gui the gui to add the element to
+   * @param item the item to add
+   * @param slot the slot to add the item to
+   * @param action the action to do when clicked
+   * @param text the text to add to the item
+   */
   public void addStaticElement(InventoryGui gui, ItemStack item, char slot, Action action,
       String... text) {
     gui.addElement(new StaticGuiElement(slot, item, 1, action, text));
   }
 
-  public QuestBase getQuestBase() {
-    return questBase;
-  }
-
-  public InventoryGui getMainGui() {
-    return mainGui;
-  }
-
-  public InventoryGui getCheckpointGui() {
-    return checkpointGui;
-  }
-
-  public InventoryGui getRewardGui() {
-    return rewardGui;
-  }
-
+  /**
+   * @return Player who is editing the quest
+   */
   public Player getEditor() {
     return editor;
   }
 
-  public void setEditor(Player editor) {
-    this.editor = editor;
-  }
-
+  /**
+   * @return RewardGui that is being edited
+   */
   public RewardGui getEditedReward() {
     return editedReward;
   }
 
+  /**
+   * @return ItemStack filler
+   */
   public ItemStack getFiller() {
     return filler;
   }
 
+  /**
+   * set the edited checkpoint
+   * @param checkpoint the checkpoint to set
+   */
   public void setEditedCheckpoint(CheckpointGui checkpoint) {
     editedCheckpoint = checkpoint;
   }
 
+  /**
+   * set the edited reward
+   * @param reward the reward to set
+   */
   public void setEditedReward(RewardGui reward) {
     editedReward = reward;
   }
 
+  /**
+   * @return EditTypeEnum of the edit
+   */
   public EditGuiTypeEnum getEditGuiType() {
     return editGuiType;
   }
 
+  /**
+   * set the edit type
+   * @param type the type to set
+   */
   public void setEditGuiType(EditGuiTypeEnum type) {
     editGuiType = type;
   }
 
+  /**
+   * @return CheckpointGui that is being edited
+   */
   public CheckpointGui getEditedCheckpoint() {
     return editedCheckpoint;
   }
 
+  /**
+   * Move the item back in the list
+   * @param list the list to move the item in
+   * @param selectedIndex the index of the item to move
+   * @param <T> the type of the list
+   */
   private <T> void moveBack(LinkedList<T> list, int selectedIndex) {
     if (selectedIndex > 0 && selectedIndex < list.size()) {
       T temp = list.get(selectedIndex);
@@ -440,6 +498,12 @@ public class QuestGui {
     }
   }
 
+  /**
+   * Move the item forward in the list
+   * @param list the list to move the item in
+   * @param selectedIndex the index of the item to move
+   * @param <T> the type of the list
+   */
   public static <T> void moveForward(LinkedList<T> list, int selectedIndex) {
     if (selectedIndex >= 0 && selectedIndex < list.size() - 1) {
       T temp = list.get(selectedIndex);

@@ -31,27 +31,46 @@ public class PlayerNextCheckpointEvent extends Event implements Cancellable {
     return HANDLERS_LIST;
   }
 
+  /**
+   * @return the quest player
+   */
   public QuestPlayer getQuestPlayer() {
     return questPlayer;
   }
 
+  /**
+   * @return the quest that was updated
+   */
   public PlayerQuest getPlayerQuest() {
     return playerQuest;
   }
 
+  /**
+   * @return the current checkpoint
+   */
   public PlayerCheckpoint getCurrentCheckpoint() {
     return currentCheckpoint;
   }
 
+  /**
+   * @return the next checkpoint
+   */
   public PlayerCheckpoint getNextCheckpoint() {
     return nextCheckpoint;
   }
 
+  /**
+   * @return whether the event is cancelled
+   */
   @Override
   public boolean isCancelled() {
     return cancelled;
   }
 
+  /**
+   * sets whether the event is cancelled
+   * @param cancel whether to cancel the event
+   */
   @Override
   public void setCancelled(boolean cancel) {
     cancelled = cancel;

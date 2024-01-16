@@ -52,6 +52,10 @@ public class PacketDisplay {
     setRotation();
   }
 
+  /**
+   * set the text of the text display
+   * @param text the text to set
+   */
   public void setText(String text) {
     this.text = text;
     textDisplay.setText(
@@ -60,6 +64,10 @@ public class PacketDisplay {
     sendDataPacket(false);
   }
 
+  /**
+   * send the data packets to player
+   * @param spawn if the spawn packet should be sent
+   */
   public void sendDataPacket(boolean spawn) {
     if (spawn) {
       sendSpawnPacket();
@@ -69,21 +77,33 @@ public class PacketDisplay {
     PacketUtils.sendPacket(player, dataPacket);
   }
 
+  /**
+   * send the spawn packet to player
+   */
   public void sendSpawnPacket() {
     Packet<ClientGamePacketListener> packet = textDisplay.getAddEntityPacket();
     PacketUtils.sendPacket(player, packet);
   }
 
+  /**
+   * send the teleport packet to player
+   */
   public void sendTeleportPacket() {
     Packet<ClientGamePacketListener> packet = PacketUtils.getTeleportEntityPacket(textDisplay);
     PacketUtils.sendPacket(player, packet);
   }
 
+  /**
+   * set the rotation of the text display
+   */
   public void setRotation() {
     textDisplay.setRot(location.getYaw(), location.getPitch());
     sendTeleportPacket();
   }
 
+  /**
+   * update the text of the text display
+   */
   public void updateText() {
     String[] lines = defaultText.split("\n");
     StringBuilder text = new StringBuilder();
@@ -94,6 +114,10 @@ public class PacketDisplay {
     setText(text.toString());
   }
 
+  /**
+   * set the location of the text display
+   * @param location the location to set
+   */
   public void setLocation(Location location) {
     this.location = location;
     textDisplay.teleportTo(location.getX(), location.getY(), location.getZ());
@@ -102,6 +126,9 @@ public class PacketDisplay {
     sendTeleportPacket();
   }
 
+  /**
+   * update the location of the text display
+   */
   public static void updateDisplayLocation() {
     Location loc = SettingsConfig.getInstance().getLocationValue("questtracker.location");
     if (loc == null) {
@@ -115,6 +142,9 @@ public class PacketDisplay {
     }
   }
 
+  /**
+   * start the update timer
+   */
   public static void startUpdateTimer() {
     new BukkitRunnable() {
       @Override

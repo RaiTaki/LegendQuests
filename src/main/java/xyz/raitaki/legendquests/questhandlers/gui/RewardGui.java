@@ -60,6 +60,9 @@ public class RewardGui {
     buildRewardGUI();
   }
 
+  /**
+   * builds the reward gui based on the selected reward
+   */
   public void buildRewardGUI() {
     rewardGui.setFiller(questGui.getFiller());
 
@@ -148,22 +151,46 @@ public class RewardGui {
     });
   }
 
+  /**
+   * send message to the player
+   * @param message the message to send
+   */
   public void sendMessage(String message) {
     questGui.getEditor().sendMessage(message);
   }
 
+  /**
+   * add static elemnt to the gui
+   * @param item the item of the element
+   * @param slot the slot of the element
+   * @param action the action of the element
+   * @param text the text of the element
+   */
   public void addStaticElement(ItemStack item, char slot, Action action, String... text) {
     rewardGui.addElement(new StaticGuiElement(slot, item, 1, action, text));
   }
 
+  /**
+   * open the reward gui to the player
+   * @param player player to open the gui
+   */
   public void openRewardGUI(Player player) {
     rewardGui.show(player);
   }
 
+  /**
+   * open the reward gui to the player
+   * @param player player to open the gui
+   */
   public void openRewardGUI(HumanEntity player) {
     rewardGui.show(player);
   }
 
+  /**
+   * change the edit type of the reward
+   * @param clicker the player who clicked
+   * @param editType the edit type to change to
+   */
   public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
     this.editTypeEnum = editType;
     rewardGui.close(clicker);
@@ -171,6 +198,11 @@ public class RewardGui {
         TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
   }
 
+  /**
+   * get the next reward type
+   * @param type the current type
+   * @return the next type
+   */
   private RewardTypeEnum nextType(RewardTypeEnum type) {
     return switch (type) {
       case MONEY -> XP;
@@ -179,6 +211,10 @@ public class RewardGui {
     };
   }
 
+  /**
+   * set the values based on the chat message
+   * @param message the message to set
+   */
   public void setChatMessage(String message) {
     if (editTypeEnum == null) {
       return;
@@ -191,6 +227,9 @@ public class RewardGui {
     editTypeEnum = null;
   }
 
+  /**
+   * update the reward gui
+   */
   public void updateRewardGui() {
     rewardGui.close(questGui.getEditor());
     buildRewardGUI();
@@ -198,6 +237,9 @@ public class RewardGui {
     openRewardGUI(questGui.getEditor());
   }
 
+  /**
+   * update the reward gui synchronized
+   */
   public void updateRewardGuiSync() {
     new BukkitRunnable() {
       @Override

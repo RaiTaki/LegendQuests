@@ -36,6 +36,12 @@ public class QuestManager {
   private static LinkedList<QuestBase> quests = new LinkedList<>();
   private static HashMap<Player, QuestPlayer> questPlayers = new HashMap<>();
 
+  /**
+   * This method loads a QuestBase from JSON
+   *
+   * @param questJson - Quest as JSON
+   * @return QuestBase - QuestBase from JSON
+   */
   public static QuestBase loadBaseQuestFromJSON(String questJson) throws ParseException {
     JSONParser parser = new JSONParser();
     JSONObject json = (JSONObject) parser.parse(questJson);
@@ -81,6 +87,13 @@ public class QuestManager {
     return quest;
   }
 
+  /**
+   * This method loads a PlayerQuest from JSON
+   *
+   * @param player    - Player
+   * @param questJson - Quest as JSON
+   * @return PlayerQuest - PlayerQuest from JSON
+   */
   public static PlayerQuest loadPlayerQuestFromJson(Player player, String questJson) {
     JSONParser parser = new JSONParser();
     JSONObject json = null;
@@ -92,7 +105,7 @@ public class QuestManager {
     String name = (String) json.get("name");
     String description = (String) json.get("description");
     Long remainingTime = (Long) json.get("remainingTime");
-    PlayerQuest quest = new PlayerQuest(getQuestBaseByName(name), getQuestPlayerFromPlayer(player),
+    PlayerQuest quest = new PlayerQuest(getQuestBaseByName(name), getQuestPlayerByPlayer(player),
         remainingTime);
     JSONArray rewards = (JSONArray) json.get("rewards");
     for (Object reward : rewards) {
@@ -137,8 +150,14 @@ public class QuestManager {
     return quest;
   }
 
+  /**
+   * This method clones QuestBase to PlayerQuest
+   *
+   * @param player - Player
+   * @param quest - QuestBase
+   */
   public static void addBaseQuestToPlayer(Player player, QuestBase quest) {
-    QuestPlayer questPlayer = getQuestPlayerFromPlayer(player);
+    QuestPlayer questPlayer = getQuestPlayerByPlayer(player);
     PlayerQuest playerQuest = new PlayerQuest(quest, questPlayer, quest.getTime());
     for (QuestReward reward : quest.getRewards()) {
       playerQuest.addReward(
@@ -176,6 +195,12 @@ public class QuestManager {
     playerQuest.setCheckPoint(playerQuest.getCheckpoints().getFirst());
   }
 
+  /**
+   * This method gets QuestBase by name
+   *
+   * @param name - Quest name
+   * @return QuestBase - QuestBase by name
+   */
   public static QuestBase getQuestBaseByName(String name) {
     for (QuestBase quest : quests) {
       if (quest.getName().equals(name)) {
@@ -185,13 +210,24 @@ public class QuestManager {
     return null;
   }
 
-  public static QuestPlayer getQuestPlayerFromPlayer(Player player) {
+  /**
+   * This method gets QuestPlayer by Player
+   *
+   * @param player - Player
+   * @return QuestPlayer - QuestPlayer by Player
+   */
+  public static QuestPlayer getQuestPlayerByPlayer(Player player) {
     if (!questPlayers.containsKey(player)) {
       createQuestPlayer(player);
     }
     return questPlayers.get(player);
   }
 
+  /**
+   * This method creates QuestPlayer
+   *
+   * @param player - Player
+   */
   public static void createQuestPlayer(Player player) {
     //TODO: GET PLAYER DATA FROM DATABASE
     //TODO: CREATE QUEST PLAYER
@@ -200,14 +236,28 @@ public class QuestManager {
     questPlayers.put(player, new QuestPlayer(player));
   }
 
+  /**
+   * This method saves QuestPlayer
+   *
+   * @param questPlayer - QuestPlayer
+   */
   public static void saveQuestPlayer(QuestPlayer questPlayer) {
     //TODO: SAVE PLAYER DATA TO DATABASE
   }
 
+  /**
+   * This method returns all QuestBases
+   *
+   * @return LinkedList<QuestBase> - All QuestBases
+   */
   public static LinkedList<QuestBase> getBaseQuests() {
     return quests;
   }
 
+  /**
+   * This method registers all events
+   *
+   */
   public static void registerEvents() {
     LegendQuests instance = LegendQuests.getInstance();
 
@@ -229,6 +279,12 @@ public class QuestManager {
     instance.getServer().getPluginManager().registerEvents(new PlayerEventListener(), instance);
   }
 
+  /**
+   * This method returns QuestBase by Player
+   *
+   * @param player - Player
+   * @return QuestBase - QuestBase by Player
+   */
   public static QuestBase getQuestBaseFromEditor(Player player) {
     for (QuestBase quest : quests) {
       if (quest.getQuestGUI().getEditor() != null && quest.getQuestGUI().getEditor()
@@ -240,12 +296,22 @@ public class QuestManager {
     return null;
   }
 
+  /**
+   * This method updates Player's Quests
+   *
+   * @param questPlayer - QuestPlayer
+   */
   public static void updatePlayerQuests(QuestPlayer questPlayer) {
     for (PlayerQuest playerQuest : questPlayer.getQuests()) {
       updatePlayerQuest(playerQuest);
     }
   }
 
+  /**
+   * This method updates Player's Quest
+   *
+   * @param playerQuest - PlayerQuest
+   */
   public static void updatePlayerQuest(PlayerQuest playerQuest) {
     if (playerQuest == null) {
       return;
@@ -280,16 +346,35 @@ public class QuestManager {
     playerQuest.updateCheckpoint();
   }
 
+  /**
+   * This method updates Player's Quest by QuestBase
+   *
+   * @param player - Player
+   * @param questBase - QuestBase
+   */
   public static void updatePlayerQuestBaseQuest(QuestPlayer player, QuestBase questBase) {
     PlayerQuest playerQuest = player.getPlayerQuestByQuestBase(questBase);
     updatePlayerQuest(playerQuest);
   }
 
+  /**
+   * This method updates Player's Quest by name
+   *
+   * @param player - Player
+   * @param questName - Quest name
+   */
   public static void updatePlayerQuestByName(QuestPlayer player, String questName) {
     PlayerQuest playerQuest = player.getPlayerQuestByQuestName(questName);
     updatePlayerQuest(playerQuest);
   }
 
+  /**
+   * This method clones PlayerCheckpoint from QuestCheckpoint
+   *
+   * @param quest - PlayerQuest
+   * @param checkpoint - QuestCheckpoint
+   * @return PlayerCheckpoint - PlayerCheckpoint from QuestCheckpoint
+   */
   public static PlayerCheckpoint clonePlayerFromBase(PlayerQuest quest,
       QuestCheckpoint checkpoint) {
     PlayerCheckpoint playerCheckpoint = null;
@@ -313,6 +398,10 @@ public class QuestManager {
     return playerCheckpoint;
   }
 
+  /**
+   * This method updates all Player's Quests
+   *
+   */
   public static void updatePlayersQuest() {
     for (QuestPlayer questPlayer : questPlayers.values()) {
       updatePlayerQuests(questPlayer);
@@ -320,6 +409,11 @@ public class QuestManager {
     }
   }
 
+  /**
+   * This method returns all QuestPlayers
+   *
+   * @return HashMap<Player, QuestPlayer> - All QuestPlayers
+   */
   public static HashMap<Player, QuestPlayer> getQuestPlayers() {
     return questPlayers;
   }
