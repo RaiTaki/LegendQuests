@@ -7,6 +7,7 @@ import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
 import xyz.raitaki.legendquests.utils.ItemUtils;
 import xyz.raitaki.legendquests.utils.TextUtils;
+import xyz.raitaki.legendquests.utils.config.LanguageConfig;
 
 public class PlayerQuestReward {
 
@@ -22,23 +23,36 @@ public class PlayerQuestReward {
 
   public void giveReward() {
     Player player = quest.getQuestPlayer().getPlayer();
+    LanguageConfig languageConfig = LanguageConfig.getInstance();
     switch (type) {
       case MONEY:
         EconomyUtils.giveMoney(player, Integer.parseInt(value));
-        TextUtils.sendCenteredMessage(player, "&a&l+" + value + "$");
+        String text = languageConfig.getString("reward.money");
+        text = TextUtils.replaceStrings(text, true, "{money}", value);
+        TextUtils.sendCenteredMessage(player, text);
         break;
       case ITEM:
         ItemStack itemStack = ItemUtils.stringToItem(value);
         if (itemStack == null) {
-          TextUtils.sendCenteredMessage(player, "&c&lERROR: &r&cType: ITEM: " + value);
-          TextUtils.sendCenteredMessage(player,
-              "&c&lERROR: &r&cQuest name: " + quest.getQuestName());
+          String error = languageConfig.getString("reward.item.error");
+          String quest = languageConfig.getString("reward.item.quest");
+          error = TextUtils.replaceStrings(error, true, "{value}", value);
+          quest = TextUtils.replaceStrings(quest, true, "{questname}", this.quest.getQuestName());
+          TextUtils.sendCenteredMessage(player, error);
+          TextUtils.sendCenteredMessage(player, quest);
           return;
         }
         player.getInventory().addItem(itemStack);
+        String item = languageConfig.getString("reward.item.give");
+        item = TextUtils.replaceStrings(item, true, "{itemname}",
+            itemStack.getItemMeta().getDisplayName());
+        TextUtils.sendCenteredMessage(player, item);
         break;
       case XP:
         player.giveExp(Integer.parseInt(value));
+        String xp = languageConfig.getString("reward.xp");
+        xp = TextUtils.replaceStrings(xp, true, "{value}", value);
+        TextUtils.sendCenteredMessage(player, xp);
         break;
     }
 

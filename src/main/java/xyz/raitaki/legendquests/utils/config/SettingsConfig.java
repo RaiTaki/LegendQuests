@@ -16,8 +16,8 @@ public class SettingsConfig extends ConfigManager {
     return instance;
   }
 
-  public @Nullable Location getLocation(String locationPath){
-    return instance.getLocation(locationPath);
+  public @Nullable Location getLocationValue(String location){
+    return (Location) get(location);
   }
 
   public void setLocation(String locationPath, Location location){

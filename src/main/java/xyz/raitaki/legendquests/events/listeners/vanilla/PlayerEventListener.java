@@ -2,25 +2,13 @@ package xyz.raitaki.legendquests.events.listeners.vanilla;
 
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.CHECKPOINT;
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.REWARD;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.TRACKER;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.kyori.adventure.text.TextComponent;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Display.BillboardConstraints;
-import net.minecraft.world.entity.Display.TextDisplay;
-import net.minecraft.world.entity.EntityType;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay.TextAlignment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -39,25 +27,19 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerInteractionCheckpoint;
 import xyz.raitaki.legendquests.utils.PacketDisplay;
-import xyz.raitaki.legendquests.utils.PacketUtils;
-import xyz.raitaki.legendquests.utils.config.SettingsConfig;
 
 public class PlayerEventListener implements Listener {
 
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
     QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
-    QuestManager.getBaseQuests().getFirst().showGui(event.getPlayer());
     QuestManager.getQuestPlayerFromPlayer(event.getPlayer()).sendQuestInfoChat();
 
-    World world = event.getPlayer().getWorld();
-    ServerLevel level = ((CraftWorld) world).getHandle();
+    PacketDisplay packetDisplay = new PacketDisplay(event.getPlayer(),
+        "%legendquest_questname%\n%legendquest_questdescription%\n%legendquest_checkpoint%\n%legendquest_remainingtime%");
 
-    SettingsConfig.getInstance().setLocation("questtracker.location", event.getPlayer().getLocation());
-
-    PacketDisplay packetDisplay = new PacketDisplay(event.getPlayer(), "Test");
-    packetDisplay.setText("Test2\nASDASDASD\nAASDASDwwss");
-
+    QuestPlayer questPlayer = QuestManager.getQuestPlayerFromPlayer(event.getPlayer());
+    questPlayer.setPacketDisplay(packetDisplay);
     //packetDisplay.setAlignment(TextAlignment.LEFT);
 
   }
@@ -73,25 +55,26 @@ public class PlayerEventListener implements Listener {
     TextComponent message = (TextComponent) event.message();
     String text = message.content();
     QuestBase quest = QuestManager.getQuestBaseFromEditor(player);
-      if (quest == null) {
-          return;
-      }
-      if (quest.getQuestGUI().getEditGuiType() == null) {
-          return;
-      }
+    if (quest == null) {
+      return;
+    }
+    if (quest.getQuestGUI().getEditGuiType() == null) {
+      return;
+    }
     if (quest.getQuestGUI().getEditGuiType() == REWARD) {
       RewardGui rewardGUI = quest.getQuestGUI().getEditedReward();
-        if (rewardGUI == null) {
-            return;
-        }
+      if (rewardGUI == null) {
+        return;
+      }
       rewardGUI.setChatMessage(text);
-    }
-    if (quest.getQuestGUI().getEditGuiType() == CHECKPOINT) {
+    } else if (quest.getQuestGUI().getEditGuiType() == CHECKPOINT) {
       CheckpointGui checkpointGUI = quest.getQuestGUI().getEditedCheckpoint();
-        if (checkpointGUI == null) {
-            return;
-        }
+      if (checkpointGUI == null) {
+        return;
+      }
       checkpointGUI.setChatMessage(text);
+    } else if (quest.getQuestGUI().getEditGuiType() == TRACKER) {
+      quest.getQuestGUI().doTrackerText(text);
     }
     event.setCancelled(true);
   }
@@ -104,20 +87,20 @@ public class PlayerEventListener implements Listener {
     PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(
         CheckPointTypeEnum.INTERECT);
 
-      if (playerQuest == null) {
-          return;
-      }
+    if (playerQuest == null) {
+      return;
+    }
 
     PlayerCheckpoint playerCheckpoint = playerQuest.getCheckPoint();
     String entityName = entity.getName();
-      if (!(playerCheckpoint instanceof PlayerInteractionCheckpoint interactionCheckpoint)) {
-          return;
-      }
+    if (!(playerCheckpoint instanceof PlayerInteractionCheckpoint interactionCheckpoint)) {
+      return;
+    }
 
     String questEntityName = interactionCheckpoint.getNpcName();
-      if (!entityName.equals(questEntityName)) {
-          return;
-      }
+    if (!entityName.equals(questEntityName)) {
+      return;
+    }
 
     PlayerQuestInteractEvent playerQuestInteractEvent = new PlayerQuestInteractEvent(playerQuest,
         questPlayer, entity);
@@ -131,13 +114,13 @@ public class PlayerEventListener implements Listener {
     PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(
         CheckPointTypeEnum.CONVERSATION);
 
-      if (playerQuest == null) {
-          return;
-      }
+    if (playerQuest == null) {
+      return;
+    }
     PlayerConversationCheckpoint playerCheckpoint = (PlayerConversationCheckpoint) playerQuest.getCheckPoint();
-      if (playerCheckpoint == null) {
-          return;
-      }
+    if (playerCheckpoint == null) {
+      return;
+    }
 
     if (player.isSneaking()) {
       playerCheckpoint.doAnswer();

@@ -92,7 +92,7 @@ public class QuestManager {
     String name = (String) json.get("name");
     String description = (String) json.get("description");
     Long remainingTime = (Long) json.get("remainingTime");
-    PlayerQuest quest = new PlayerQuest(getQuestByName(name), getQuestPlayerFromPlayer(player),
+    PlayerQuest quest = new PlayerQuest(getQuestBaseByName(name), getQuestPlayerFromPlayer(player),
         remainingTime);
     JSONArray rewards = (JSONArray) json.get("rewards");
     for (Object reward : rewards) {
@@ -176,7 +176,7 @@ public class QuestManager {
     playerQuest.setCheckPoint(playerQuest.getCheckpoints().getFirst());
   }
 
-  public static QuestBase getQuestByName(String name) {
+  public static QuestBase getQuestBaseByName(String name) {
     for (QuestBase quest : quests) {
       if (quest.getName().equals(name)) {
         return quest;
@@ -250,7 +250,7 @@ public class QuestManager {
     if (playerQuest == null) {
       return;
     }
-    QuestBase questBase = getQuestByName(playerQuest.getQuestName());
+    QuestBase questBase = getQuestBaseByName(playerQuest.getQuestName());
 
     if (questBase == null) {
       return;

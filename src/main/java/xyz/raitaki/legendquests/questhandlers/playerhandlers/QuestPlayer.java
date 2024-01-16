@@ -6,6 +6,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
+import xyz.raitaki.legendquests.utils.PacketDisplay;
 import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class QuestPlayer {
@@ -13,6 +14,7 @@ public class QuestPlayer {
   private Player player;
   private UUID uuid;
   private LinkedList<PlayerQuest> quests;
+  private PacketDisplay packetDisplay;
 
   public QuestPlayer(Player player) {
     this.player = player;
@@ -69,5 +71,13 @@ public class QuestPlayer {
       TextUtils.sendCenteredMessage(player, "&7 Remaining time: " + quest.getRemainingTimeFormatted());
       TextUtils.sendCenteredMessage(player, "&8&m                                         ");
     }
+  }
+
+  public void setPacketDisplay(PacketDisplay packetDisplay){
+    this.packetDisplay = packetDisplay;
+  }
+
+  public PacketDisplay getPacketDisplay(){
+    return packetDisplay;
   }
 }

@@ -1,4 +1,23 @@
 placeholders:
-  kill: "<SOLID:7d7d7d>Kill {entityName} {counter}/{max}"
-  interact: "<SOLID:7d7d7d>Interact with {entityName}"
-  noquest: "<SOLID:1a1a1a>You don't have any quests."
+  kill: "Kill {entityName} {counter}/{max}"
+  interact: "Interact with {entityName}"
+  noquest: "You don't have any quests."
+reward:
+  item:
+    error: "&c&lERROR: &r&cType: ITEM: {value}"
+    quest: "&c&lERROR: &r&cQuest name: {questname}"
+    give: "&a&lYou won {itemname}"
+  money: "&a&l+{value}$"
+  xp: "&a&l+{value}XP"
+date:
+  years: "years"
+  days: "days"
+  hours: "hours"
+  minutes: "minutes"
+  seconds: "seconds"
+  year: "year"
+  day: "day"
+  hour: "hour"
+  minute: "minute"
+  second: "second"
+  

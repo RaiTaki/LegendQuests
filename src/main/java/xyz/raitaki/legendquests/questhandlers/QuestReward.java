@@ -21,43 +21,6 @@ public class QuestReward {
     this.value = value;
   }
 
-  public void giveReward(Player player) {
-    switch (type) {
-      case MONEY:
-        try {
-          EconomyUtils.giveMoney(player, Integer.parseInt(value));
-        } catch (NumberFormatException e) {
-          TextUtils.sendCenteredMessage(player,
-              "&c&lERROR: &r&cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
-          TextUtils.sendCenteredMessage(player,
-              "&c&lERROR: &r&cType: QUEST: " + questBase.getName());
-        }
-        break;
-      case ITEM:
-        ItemStack itemStack = ItemUtils.stringToItem(value);
-        if (itemStack == null) {
-          TextUtils.sendCenteredMessage(player,
-              "&c&lERROR: &r&cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
-          TextUtils.sendCenteredMessage(player,
-              "&c&lERROR: &r&cType: QUEST: " + questBase.getName());
-          return;
-        }
-        player.getInventory().addItem(itemStack);
-        break;
-      case XP:
-        try {
-          player.giveExp(Integer.parseInt(value));
-        } catch (NumberFormatException e) {
-          TextUtils.sendCenteredMessage(player,
-              "&c&lERROR: &r&cSomething went wrong while giving you your reward. Please contact an admin. With information down below.");
-          TextUtils.sendCenteredMessage(player,
-              "&c&lERROR: &r&cType: QUEST: " + questBase.getName());
-        }
-        break;
-    }
-
-  }
-
   public JSONObject getAsJSON() {
     JSONObject jsonObject = new JSONObject();
     jsonObject.put("type", type.toString());

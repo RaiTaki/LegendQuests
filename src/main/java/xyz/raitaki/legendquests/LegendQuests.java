@@ -2,6 +2,8 @@ package xyz.raitaki.legendquests;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.raitaki.legendquests.commands.EditQuestCommand;
+import xyz.raitaki.legendquests.commands.completer.EditQuestCompleter;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
@@ -12,6 +14,7 @@ import xyz.raitaki.legendquests.questhandlers.checkpoints.InteractionCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.KillCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.placeholders.CheckpointPlaceholder;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
+import xyz.raitaki.legendquests.utils.PacketDisplay;
 import xyz.raitaki.legendquests.utils.config.LanguageConfig;
 import xyz.raitaki.legendquests.utils.config.SettingsConfig;
 
@@ -23,6 +26,11 @@ public final class LegendQuests extends JavaPlugin {
   public void onEnable() {
     instance = this;
     EconomyUtils.setupEconomy();
+    registerCommands();
+
+    new LanguageConfig("language.yml");
+    new SettingsConfig("settings.yml");
+
     QuestBase questBase = new QuestBase("test", "test", 20 * 60 * 1000);
     questBase.addReward(new QuestReward(questBase, RewardTypeEnum.MONEY, "100"));
     questBase.addCheckPoint(
@@ -42,9 +50,7 @@ public final class LegendQuests extends JavaPlugin {
     Bukkit.broadcastMessage(questBase.getAsJSON());
     QuestManager.registerEvents();
     CheckpointPlaceholder.registerPlaceholder();
-
-    new LanguageConfig("language.yml");
-    new SettingsConfig("settings.yml");
+    PacketDisplay.startUpdateTimer();
   }
 
   @Override
@@ -54,5 +60,10 @@ public final class LegendQuests extends JavaPlugin {
 
   public static LegendQuests getInstance() {
     return instance;
+  }
+
+  public void registerCommands(){
+    getCommand("editquest").setExecutor(new EditQuestCommand());
+    getCommand("editquest").setTabCompleter(new EditQuestCompleter());
   }
 }

@@ -1,12 +1,9 @@
 package xyz.raitaki.legendquests.utils;
 
 import com.iridium.iridiumcolorapi.IridiumColorAPI;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.bukkit.entity.Player;
+import xyz.raitaki.legendquests.utils.config.LanguageConfig;
 
 public class TextUtils {
 
@@ -65,20 +62,37 @@ public class TextUtils {
       sb.append(" ");
       compensated += spaceLength;
     }
-    player.sendMessage(sb.toString() + message);
+    player.sendMessage(sb + message);
   }
 
   public static String formatDateTime(long durationMillis) {
+    long years = TimeUnit.MILLISECONDS.toDays(durationMillis) / 365;
+    long days = TimeUnit.MILLISECONDS.toDays(durationMillis);
     long hours = TimeUnit.MILLISECONDS.toHours(durationMillis);
     long minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60;
     long seconds = TimeUnit.MILLISECONDS.toSeconds(durationMillis) % 60;
 
-    String hourText = hours == 1 ? "hour" : "hours";
-    String minuteText = minutes == 1 ? "minute" : "minutes";
-    String secondText = seconds == 1 ? "second" : "seconds";
+    LanguageConfig languageConfig = LanguageConfig.getInstance();
+    String yearText =
+        years == 1 ? languageConfig.getString("date.year") : languageConfig.getString("date.years");
+    String dayText =
+        days == 1 ? languageConfig.getString("date.day") : languageConfig.getString("date.years");
+    String hourText =
+        hours == 1 ? languageConfig.getString("date.hour") : languageConfig.getString("date.hours");
+    String minuteText = minutes == 1 ? languageConfig.getString("date.minute")
+        : languageConfig.getString("date.minutes");
+    String secondText = seconds == 1 ? languageConfig.getString("date.second")
+        : languageConfig.getString("date.seconds");
 
-    if (hours > 0) {
-      return String.format("%02d %s %02d %s %02d %s", hours, hourText, minutes, minuteText, seconds, secondText);
+    if (years > 0) {
+      return String.format("%02d %s %02d %s %02d %s", years, yearText, days, dayText, hours,
+          hourText);
+    } else if (days > 0) {
+      return String.format("%02d %s %02d %s %02d %s", days, dayText, hours, hourText, minutes,
+          minuteText);
+    } else if (hours > 0) {
+      return String.format("%02d %s %02d %s %02d %s", hours, hourText, minutes, minuteText, seconds,
+          secondText);
     } else if (minutes > 0) {
       return String.format("%02d %s %02d %s", minutes, minuteText, seconds, secondText);
     } else {

@@ -5,11 +5,13 @@ import de.themoep.inventorygui.GuiElementGroup;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
 import java.util.LinkedList;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.raitaki.legendquests.LegendQuests;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
@@ -17,7 +19,9 @@ import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.questhandlers.QuestReward;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint;
+import xyz.raitaki.legendquests.utils.PacketDisplay;
 import xyz.raitaki.legendquests.utils.TextUtils;
+import xyz.raitaki.legendquests.utils.config.SettingsConfig;
 
 public class QuestGui {
 
@@ -31,21 +35,18 @@ public class QuestGui {
   private CheckpointGui editedCheckpoint;
   private RewardGui editedReward;
   private EditGuiTypeEnum editGuiType;
+  private EditTypeEnum editType;
 
   public QuestGui(QuestBase questBase) {
     this.questBase = questBase;
 
     filler = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
     filler.getItemMeta().setDisplayName("");
-
-    buildMainGUI();
-    buildRewardGUI();
-    buildCheckpointGUI();
   }
 
   public void buildMainGUI() {
     String[] guiSetup = {
-        "         ",
+        "    g    ",
         "  a   b  ",
         "         ",
         "  s i z  ",
@@ -89,6 +90,40 @@ public class QuestGui {
       openRewardGUI(click.getWhoClicked());
       return true;
     }, TextUtils.replaceColors("<SOLID:00ff08>Rewards"));
+
+    //TRACKER
+    Location location = SettingsConfig.getInstance().getLocationValue("questtracker.location");
+    if(location != null) {
+      addStaticElement(mainGui, new ItemStack(Material.COMPASS), 'g', click -> {
+
+        if(click.getType() == ClickType.LEFT) {
+          setChangeType(click.getWhoClicked(), EditTypeEnum.X_VALUE);
+          editGuiType = EditGuiTypeEnum.TRACKER;
+        }
+        else if (click.getType() == ClickType.RIGHT) {
+          setChangeType(click.getWhoClicked(), EditTypeEnum.Y_VALUE);
+          editGuiType = EditGuiTypeEnum.TRACKER;
+        }
+        else if (click.getType() == ClickType.SHIFT_LEFT) {
+          setChangeType(click.getWhoClicked(), EditTypeEnum.Z_VALUE);
+          editGuiType = EditGuiTypeEnum.TRACKER;
+        }
+        else if (click.getType() == ClickType.SHIFT_RIGHT) {
+          setChangeType(click.getWhoClicked(), EditTypeEnum.YAW_VALUE);
+          editGuiType = EditGuiTypeEnum.TRACKER;
+        }
+        else if (click.getType() == ClickType.MIDDLE) {
+          setChangeType(click.getWhoClicked(), EditTypeEnum.PITCH_VALUE);
+          editGuiType = EditGuiTypeEnum.TRACKER;
+        }
+            return true;
+          }, TextUtils.replaceColors("<SOLID:00ff08>Tracker"),
+          TextUtils.replaceColors("<SOLID:7d7d7d>Left click to set tracker X pos: <SOLID:00ff08>" + formatDouble(location.getX())),
+          TextUtils.replaceColors("<SOLID:7d7d7d>Right click to set tracker Y pos: <SOLID:00ff08>" + formatDouble(location.getY())),
+          TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Left click to set tracker Z pos: <SOLID:00ff08>" + formatDouble(location.getZ())),
+          TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Right click to set tracker Yaw: <SOLID:00ff08>" + formatDouble(location.getYaw())),
+          TextUtils.replaceColors("<SOLID:7d7d7d>Middle click to set tracker Pitch: <SOLID:00ff08>" + formatDouble(location.getPitch())));
+    }
 
     mainGui.setCloseAction(close -> {
       editor = null;
@@ -177,6 +212,53 @@ public class QuestGui {
     mainGui.show(editor);
   }
 
+  public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
+    this.editType = editType;
+    mainGui.close(clicker);
+    sendMessage(
+        TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
+  }
+
+  public String formatDouble(double value){
+    return String.format("%.2f", value);
+  }
+
+  public void doTrackerText(String text){
+    double value = 0;
+    try{
+      value = Double.parseDouble(text);
+    } catch (NumberFormatException e){
+      sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Invalid number!"));
+      return;
+    }
+    Location loc = SettingsConfig.getInstance().getLocationValue("questtracker.location");
+    if(editType == EditTypeEnum.X_VALUE){
+      loc.setX(value);
+    }
+    else if(editType == EditTypeEnum.Y_VALUE){
+      loc.setY(value);
+    }
+    else if(editType == EditTypeEnum.Z_VALUE){
+      loc.setZ(value);
+    }
+    else if(editType == EditTypeEnum.YAW_VALUE){
+      loc.setYaw((float) value);
+    }
+    else if(editType == EditTypeEnum.PITCH_VALUE){
+      loc.setPitch((float) value);
+    }
+
+    editType = null;
+    editGuiType = null;
+    SettingsConfig.getInstance().setLocation("questtracker.location", loc);
+    PacketDisplay.updateDisplayLocation();
+    openMainGuiSynced(editor);
+  }
+
+  public void sendMessage(String message) {
+    editor.sendMessage(message);
+  }
+
   public void updateCheckpointGUI() {
     checkpointGui.close(editor);
     buildCheckpointGUI();
@@ -252,6 +334,17 @@ public class QuestGui {
     buildMainGUI();
     mainGui.show(player);
     editor = player;
+  }
+
+  public void openMainGuiSynced(HumanEntity player){
+    new BukkitRunnable(){
+      @Override
+      public void run() {
+        buildMainGUI();
+        mainGui.show(player);
+        editor = (Player) player;
+      }
+    }.runTask(LegendQuests.getInstance());
   }
 
   public void openMainGUI(HumanEntity player) {
@@ -358,7 +451,12 @@ public class QuestGui {
     NPC_NAME("NPC Name"),
     AMOUNT("Amount"),
     ACCEPT_TEXT("Accept Text"),
-    DECLINE_TEXT("Decline Text");
+    DECLINE_TEXT("Decline Text"),
+    X_VALUE("X"),
+    Y_VALUE("Y"),
+    Z_VALUE("Z"),
+    YAW_VALUE("Yaw"),
+    PITCH_VALUE("Pitch");
 
     String text;
 
@@ -373,6 +471,7 @@ public class QuestGui {
 
   public enum EditGuiTypeEnum {
     CHECKPOINT,
-    REWARD
+    REWARD,
+    TRACKER
   }
 }
