@@ -16,7 +16,6 @@ public class QuestUpdateListener implements Listener {
       @Override
       public void run() {
         QuestManager.getQuestPlayers().values().forEach(questplayer -> {
-          Bukkit.broadcastMessage(questplayer.getQuests().toString());
           QuestManager.updatePlayerQuestBaseQuest(questplayer, event.getQuestBase());
         });
       }

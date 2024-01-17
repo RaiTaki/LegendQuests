@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.raitaki.legendquests.commands.EditQuestCommand;
 import xyz.raitaki.legendquests.commands.completer.EditQuestCompleter;
+import xyz.raitaki.legendquests.database.DatabaseConnection;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
@@ -31,10 +32,12 @@ public final class LegendQuests extends JavaPlugin {
     new LanguageConfig("language.yml");
     new SettingsConfig("settings.yml");
 
+    DatabaseConnection.connect();
+
     QuestBase questBase = new QuestBase("test", "test", 20 * 60 * 1000);
     questBase.addReward(new QuestReward(questBase, RewardTypeEnum.MONEY, "100"));
     questBase.addCheckPoint(
-        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie", "Zombie"));
+        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERACT, "Zombie", "Zombie"));
     questBase.addCheckPoint(
         new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "KillZombie",
             "Zombie", "Accept", "Reject"));
@@ -42,7 +45,7 @@ public final class LegendQuests extends JavaPlugin {
     questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION,
         "Kill zombie completed", "Zombie", "", ""));
     questBase.addCheckPoint(
-        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERECT, "Zombie2", "Skeleton"));
+        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERACT, "Zombie2", "Skeleton"));
     questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION,
         "You are a real skeleton", "Zombie", "", ""));
     questBase.buildGUI();
@@ -50,12 +53,14 @@ public final class LegendQuests extends JavaPlugin {
     Bukkit.broadcastMessage(questBase.getAsJSON());
     QuestManager.registerEvents();
     CheckpointPlaceholder.registerPlaceholder();
-    PacketDisplay.startUpdateTimer();
+    //PacketDisplay.startUpdateTimer();
   }
 
   @Override
   public void onDisable() {
     // Plugin shutdown logic
+    DatabaseConnection.saveAllPlayersSynced();
+    DatabaseConnection.close();
   }
 
   /**

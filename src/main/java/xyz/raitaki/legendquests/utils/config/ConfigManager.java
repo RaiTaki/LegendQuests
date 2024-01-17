@@ -1,5 +1,8 @@
 package xyz.raitaki.legendquests.utils.config;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.raitaki.legendquests.LegendQuests;
 
@@ -15,6 +18,7 @@ public abstract class ConfigManager {
     this.configName = configName;
     config = YamlConfiguration.loadConfiguration(
         plugin.getDataFolder().toPath().resolve(configName).toFile());
+    saveConfig();
   }
 
   /**

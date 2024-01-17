@@ -1,6 +1,6 @@
 package xyz.raitaki.legendquests.commands.completer;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class EditQuestCompleter implements TabCompleter {
   @Override
   public List<String> onTabComplete(CommandSender sender, Command command, String alias,
       String[] args) {
-    List<String> completions = new ArrayList<>();
+    List<String> completions = new LinkedList<>();
     List<String> questNames = getQuestNames();
     if (!sender.hasPermission("legendquests.edit")) {
       return null;

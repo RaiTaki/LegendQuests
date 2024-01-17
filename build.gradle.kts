@@ -36,6 +36,7 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     implementation("com.iridium:IridiumColorAPI:1.0.8")
     implementation("de.themoep:inventorygui:1.6.1-SNAPSHOT")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.3.2")
     compileOnly("me.clip:placeholderapi:2.11.5")
 
 }
@@ -47,6 +48,7 @@ tasks {
     shadowJar{
         relocate("com.iridium", "xyz.raitaki.iridium")
         relocate("de.themoep.inventorygui", "xyz.raitaki.inventorygui")
+        relocate("org.mariadb.jdbc", "xyz.raitaki.jdbc")
     }
     compileJava {
         options.encoding = Charsets.UTF_8.name()

@@ -15,6 +15,8 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import xyz.raitaki.legendquests.database.DatabaseConnection;
+import xyz.raitaki.legendquests.database.objects.QuestData;
 import xyz.raitaki.legendquests.events.PlayerQuestInteractEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
@@ -26,27 +28,29 @@ import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerConversationCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerInteractionCheckpoint;
-import xyz.raitaki.legendquests.utils.PacketDisplay;
 
 public class PlayerEventListener implements Listener {
 
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
-    QuestManager.addBaseQuestToPlayer(event.getPlayer(), QuestManager.getBaseQuests().get(0));
-    QuestManager.getQuestPlayerByPlayer(event.getPlayer()).sendQuestInfoChat();
+    Player player = event.getPlayer();
+    DatabaseConnection.getPlayerData(player.getUniqueId().toString())
+        .thenAccept(playerData -> {
 
-    PacketDisplay packetDisplay = new PacketDisplay(event.getPlayer(),
-        "%legendquest_questname%\n%legendquest_questdescription%\n%legendquest_checkpoint%\n%legendquest_remainingtime%");
-
-    QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(event.getPlayer());
-    questPlayer.setPacketDisplay(packetDisplay);
-    //packetDisplay.setAlignment(TextAlignment.LEFT);
-
+          for (QuestData questData : playerData.getQuests()) {
+            //QuestManager.loadPlayerQuestFromData(event.getPlayer(), questData);
+            QuestManager.loadPlayerQuestFromData(player, questData);
+          }
+          QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
+          questPlayer.sendQuestInfoChat();
+        });
   }
 
   @EventHandler
   public void onPlayerQuit(PlayerQuitEvent event) {
-
+    QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(event.getPlayer());
+    DatabaseConnection.savePlayerData(questPlayer);
+    QuestManager.removeQuestPlayer(event.getPlayer());
   }
 
   @EventHandler
@@ -85,7 +89,7 @@ public class PlayerEventListener implements Listener {
     Entity entity = event.getRightClicked();
     QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
     PlayerQuest playerQuest = questPlayer.getPlayerQuestByCheckpointType(
-        CheckPointTypeEnum.INTERECT);
+        CheckPointTypeEnum.INTERACT);
 
     if (playerQuest == null) {
       return;

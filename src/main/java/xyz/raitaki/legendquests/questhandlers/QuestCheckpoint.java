@@ -20,7 +20,7 @@ public abstract class QuestCheckpoint {
   public abstract JSONObject getAsJSON();
 
   public enum CheckPointTypeEnum {
-    INTERECT,
+    INTERACT,
     CONVERSATION,
     KILL,
   }

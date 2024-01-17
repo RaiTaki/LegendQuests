@@ -110,7 +110,7 @@ public class CheckpointGui {
         return true;
 
       }, TextUtils.replaceColors("<SOLID:7d7d7d>Amount: <SOLID:9ADB4F>" + newValue));
-    } else if (newType == CheckPointTypeEnum.INTERECT) {
+    } else if (newType == CheckPointTypeEnum.INTERACT) {
       addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
         setChangeType(click.getWhoClicked(), NPC_NAME);
         return true;
@@ -142,7 +142,7 @@ public class CheckpointGui {
 
       if (newType == CheckPointTypeEnum.KILL) {
         newCheckpoint = new KillCheckpoint(questBase, newType, newValue, newAmount);
-      } else if (newType == CheckPointTypeEnum.INTERECT) {
+      } else if (newType == CheckPointTypeEnum.INTERACT) {
         newCheckpoint = new InteractionCheckpoint(questBase, newType, newValue, newNpcName);
       } else {
         newCheckpoint = new ConversationCheckpoint(questBase, newType, newValue, newNpcName,
@@ -257,8 +257,8 @@ public class CheckpointGui {
    */
   private CheckPointTypeEnum nextType(CheckPointTypeEnum type) {
     return switch (type) {
-      case CONVERSATION -> CheckPointTypeEnum.INTERECT;
-      case INTERECT -> CheckPointTypeEnum.KILL;
+      case CONVERSATION -> CheckPointTypeEnum.INTERACT;
+      case INTERACT -> CheckPointTypeEnum.KILL;
       case KILL -> CheckPointTypeEnum.CONVERSATION;
     };
   }

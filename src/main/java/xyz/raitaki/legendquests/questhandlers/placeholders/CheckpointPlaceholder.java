@@ -62,7 +62,7 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
               .get("placeholders.kill", true, "{entityName}", entityName, "{counter}", counter,
                   "{max}", amount);
         }
-        if (type == CheckPointTypeEnum.INTERECT) {
+        if (type == CheckPointTypeEnum.INTERACT) {
           st = LanguageConfig.getInstance()
               .get("placeholders.interact", true, "{entityName}", quest.getCheckPoint().getValue());
         }

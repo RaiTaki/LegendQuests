@@ -7,3 +7,9 @@ questtracker:
     z: 1
     pitch: 1
     yaw: 1
+database: # ONLY MARIADB IS SUPPORTED
+  host: localhost
+  port: 3306
+  database: database
+  username: username
+  password: password

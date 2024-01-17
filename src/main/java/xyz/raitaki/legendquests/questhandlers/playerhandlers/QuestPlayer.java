@@ -1,11 +1,15 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
 import java.util.LinkedList;
+import java.util.LinkedList;
 import java.util.UUID;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
+import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.utils.PacketDisplay;
 import xyz.raitaki.legendquests.utils.TextUtils;
 
@@ -20,6 +24,9 @@ public class QuestPlayer {
     this.player = player;
     this.uuid = player.getUniqueId();
     quests = new LinkedList<>();
+
+    packetDisplay = new PacketDisplay(player,
+        "%legendquest_questname%\n%legendquest_questdescription%\n%legendquest_checkpoint%\n%legendquest_remainingtime%");
   }
 
   /**
@@ -110,5 +117,20 @@ public class QuestPlayer {
    */
   public PacketDisplay getPacketDisplay() {
     return packetDisplay;
+  }
+
+  /**
+   * @return the uuid of the player
+   */
+  public UUID getUuid() {
+    return uuid;
+  }
+
+  public JSONArray getAsJSON() {
+    JSONArray jsonArray = new JSONArray();
+    for (PlayerQuest quest : quests) {
+      jsonArray.add(quest.getAsJSON());
+    }
+    return jsonArray;
   }
 }

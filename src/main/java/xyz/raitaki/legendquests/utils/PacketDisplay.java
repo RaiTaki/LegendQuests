@@ -122,7 +122,6 @@ public class PacketDisplay {
     this.location = location;
     textDisplay.teleportTo(location.getX(), location.getY(), location.getZ());
     textDisplay.setRot(location.getYaw(), location.getPitch());
-    Bukkit.broadcastMessage("Location: " + location.toString());
     sendTeleportPacket();
   }
 

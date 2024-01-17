@@ -31,7 +31,7 @@ public class PlayerQuestReward {
       case MONEY:
         EconomyUtils.giveMoney(player, Integer.parseInt(value));
         String text = languageConfig.getString("reward.money");
-        text = TextUtils.replaceStrings(text, true, "{money}", value);
+        text = TextUtils.replaceStrings(text, true, "{value}", value);
         TextUtils.sendCenteredMessage(player, text);
         break;
       case ITEM:
