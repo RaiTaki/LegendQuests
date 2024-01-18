@@ -39,32 +39,37 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
 
   @Override
   public String onPlaceholderRequest(Player p, @NotNull String params) {
-    String st = LanguageConfig.getInstance().get("placeholders.noquest", true);
+    String st = getStringByParam(params);
     if (p == null) {
       return st;
     }
 
     QuestPlayer player = QuestManager.getQuestPlayerByPlayer(p);
-    PlayerQuest quest = player.getQuests().get(0);
+    if (player.getQuests().isEmpty()) {
+      return st;
+    }
+
+    PlayerQuest quest = player.getQuestOnGoing();
     if (quest == null) {
       return st;
     }
 
     if (params.equalsIgnoreCase("checkpoint")) {
-      if (quest.getCheckPoint() != null) {
-        CheckPointTypeEnum type = quest.getCheckPoint().getType();
+      if (quest.getCheckpoint() != null) {
+        CheckPointTypeEnum type = quest.getCheckpoint().getType();
         if (type == CheckPointTypeEnum.KILL) {
-          PlayerKillCheckpoint checkpoint = (PlayerKillCheckpoint) quest.getCheckPoint();
+          PlayerKillCheckpoint checkpoint = (PlayerKillCheckpoint) quest.getCheckpoint();
           String entityName = checkpoint.getValue();
           String counter = String.valueOf(checkpoint.getCounter());
           String amount = String.valueOf(checkpoint.getAmount());
-          st = LanguageConfig.getInstance()
-              .get("placeholders.kill", true, "{entityName}", entityName, "{counter}", counter,
-                  "{max}", amount);
+          st = LanguageConfig.getInstance().get("placeholders.kill", true,
+              "{entityName}", entityName,
+              "{counter}", counter,
+              "{max}", amount);
         }
         if (type == CheckPointTypeEnum.INTERACT) {
           st = LanguageConfig.getInstance()
-              .get("placeholders.interact", true, "{entityName}", quest.getCheckPoint().getValue());
+              .get("placeholders.interact", true, "{entityName}", quest.getCheckpoint().getValue());
         }
       }
     }
@@ -82,5 +87,13 @@ public class CheckpointPlaceholder extends PlaceholderExpansion {
 
   public static void registerPlaceholder() {
     new CheckpointPlaceholder().register();
+  }
+
+  public String getStringByParam(String param) {
+    if (param.equalsIgnoreCase("checkpoint")) {
+      return LanguageConfig.getInstance().get("placeholders.noquest", true);
+    } else {
+      return "";
+    }
   }
 }

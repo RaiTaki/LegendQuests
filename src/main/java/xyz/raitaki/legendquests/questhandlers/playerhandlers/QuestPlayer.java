@@ -1,15 +1,12 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
 import java.util.LinkedList;
-import java.util.LinkedList;
 import java.util.UUID;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
-import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.utils.PacketDisplay;
 import xyz.raitaki.legendquests.utils.TextUtils;
 
@@ -43,6 +40,15 @@ public class QuestPlayer {
     return quests;
   }
 
+  public PlayerQuest getQuestOnGoing(){
+    for(PlayerQuest quest : quests){
+      if(!quest.isCompleted()){
+        return quest;
+      }
+    }
+    return null;
+  }
+
   /**
    * @return the player
    */
@@ -56,7 +62,7 @@ public class QuestPlayer {
    */
   public PlayerQuest getPlayerQuestByCheckpointType(QuestCheckpoint.CheckPointTypeEnum type) {
     for (PlayerQuest quest : quests) {
-      if (quest.getCheckPoint().getType().equals(type)) {
+      if (quest.getCheckpoint().getType().equals(type) && !quest.isCompleted()) {
         return quest;
       }
     }

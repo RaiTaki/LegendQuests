@@ -11,6 +11,10 @@ public class PlayerAnswerListener implements Listener {
   public void onPlayerAnswer(PlayerAnswerEvent event) {
     PlayerQuest playerQuest = event.getPlayerQuest();
 
+    if(playerQuest.isCompleted()){
+      return;
+    }
+
     playerQuest.nextCheckPoint();
   }
 }

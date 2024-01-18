@@ -22,9 +22,12 @@ public class EntityKillListener implements Listener {
     if (quest == null) {
       return;
     }
+    if(quest.isCompleted()){
+      return;
+    }
 
     String entityName = event.getEntity().getName();
-    String questEntityName = quest.getCheckPoint().getValue();
+    String questEntityName = quest.getCheckpoint().getValue();
 
     if (!entityName.equals(questEntityName)) {
       return;

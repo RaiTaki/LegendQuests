@@ -36,6 +36,8 @@ public class ConversationCheckpoint extends QuestCheckpoint {
     jsonObject.put("type", getType().toString());
     jsonObject.put("value", getValue());
     jsonObject.put("npcName", getNpcName());
+    jsonObject.put("acceptText", getAcceptText());
+    jsonObject.put("declineText", getDeclineText());
     return jsonObject;
   }
 

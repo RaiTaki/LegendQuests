@@ -8,10 +8,12 @@ import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import xyz.raitaki.legendquests.LegendQuests;
 import xyz.raitaki.legendquests.database.objects.PlayerData;
+import xyz.raitaki.legendquests.database.objects.QuestsData;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.utils.config.SettingsConfig;
@@ -56,6 +58,13 @@ public class DatabaseConnection {
           + "`data` TEXT NOT NULL,"
           + "PRIMARY KEY (`id`),"
           + "UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC))");
+
+      connection.createStatement().execute("CREATE TABLE IF NOT EXISTS `quests` ("
+          + "`id` INT NOT NULL AUTO_INCREMENT,"
+          + " `data` TEXT NOT NULL,"
+          + " PRIMARY KEY (`id`),"
+          + " UNIQUE INDEX `unique_id` (`id` ASC))");
+
     } catch (SQLException exception) {
       Bukkit.getLogger().warning(exception.getMessage());
       Bukkit.getPluginManager().disablePlugin(LegendQuests.getInstance());
@@ -150,13 +159,70 @@ public class DatabaseConnection {
   public static void insertPlayerDataToDatabase(QuestPlayer player) {
     String query = "INSERT INTO players (uuid, data) VALUES (?, ?)";
     LegendQuests instance = LegendQuests.getInstance();
-    if(player.getQuests().isEmpty()){
+    if (player.getQuests().isEmpty()) {
       QuestManager.addBaseQuestToPlayer(player.getPlayer(), QuestManager.getBaseQuests().get(0));
     }
     instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
       try (PreparedStatement statement = connection.prepareStatement(query)) {
         statement.setString(1, player.getUuid().toString());
         statement.setString(2, player.getAsJSON().toJSONString());
+        statement.executeUpdate();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    });
+  }
+
+  public static void updateQuest(JSONObject json){
+    String query = "UPDATE quests SET data = ? WHERE id = ?";
+    LegendQuests instance = LegendQuests.getInstance();
+    instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
+      try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setString(1, json.toJSONString());
+        statement.setInt(2, Integer.parseInt((String) json.get("id"))+1);
+        statement.executeUpdate();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    });
+  }
+
+  /**
+   * Load all quests from the database
+   */
+  public static void loadAllQuests(){
+    String query = "SELECT * FROM quests";
+    LegendQuests instance = LegendQuests.getInstance();
+
+    JSONArray quests = new JSONArray();
+    instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
+      try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (ResultSet resultSet = statement.executeQuery()) {
+          while (resultSet.next()) {
+            String data = resultSet.getString("data");
+            JSONParser parser = new JSONParser();
+            quests.add(parser.parse(data));
+          }
+
+          new QuestsData(quests);
+        }
+      } catch (SQLException | ParseException e) {
+        Bukkit.getLogger().warning(e.getMessage());
+      }
+    });
+  }
+
+  /**
+   * Insert the quest to the database
+   *
+   * @param json json of the quest
+   */
+  public static void insertQuest(JSONObject json){
+    String query = "INSERT INTO quests (data) VALUES (?)";
+    LegendQuests instance = LegendQuests.getInstance();
+    instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
+      try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setString(1, json.toJSONString());
         statement.executeUpdate();
       } catch (SQLException e) {
         throw new RuntimeException(e);
@@ -178,9 +244,9 @@ public class DatabaseConnection {
   /**
    * Save all players to the database synchronously
    */
-  public static void saveAllPlayersSynced(){
+  public static void saveAllPlayersSynced() {
     QuestManager.getQuestPlayers().values().forEach(player -> {
-      if(player.getPlayer().isOnline()) {
+      if (player.getPlayer().isOnline()) {
         savePlayerDataSync(player);
       }
     });

@@ -6,3 +6,5 @@ depend: [PlaceholderAPI]
 commands:
   editquest:
     permission: legendquests.editquest
+  createquest:
+    permission: legendquests.createquest

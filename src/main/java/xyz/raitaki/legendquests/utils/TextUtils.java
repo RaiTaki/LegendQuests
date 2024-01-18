@@ -125,4 +125,33 @@ public class TextUtils {
       return String.format("%02d %s", seconds, secondText);
     }
   }
+
+  /**
+   * parse a string to time
+   *
+   * @param text the text to parse
+   * @return the time in milliseconds
+   */
+  public static long parseStringToTime(String text){
+    long time = 0;
+    text = text.replace(",", "");
+    String[] split = text.split(" ");
+
+    for(String s : split){
+      if(s.contains("Y")){
+        time += Integer.parseInt(s.replace("Y", "")) * 31536000000L;
+      }
+      else if(s.contains("D")){
+        time += Integer.parseInt(s.replace("D", "")) * 86400000L;
+      }
+      else if(s.contains("H")){
+        time += Integer.parseInt(s.replace("H", "")) * 3600000L;
+      }else if(s.contains("M")){
+        time += Integer.parseInt(s.replace("M", "")) * 60000L;
+      }else if(s.contains("S")){
+        time += Integer.parseInt(s.replace("S", "")) * 1000L;
+      }
+    }
+    return time;
+  }
 }

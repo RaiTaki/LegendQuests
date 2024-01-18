@@ -12,7 +12,7 @@ public class PlayerQuestKillListener implements Listener {
   @EventHandler
   public void onEntityKill(PlayerQuestKillEvent event) {
     PlayerQuest quest = event.getPlayerQuest();
-    PlayerCheckpoint checkpoint = quest.getCheckPoint();
+    PlayerCheckpoint checkpoint = quest.getCheckpoint();
     if (quest.isCompleted()) {
       return;
     }

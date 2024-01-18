@@ -9,10 +9,13 @@ public class KillCheckpointData extends CheckpointData {
 
   private int amount;
   private int counter;
-  public KillCheckpointData(JSONObject data) {
-    super(data);
+  public KillCheckpointData(JSONObject data, boolean player) {
+    super(data, player);
     amount = (int) (long) data.get("amount");
-    counter = (int) (long) data.get("counter");
+
+    if(player) {
+      counter = (int) (long) data.get("counter");
+    }
   }
 
   public int getAmount() {

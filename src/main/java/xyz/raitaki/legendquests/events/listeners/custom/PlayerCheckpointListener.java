@@ -12,9 +12,9 @@ public class PlayerCheckpointListener implements Listener {
 
   @EventHandler
   public void onCheckpointUpdate(PlayerNextCheckpointEvent event) {
-    PlayerQuest quest = event.getPlayerQuest();
-    QuestPlayer player = event.getQuestPlayer();
-    PlayerCheckpoint currentCheckpoint = event.getCurrentCheckpoint();
+    if (event.getPlayerQuest().isCompleted()) {
+      return;
+    }
     PlayerCheckpoint nextCheckpoint = event.getNextCheckpoint();
 
     if (nextCheckpoint instanceof PlayerConversationCheckpoint conversation) {

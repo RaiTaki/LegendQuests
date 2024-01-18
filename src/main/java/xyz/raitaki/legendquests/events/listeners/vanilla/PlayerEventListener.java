@@ -1,6 +1,7 @@
 package xyz.raitaki.legendquests.events.listeners.vanilla;
 
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.CHECKPOINT;
+import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.QUEST;
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.REWARD;
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditGuiTypeEnum.TRACKER;
 
@@ -34,16 +35,15 @@ public class PlayerEventListener implements Listener {
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
-    DatabaseConnection.getPlayerData(player.getUniqueId().toString())
-        .thenAccept(playerData -> {
+    DatabaseConnection.getPlayerData(player.getUniqueId().toString()).thenAccept(playerData -> {
 
-          for (QuestData questData : playerData.getQuests()) {
-            //QuestManager.loadPlayerQuestFromData(event.getPlayer(), questData);
-            QuestManager.loadPlayerQuestFromData(player, questData);
-          }
-          QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
-          questPlayer.sendQuestInfoChat();
-        });
+      for (QuestData questData : playerData.getQuests()) {
+        //QuestManager.loadPlayerQuestFromData(event.getPlayer(), questData);
+        QuestManager.loadPlayerQuestFromData(player, questData);
+      }
+      QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
+      questPlayer.sendQuestInfoChat();
+    });
   }
 
   @EventHandler
@@ -79,6 +79,8 @@ public class PlayerEventListener implements Listener {
       checkpointGUI.setChatMessage(text);
     } else if (quest.getQuestGUI().getEditGuiType() == TRACKER) {
       quest.getQuestGUI().doTrackerText(text);
+    } else if (quest.getQuestGUI().getEditGuiType() == QUEST) {
+      quest.getQuestGUI().doQuestChange(text);
     }
     event.setCancelled(true);
   }
@@ -95,7 +97,7 @@ public class PlayerEventListener implements Listener {
       return;
     }
 
-    PlayerCheckpoint playerCheckpoint = playerQuest.getCheckPoint();
+    PlayerCheckpoint playerCheckpoint = playerQuest.getCheckpoint();
     String entityName = entity.getName();
     if (!(playerCheckpoint instanceof PlayerInteractionCheckpoint interactionCheckpoint)) {
       return;
@@ -121,7 +123,7 @@ public class PlayerEventListener implements Listener {
     if (playerQuest == null) {
       return;
     }
-    PlayerConversationCheckpoint playerCheckpoint = (PlayerConversationCheckpoint) playerQuest.getCheckPoint();
+    PlayerConversationCheckpoint playerCheckpoint = (PlayerConversationCheckpoint) playerQuest.getCheckpoint();
     if (playerCheckpoint == null) {
       return;
     }

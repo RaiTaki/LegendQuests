@@ -2,7 +2,9 @@ package xyz.raitaki.legendquests;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.raitaki.legendquests.commands.CreateQuestCommand;
 import xyz.raitaki.legendquests.commands.EditQuestCommand;
+import xyz.raitaki.legendquests.commands.completer.CreateQuestCompleter;
 import xyz.raitaki.legendquests.commands.completer.EditQuestCompleter;
 import xyz.raitaki.legendquests.database.DatabaseConnection;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
@@ -33,27 +35,10 @@ public final class LegendQuests extends JavaPlugin {
     new SettingsConfig("settings.yml");
 
     DatabaseConnection.connect();
-
-    QuestBase questBase = new QuestBase("test", "test", 20 * 60 * 1000);
-    questBase.addReward(new QuestReward(questBase, RewardTypeEnum.MONEY, "100"));
-    questBase.addCheckPoint(
-        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERACT, "Zombie", "Zombie"));
-    questBase.addCheckPoint(
-        new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION, "KillZombie",
-            "Zombie", "Accept", "Reject"));
-    questBase.addCheckPoint(new KillCheckpoint(questBase, CheckPointTypeEnum.KILL, "Zombie", 2));
-    questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION,
-        "Kill zombie completed", "Zombie", "", ""));
-    questBase.addCheckPoint(
-        new InteractionCheckpoint(questBase, CheckPointTypeEnum.INTERACT, "Zombie2", "Skeleton"));
-    questBase.addCheckPoint(new ConversationCheckpoint(questBase, CheckPointTypeEnum.CONVERSATION,
-        "You are a real skeleton", "Zombie", "", ""));
-    questBase.buildGUI();
-
-    Bukkit.broadcastMessage(questBase.getAsJSON());
+    DatabaseConnection.loadAllQuests();
     QuestManager.registerEvents();
     CheckpointPlaceholder.registerPlaceholder();
-    //PacketDisplay.startUpdateTimer();
+    PacketDisplay.startUpdateTimer();
   }
 
   @Override
@@ -76,5 +61,8 @@ public final class LegendQuests extends JavaPlugin {
   public void registerCommands() {
     getCommand("editquest").setExecutor(new EditQuestCommand());
     getCommand("editquest").setTabCompleter(new EditQuestCompleter());
+
+    getCommand("createquest").setExecutor(new CreateQuestCommand());
+    getCommand("createquest").setTabCompleter(new CreateQuestCompleter());
   }
 }

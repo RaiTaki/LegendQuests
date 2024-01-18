@@ -1,19 +1,24 @@
 package xyz.raitaki.legendquests.database.objects;
 
+import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 
 public abstract class CheckpointData {
+
   private JSONObject data;
   private CheckPointTypeEnum type;
   private String value;
   private boolean completed;
 
-  public CheckpointData(JSONObject data) {
+  public CheckpointData(JSONObject data, boolean player) {
     this.data = data;
     type = CheckPointTypeEnum.valueOf((String) data.get("type"));
     value = (String) data.get("value");
-    completed = (boolean) data.get("completed");
+
+    if (player) {
+      completed = (boolean) data.get("completed");
+    }
   }
 
   public CheckPointTypeEnum getType() {
@@ -27,6 +32,7 @@ public abstract class CheckpointData {
   public boolean isCompleted() {
     return completed;
   }
+
   public JSONObject getData() {
     return data;
   }

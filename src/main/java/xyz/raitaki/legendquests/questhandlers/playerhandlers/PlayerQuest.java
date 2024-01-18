@@ -7,13 +7,15 @@ import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.events.PlayerNextCheckpointEvent;
 import xyz.raitaki.legendquests.events.PlayerQuestEndEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
+import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
+import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.utils.TextUtils;
 
 public class PlayerQuest {
 
   private QuestBase questBase;
   private QuestPlayer player;
-  private PlayerCheckpoint checkPoint;
+  private PlayerCheckpoint checkpoint;
   private LinkedList<PlayerCheckpoint> checkpoints;
   private LinkedList<PlayerQuestReward> rewards;
   private boolean completed;
@@ -41,30 +43,39 @@ public class PlayerQuest {
   }
 
   /**
-   * @param checkPoint set the checkpoint of the quest
+   * @param checkpoint set the checkpoint of the quest
    */
-  public void setCheckPoint(PlayerCheckpoint checkPoint) {
-    this.checkPoint = checkPoint;
+  public void setCheckpoint(PlayerCheckpoint checkpoint) {
+    this.checkpoint = checkpoint;
   }
 
   /**
    * move the player to the next checkpoint
    */
   public void nextCheckPoint() {
-    int index = checkpoints.indexOf(checkPoint);
+    int index = checkpoints.indexOf(checkpoint);
     if (index == checkpoints.size() - 1) {
       PlayerQuestEndEvent event = new PlayerQuestEndEvent(player, this);
       Bukkit.getPluginManager().callEvent(event);
       completed = true;
+      String nextQuestName = questBase.getNextQuestName();
+
+      if (nextQuestName != null) {
+        QuestBase nextQuest = QuestManager.getQuestBaseByName(nextQuestName);
+        if(nextQuest == null) {
+          return;
+        }
+        QuestManager.addBaseQuestToPlayer(player.getPlayer(), nextQuest);
+      }
     } else {
-      checkPoint.setCompleted(true);
-      checkPoint = checkpoints.get(index + 1);
-      PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkPoint,
+      checkpoint.setCompleted(true);
+      checkpoint = checkpoints.get(index + 1);
+      PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkpoint,
           checkpoints.get(index + 1));
       Bukkit.getPluginManager().callEvent(event);
       if (event.isCancelled()) {
-        checkPoint = checkpoints.get(index);
-        checkPoint.setCompleted(false);
+        checkpoint = checkpoints.get(index);
+        checkpoint.setCompleted(false);
       }
     }
   }
@@ -73,11 +84,11 @@ public class PlayerQuest {
    * move the player to the previous checkpoint
    */
   public void previousCheckPoint() {
-    int index = checkpoints.indexOf(checkPoint);
-    checkPoint.setCompleted(false);
+    int index = checkpoints.indexOf(checkpoint);
+    checkpoint.setCompleted(false);
     if (index != 0) {
-      checkPoint = checkpoints.get(index - 1);
-      checkPoint.setCompleted(false);
+      checkpoint = checkpoints.get(index - 1);
+      checkpoint.setCompleted(false);
     }
   }
 
@@ -105,8 +116,8 @@ public class PlayerQuest {
   /**
    * @return the checkpoint of the quest
    */
-  public PlayerCheckpoint getCheckPoint() {
-    return checkPoint;
+  public PlayerCheckpoint getCheckpoint() {
+    return checkpoint;
   }
 
   /**
@@ -147,8 +158,17 @@ public class PlayerQuest {
       if (checkpoint.isCompleted()) {
         continue;
       }
-      this.checkPoint = checkpoint;
+      this.checkpoint = checkpoint;
+      if(this.checkpoint.getType() == CheckPointTypeEnum.CONVERSATION && !isCompleted()) {
+        this.checkpoint = checkpoints.get(checkpoints.indexOf(checkpoint) - 1);
+        this.checkpoint.setCompleted(false);
+        this.completed = false;
+      }
       return;
+    }
+
+    if(this.checkpoint == null || this.checkpoint.isCompleted() && !this.completed) {
+      nextCheckPoint();
     }
   }
 
@@ -161,6 +181,7 @@ public class PlayerQuest {
     jsonObject.put("description", questBase.getDescription());
     jsonObject.put("completed", completed);
     jsonObject.put("remainingTime", getCalculatedRemainingTime());
+    jsonObject.put("id", questBase.getQuestId());
 
     JSONArray rewardsArray = new JSONArray();
     for (PlayerQuestReward reward : rewards) {
@@ -217,9 +238,30 @@ public class PlayerQuest {
     this.startTime = System.currentTimeMillis();
     this.remainingTime = questBase.getTime();
     this.completed = false;
-    this.checkPoint = checkpoints.get(0);
+    this.checkpoint = checkpoints.get(0);
     for (PlayerCheckpoint checkpoint : checkpoints) {
       checkpoint.setCompleted(false);
     }
+  }
+
+  /**
+   * @param remainingTime set the remaining time of the quest
+   */
+  public void setRemainingTime(long remainingTime) {
+    this.remainingTime = remainingTime;
+  }
+
+  /**
+   * @param questName the quest name to set
+   */
+  public void setQuestName(String questName) {
+    this.questName = questName;
+  }
+
+  /**
+   * @param description the description to set
+   */
+  public void setDescription(String description) {
+    this.description = description;
   }
 }

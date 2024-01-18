@@ -7,8 +7,8 @@ import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum
 public class InteractionCheckpointData extends CheckpointData {
 
   private String npcName;
-  public InteractionCheckpointData(JSONObject data) {
-    super(data);
+  public InteractionCheckpointData(JSONObject data, boolean player) {
+    super(data, player);
     npcName = (String) data.get("npcName");
   }
 

@@ -14,20 +14,31 @@ public class QuestData {
 
   private JSONObject data;
   private String name;
+  private String id;
   private String description;
   private List<CheckpointData> checkpoints;
   private List<RewardData> rewards;
   private boolean completed;
   private long time;
+  private boolean player;
+  private String nextQuestName;
 
-  public QuestData(JSONObject data) {
+  public QuestData(JSONObject data, boolean player) {
+    this.player = player;
     this.data = data;
     checkpoints = loadCheckpoints();
     rewards = loadRewards();
     name = (String) data.get("name");
+    id = (String) data.get("id");
     description = (String) data.get("description");
-    completed = (boolean) data.get("completed");
-    time = (long) data.get("remainingTime");
+
+    if (player) {
+      time = (long) data.get("remainingTime");
+      completed = (boolean) data.get("completed");
+    } else {
+      time = (long) data.get("time");
+      nextQuestName = (String) data.get("nextQuestName");
+    }
   }
 
   public String getName() {
@@ -58,6 +69,10 @@ public class QuestData {
     return rewards;
   }
 
+  public String getId() {
+    return id;
+  }
+
   private List<RewardData> loadRewards() {
     LinkedList<RewardData> rewards = new LinkedList<>();
     for (Object reward : (JSONArray) data.get("rewards")) {
@@ -72,13 +87,17 @@ public class QuestData {
       String type = (String) ((JSONObject) checkpoint).get("type");
 
       if (type.equals("KILL")) {
-        checkpoints.add(new KillCheckpointData((JSONObject) checkpoint));
+        checkpoints.add(new KillCheckpointData((JSONObject) checkpoint, player));
       } else if (type.equals("INTERACT")) {
-        checkpoints.add(new InteractionCheckpointData((JSONObject) checkpoint));
+        checkpoints.add(new InteractionCheckpointData((JSONObject) checkpoint, player));
       } else {
-        checkpoints.add(new ConversationCheckpointData((JSONObject) checkpoint));
+        checkpoints.add(new ConversationCheckpointData((JSONObject) checkpoint, player));
       }
     }
     return checkpoints;
+  }
+
+  public String getNextQuestName() {
+    return nextQuestName;
   }
 }

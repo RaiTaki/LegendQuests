@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.raitaki.legendquests.LegendQuests;
+import xyz.raitaki.legendquests.database.DatabaseConnection;
 import xyz.raitaki.legendquests.events.QuestUpdateEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
 
@@ -18,6 +19,7 @@ public class QuestUpdateListener implements Listener {
         QuestManager.getQuestPlayers().values().forEach(questplayer -> {
           QuestManager.updatePlayerQuestBaseQuest(questplayer, event.getQuestBase());
         });
+        DatabaseConnection.updateQuest(event.getQuestBase().getAsJSON());
       }
     }.runTaskAsynchronously(LegendQuests.getInstance());
   }

@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.raitaki.legendquests.LegendQuests;
+import xyz.raitaki.legendquests.events.QuestUpdateEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
@@ -31,7 +32,6 @@ public class QuestGui {
   private InventoryGui checkpointGui;
   private InventoryGui rewardGui;
   private Player editor;
-
   private CheckpointGui editedCheckpoint;
   private RewardGui editedReward;
   private EditGuiTypeEnum editGuiType;
@@ -50,7 +50,8 @@ public class QuestGui {
   public void buildMainGUI() {
     String[] guiSetup = {
         "    g    ",
-        "  a   b  ",
+        "         ",
+        "  a d b  ",
         "         ",
         "  s i z  ",
         "         "
@@ -62,9 +63,33 @@ public class QuestGui {
     //NAME & DESC
     addStaticElement(mainGui, new ItemStack(Material.PAPER), 'a', click -> true,
         TextUtils.replaceColors("<SOLID:7d7d7d>Quest: <SOLID:9ADB4F>" + questBase.getName()),
+        TextUtils.replaceColors("<SOLID:7d7d7d>Quest ID: <SOLID:9ADB4F>" + questBase.getQuestId()),
         TextUtils.replaceColors(
-            "<SOLID:7d7d7d>Description: <SOLID:9ADB4F>" + questBase.getDescription())
+            "<SOLID:7d7d7d>Description: <SOLID:9ADB4F>" + questBase.getDescription()),
+        TextUtils.replaceColors("<SOLID:7d7d7d>Time: <SOLID:9ADB4F>" + questBase.getTime()),
+        TextUtils.replaceColors(
+            "<SOLID:7d7d7d>Next Quest: <SOLID:9ADB4F>" + questBase.getNextQuestName())
     );
+
+    addStaticElement(mainGui, new ItemStack(Material.PAPER), 'd', click -> {
+      if(click.getType() == ClickType.LEFT) {
+        setChangeType(click.getWhoClicked(), EditTypeEnum.DESCRIPTION);
+        editGuiType = EditGuiTypeEnum.QUEST;
+      } else if(click.getType() == ClickType.SHIFT_LEFT) {
+        setChangeType(click.getWhoClicked(), EditTypeEnum.QUEST_NAME);
+        editGuiType = EditGuiTypeEnum.QUEST;
+      } else if(click.getType() == ClickType.RIGHT) {
+        setChangeType(click.getWhoClicked(), EditTypeEnum.TIME);
+        editGuiType = EditGuiTypeEnum.QUEST;
+      } else if(click.getType() == ClickType.SHIFT_RIGHT) {
+        setChangeType(click.getWhoClicked(), EditTypeEnum.NEXT_QUEST);
+        editGuiType = EditGuiTypeEnum.QUEST;
+      }
+      return true;
+    }, TextUtils.replaceColors("<SOLID:7d7d7d>Left click to edit description: <SOLID:9ADB4F>" + questBase.getDescription()),
+        TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Left click to edit quest name: <SOLID:9ADB4F>" + questBase.getName()),
+        TextUtils.replaceColors("<SOLID:7d7d7d>Right click to edit time: <SOLID:9ADB4F>" + questBase.getTime()),
+        TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Right click to edit next quest: <SOLID:9ADB4F>" + questBase.getNextQuestName()));
 
     //DETAILS
 
@@ -79,6 +104,9 @@ public class QuestGui {
     addStaticElement(mainGui, new ItemStack(Material.PAPER), 'i', click -> {
       QuestManager.updatePlayersQuest();
       mainGui.close(click.getWhoClicked());
+
+      QuestUpdateEvent event = new QuestUpdateEvent(questBase);
+      LegendQuests.getInstance().getServer().getPluginManager().callEvent(event);
       return true;
     }, TextUtils.replaceColors("<SOLID:00ff08>Close"));
 
@@ -138,6 +166,9 @@ public class QuestGui {
       editor = null;
       mainGui.close(close.getPlayer());
       QuestManager.updatePlayersQuest();
+
+      QuestUpdateEvent event = new QuestUpdateEvent(questBase);
+      LegendQuests.getInstance().getServer().getPluginManager().callEvent(event);
       return true;
     });
   }
@@ -201,7 +232,7 @@ public class QuestGui {
       ConversationCheckpoint conversationCheckpoint = new ConversationCheckpoint(questBase,
           CheckPointTypeEnum.CONVERSATION, "NPC_TEXT", "NPC_NAME", "ACCEPT_TEXT",
           "DECLINE_TEXT");
-      questBase.addCheckPoint(conversationCheckpoint);
+      questBase.addCheckpoint(conversationCheckpoint);
       updateCheckpointGUI();
       return true;
     }, TextUtils.replaceColors("<SOLID:00ff08>Add Checkpoint"));
@@ -220,7 +251,8 @@ public class QuestGui {
 
   /**
    * Set the type of the change
-   * @param clicker who clicked
+   *
+   * @param clicker  who clicked
    * @param editType type of the change
    */
   public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
@@ -228,10 +260,14 @@ public class QuestGui {
     mainGui.close(clicker);
     sendMessage(
         TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
+    if(editType == EditTypeEnum.TIME){
+      sendMessage(TextUtils.replaceColors("<SOLID:00ff08>Format: <SOLID:9ADB4F>1D, 1H, 1M, 1S. Case sensitive!"));
+    }
   }
 
   /**
    * Format double to 2 decimal places
+   *
    * @param value the value to format
    * @return the formatted value
    */
@@ -241,6 +277,7 @@ public class QuestGui {
 
   /**
    * Do the change based on the string
+   *
    * @param text the text to change to
    */
   public void doTrackerText(String text) {
@@ -268,6 +305,27 @@ public class QuestGui {
     editGuiType = null;
     SettingsConfig.getInstance().setLocation("questtracker.location", loc);
     PacketDisplay.updateDisplayLocation();
+    openMainGuiSynced(editor);
+  }
+
+  /**
+   * Do the quest change based on the string
+   *
+   * @param text the text to change to
+   */
+  public void doQuestChange(String text) {
+    if (editType == EditTypeEnum.DESCRIPTION) {
+      questBase.setQuestDescription(text);
+    } else if (editType == EditTypeEnum.QUEST_NAME) {
+      questBase.setQuestName(text);
+    } else if (editType == EditTypeEnum.TIME) {
+      questBase.setTime(TextUtils.parseStringToTime(text));
+    } else if (editType == EditTypeEnum.NEXT_QUEST) {
+      questBase.setNextQuestName(text);
+    }
+
+    editType = null;
+    editGuiType = null;
     openMainGuiSynced(editor);
   }
 
@@ -335,6 +393,7 @@ public class QuestGui {
 
   /**
    * open the main gui
+   *
    * @param player the player to open the gui to
    */
   public void openMainGUI(Player player) {
@@ -345,6 +404,7 @@ public class QuestGui {
 
   /**
    * Send message to the player
+   *
    * @param message the message to send
    */
   public void sendMessage(String message) {
@@ -371,6 +431,7 @@ public class QuestGui {
 
   /**
    * Open the main gui synced
+   *
    * @param player the player to open the gui to
    */
   public void openMainGuiSynced(HumanEntity player) {
@@ -386,6 +447,7 @@ public class QuestGui {
 
   /**
    * Open the main gui synced
+   *
    * @param player the player to open the gui to
    */
   public void openMainGUI(HumanEntity player) {
@@ -396,6 +458,7 @@ public class QuestGui {
 
   /**
    * Open the checkpoint gui
+   *
    * @param player the player to open the gui to
    */
   public void openCheckpointGUI(HumanEntity player) {
@@ -405,6 +468,7 @@ public class QuestGui {
 
   /**
    * Open the reward gui
+   *
    * @param player the player to open the gui to
    */
   public void openRewardGUI(HumanEntity player) {
@@ -414,11 +478,12 @@ public class QuestGui {
 
   /**
    * Add static element to the gui
-   * @param gui the gui to add the element to
-   * @param item the item to add
-   * @param slot the slot to add the item to
+   *
+   * @param gui    the gui to add the element to
+   * @param item   the item to add
+   * @param slot   the slot to add the item to
    * @param action the action to do when clicked
-   * @param text the text to add to the item
+   * @param text   the text to add to the item
    */
   public void addStaticElement(InventoryGui gui, ItemStack item, char slot, Action action,
       String... text) {
@@ -448,6 +513,7 @@ public class QuestGui {
 
   /**
    * set the edited checkpoint
+   *
    * @param checkpoint the checkpoint to set
    */
   public void setEditedCheckpoint(CheckpointGui checkpoint) {
@@ -456,6 +522,7 @@ public class QuestGui {
 
   /**
    * set the edited reward
+   *
    * @param reward the reward to set
    */
   public void setEditedReward(RewardGui reward) {
@@ -471,6 +538,7 @@ public class QuestGui {
 
   /**
    * set the edit type
+   *
    * @param type the type to set
    */
   public void setEditGuiType(EditGuiTypeEnum type) {
@@ -486,9 +554,10 @@ public class QuestGui {
 
   /**
    * Move the item back in the list
-   * @param list the list to move the item in
+   *
+   * @param list          the list to move the item in
    * @param selectedIndex the index of the item to move
-   * @param <T> the type of the list
+   * @param <T>           the type of the list
    */
   private <T> void moveBack(LinkedList<T> list, int selectedIndex) {
     if (selectedIndex > 0 && selectedIndex < list.size()) {
@@ -500,9 +569,10 @@ public class QuestGui {
 
   /**
    * Move the item forward in the list
-   * @param list the list to move the item in
+   *
+   * @param list          the list to move the item in
    * @param selectedIndex the index of the item to move
-   * @param <T> the type of the list
+   * @param <T>           the type of the list
    */
   public static <T> void moveForward(LinkedList<T> list, int selectedIndex) {
     if (selectedIndex >= 0 && selectedIndex < list.size() - 1) {
@@ -522,7 +592,11 @@ public class QuestGui {
     Y_VALUE("Y"),
     Z_VALUE("Z"),
     YAW_VALUE("Yaw"),
-    PITCH_VALUE("Pitch");
+    PITCH_VALUE("Pitch"),
+    DESCRIPTION("Description"),
+    QUEST_NAME("Quest Name"),
+    TIME("Time"),
+    NEXT_QUEST("Next Quest");
 
     String text;
 
@@ -536,6 +610,7 @@ public class QuestGui {
   }
 
   public enum EditGuiTypeEnum {
+    QUEST,
     CHECKPOINT,
     REWARD,
     TRACKER
