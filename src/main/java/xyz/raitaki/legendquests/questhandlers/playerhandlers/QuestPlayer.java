@@ -40,9 +40,9 @@ public class QuestPlayer {
     return quests;
   }
 
-  public PlayerQuest getQuestOnGoing(){
-    for(PlayerQuest quest : quests){
-      if(!quest.isCompleted()){
+  public PlayerQuest getQuestOnGoing() {
+    for (PlayerQuest quest : quests) {
+      if (!quest.isCompleted()) {
         return quest;
       }
     }
@@ -99,16 +99,22 @@ public class QuestPlayer {
    * Send the quest info to the player
    */
   public void sendQuestInfoChat() {
-    for (PlayerQuest quest : quests) {
+    PlayerQuest quest = getQuestOnGoing();
+    TextUtils.sendCenteredMessage(player, "&8&m                                         ");
+
+    if (quest == null) {
+      TextUtils.sendCenteredMessage(player, "&c&lNo quest on going");
       TextUtils.sendCenteredMessage(player, "&8&m                                         ");
+      return;
+    } else {
       TextUtils.sendCenteredMessage(player, "&a&l" + quest.getQuestName());
       TextUtils.sendCenteredMessage(player, "&7" + quest.getDescription());
       TextUtils.sendCenteredMessage(player,
           "&7" + PlaceholderAPI.setPlaceholders(player, "%legendquest_checkpoint%"));
       TextUtils.sendCenteredMessage(player,
           "&7 Remaining time: " + quest.getRemainingTimeFormatted());
-      TextUtils.sendCenteredMessage(player, "&8&m                                         ");
     }
+    TextUtils.sendCenteredMessage(player, "&8&m                                         ");
   }
 
   /**

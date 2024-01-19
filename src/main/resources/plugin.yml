@@ -8,3 +8,4 @@ commands:
     permission: legendquests.editquest
   createquest:
     permission: legendquests.createquest
+  questinfo:

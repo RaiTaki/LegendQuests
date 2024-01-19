@@ -4,8 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.raitaki.legendquests.commands.CreateQuestCommand;
 import xyz.raitaki.legendquests.commands.EditQuestCommand;
+import xyz.raitaki.legendquests.commands.QuestInfoCommand;
 import xyz.raitaki.legendquests.commands.completer.CreateQuestCompleter;
 import xyz.raitaki.legendquests.commands.completer.EditQuestCompleter;
+import xyz.raitaki.legendquests.commands.completer.QuestInfoCompleter;
 import xyz.raitaki.legendquests.database.DatabaseConnection;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
@@ -64,5 +66,8 @@ public final class LegendQuests extends JavaPlugin {
 
     getCommand("createquest").setExecutor(new CreateQuestCommand());
     getCommand("createquest").setTabCompleter(new CreateQuestCompleter());
+
+    getCommand("questinfo").setExecutor(new QuestInfoCommand());
+    getCommand("questinfo").setTabCompleter(new QuestInfoCompleter());
   }
 }
