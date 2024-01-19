@@ -7,11 +7,9 @@ import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.D
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.NPC_NAME;
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum.VALUE;
 
-import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.GuiElement.Action;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
