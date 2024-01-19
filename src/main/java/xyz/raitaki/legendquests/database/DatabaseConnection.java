@@ -14,6 +14,7 @@ import org.json.simple.parser.ParseException;
 import xyz.raitaki.legendquests.LegendQuests;
 import xyz.raitaki.legendquests.database.objects.PlayerData;
 import xyz.raitaki.legendquests.database.objects.QuestsData;
+import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.utils.config.SettingsConfig;
@@ -248,6 +249,23 @@ public class DatabaseConnection {
     QuestManager.getQuestPlayers().values().forEach(player -> {
       if (player.getPlayer().isOnline()) {
         savePlayerDataSync(player);
+      }
+    });
+  }
+
+  /**
+   * Delete the quest from the database
+   * @param questBase the quest base of the quest
+   */
+  public static void deleteQuest(QuestBase questBase){
+    String query = "DELETE FROM quests WHERE id = ?";
+    LegendQuests instance = LegendQuests.getInstance();
+    instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
+      try (PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setInt(1, Integer.parseInt(questBase.getQuestId())+1);
+        statement.executeUpdate();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
       }
     });
   }

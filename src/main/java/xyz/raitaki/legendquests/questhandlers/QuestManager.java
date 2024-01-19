@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.raitaki.legendquests.LegendQuests;
+import xyz.raitaki.legendquests.database.DatabaseConnection;
 import xyz.raitaki.legendquests.database.objects.CheckpointData;
 import xyz.raitaki.legendquests.database.objects.QuestData;
 import xyz.raitaki.legendquests.database.objects.RewardData;
@@ -379,6 +380,15 @@ public class QuestManager {
           interactionCheckpoint.getNpcName());
     }
     return playerCheckpoint;
+  }
+
+  /**
+   * This method to delete QuestBase
+   * @param quest - QuestBase
+   */
+  public static void deleteQuest(QuestBase quest){
+    quests.remove(quest);
+    DatabaseConnection.deleteQuest(quest);
   }
 
   /**

@@ -72,24 +72,34 @@ public class QuestGui {
     );
 
     addStaticElement(mainGui, new ItemStack(Material.PAPER), 'd', click -> {
-      if(click.getType() == ClickType.LEFT) {
-        setChangeType(click.getWhoClicked(), EditTypeEnum.DESCRIPTION);
-        editGuiType = EditGuiTypeEnum.QUEST;
-      } else if(click.getType() == ClickType.SHIFT_LEFT) {
-        setChangeType(click.getWhoClicked(), EditTypeEnum.QUEST_NAME);
-        editGuiType = EditGuiTypeEnum.QUEST;
-      } else if(click.getType() == ClickType.RIGHT) {
-        setChangeType(click.getWhoClicked(), EditTypeEnum.TIME);
-        editGuiType = EditGuiTypeEnum.QUEST;
-      } else if(click.getType() == ClickType.SHIFT_RIGHT) {
-        setChangeType(click.getWhoClicked(), EditTypeEnum.NEXT_QUEST);
-        editGuiType = EditGuiTypeEnum.QUEST;
-      }
-      return true;
-    }, TextUtils.replaceColors("<SOLID:7d7d7d>Left click to edit description: <SOLID:9ADB4F>" + questBase.getDescription()),
-        TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Left click to edit quest name: <SOLID:9ADB4F>" + questBase.getName()),
-        TextUtils.replaceColors("<SOLID:7d7d7d>Right click to edit time: <SOLID:9ADB4F>" + questBase.getTime()),
-        TextUtils.replaceColors("<SOLID:7d7d7d>Shift + Right click to edit next quest: <SOLID:9ADB4F>" + questBase.getNextQuestName()));
+          if (click.getType() == ClickType.LEFT) {
+            setChangeType(click.getWhoClicked(), EditTypeEnum.DESCRIPTION);
+            editGuiType = EditGuiTypeEnum.QUEST;
+          } else if (click.getType() == ClickType.SHIFT_LEFT) {
+            setChangeType(click.getWhoClicked(), EditTypeEnum.QUEST_NAME);
+            editGuiType = EditGuiTypeEnum.QUEST;
+          } else if (click.getType() == ClickType.RIGHT) {
+            setChangeType(click.getWhoClicked(), EditTypeEnum.TIME);
+            editGuiType = EditGuiTypeEnum.QUEST;
+          } else if (click.getType() == ClickType.SHIFT_RIGHT) {
+            setChangeType(click.getWhoClicked(), EditTypeEnum.NEXT_QUEST);
+            editGuiType = EditGuiTypeEnum.QUEST;
+          } else if (click.getType() == ClickType.MIDDLE) {
+            QuestManager.deleteQuest(questBase);
+            mainGui.close(click.getWhoClicked());
+          }
+          return true;
+        }, TextUtils.replaceColors("<SOLID:7d7d7d>Left click to edit description: <SOLID:9ADB4F>"
+            + questBase.getDescription()),
+        TextUtils.replaceColors(
+            "<SOLID:7d7d7d>Shift + Left click to edit quest name: <SOLID:9ADB4F>"
+                + questBase.getName()),
+        TextUtils.replaceColors(
+            "<SOLID:7d7d7d>Right click to edit time: <SOLID:9ADB4F>" + questBase.getTime()),
+        TextUtils.replaceColors(
+            "<SOLID:7d7d7d>Shift + Right click to edit next quest: <SOLID:9ADB4F>"
+                + questBase.getNextQuestName()),
+        TextUtils.replaceColors("SOLID<ff0000>Middle click to delete the quest"));
 
     //DETAILS
 
@@ -126,7 +136,6 @@ public class QuestGui {
     Location location = SettingsConfig.getInstance().getLocationValue("questtracker.location");
     if (location != null) {
       addStaticElement(mainGui, new ItemStack(Material.COMPASS), 'g', click -> {
-
             if (click.getType() == ClickType.LEFT) {
               setChangeType(click.getWhoClicked(), EditTypeEnum.X_VALUE);
               editGuiType = EditGuiTypeEnum.TRACKER;
@@ -144,7 +153,8 @@ public class QuestGui {
               editGuiType = EditGuiTypeEnum.TRACKER;
             }
             return true;
-          }, TextUtils.replaceColors("<SOLID:00ff08>Tracker"),
+          },
+          TextUtils.replaceColors("<SOLID:00ff08>Tracker"),
           TextUtils.replaceColors(
               "<SOLID:7d7d7d>Left click to set tracker X pos: <SOLID:00ff08>" + formatDouble(
                   location.getX())),
@@ -260,8 +270,9 @@ public class QuestGui {
     mainGui.close(clicker);
     sendMessage(
         TextUtils.replaceColors("<SOLID:00ff08>Enter new " + editType.getText() + " through chat"));
-    if(editType == EditTypeEnum.TIME){
-      sendMessage(TextUtils.replaceColors("<SOLID:00ff08>Format: <SOLID:9ADB4F>1D, 1H, 1M, 1S. Case sensitive!"));
+    if (editType == EditTypeEnum.TIME) {
+      sendMessage(TextUtils.replaceColors(
+          "<SOLID:00ff08>Format: <SOLID:9ADB4F>1D, 1H, 1M, 1S. Case sensitive!"));
     }
   }
 
