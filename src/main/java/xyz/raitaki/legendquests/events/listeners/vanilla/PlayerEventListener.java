@@ -35,21 +35,13 @@ public class PlayerEventListener implements Listener {
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
     Player player = event.getPlayer();
-    DatabaseConnection.getPlayerData(player.getUniqueId().toString()).thenAccept(playerData -> {
-
-      for (QuestData questData : playerData.getQuests()) {
-        //QuestManager.loadPlayerQuestFromData(event.getPlayer(), questData);
-        QuestManager.loadPlayerQuestFromData(player, questData);
-      }
-      QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
-      questPlayer.sendQuestInfoChat();
-    });
+    QuestManager.createQuestPlayer(player);
   }
 
   @EventHandler
   public void onPlayerQuit(PlayerQuitEvent event) {
     QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(event.getPlayer());
-    DatabaseConnection.savePlayerData(questPlayer);
+    QuestManager.saveQuestPlayer(questPlayer);
     QuestManager.removeQuestPlayer(event.getPlayer());
   }
 

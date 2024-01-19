@@ -195,11 +195,16 @@ public class QuestManager {
    * @param player - Player
    */
   public static void createQuestPlayer(Player player) {
-    //TODO: GET PLAYER DATA FROM DATABASE
-    //TODO: CREATE QUEST PLAYER
-    //TODO: ADD TO questPlayers
-
     questPlayers.put(player, new QuestPlayer(player));
+    DatabaseConnection.getPlayerData(player.getUniqueId().toString()).thenAccept(playerData -> {
+
+      for (QuestData questData : playerData.getQuests()) {
+        //QuestManager.loadPlayerQuestFromData(event.getPlayer(), questData);
+        QuestManager.loadPlayerQuestFromData(player, questData);
+      }
+      QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
+      questPlayer.sendQuestInfoChat();
+    });
   }
 
   /**
@@ -208,7 +213,7 @@ public class QuestManager {
    * @param questPlayer - QuestPlayer
    */
   public static void saveQuestPlayer(QuestPlayer questPlayer) {
-    //TODO: SAVE PLAYER DATA TO DATABASE
+    DatabaseConnection.savePlayerData(questPlayer);
   }
 
   /**
