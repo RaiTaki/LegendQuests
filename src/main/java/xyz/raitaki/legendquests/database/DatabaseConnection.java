@@ -161,7 +161,9 @@ public class DatabaseConnection {
     String query = "INSERT INTO players (uuid, data) VALUES (?, ?)";
     LegendQuests instance = LegendQuests.getInstance();
     if (player.getQuests().isEmpty()) {
-      QuestManager.addBaseQuestToPlayer(player.getPlayer(), QuestManager.getBaseQuests().get(0));
+      if (!QuestManager.getBaseQuests().isEmpty()) {
+        QuestManager.addBaseQuestToPlayer(player.getPlayer(), QuestManager.getBaseQuests().get(0));
+      }
     }
     instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
       try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -174,13 +176,13 @@ public class DatabaseConnection {
     });
   }
 
-  public static void updateQuest(JSONObject json){
+  public static void updateQuest(JSONObject json) {
     String query = "UPDATE quests SET data = ? WHERE id = ?";
     LegendQuests instance = LegendQuests.getInstance();
     instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
       try (PreparedStatement statement = connection.prepareStatement(query)) {
         statement.setString(1, json.toJSONString());
-        statement.setInt(2, Integer.parseInt((String) json.get("id"))+1);
+        statement.setInt(2, Integer.parseInt((String) json.get("id")));
         statement.executeUpdate();
       } catch (SQLException e) {
         throw new RuntimeException(e);
@@ -191,7 +193,7 @@ public class DatabaseConnection {
   /**
    * Load all quests from the database
    */
-  public static void loadAllQuests(){
+  public static void loadAllQuests() {
     String query = "SELECT * FROM quests";
     LegendQuests instance = LegendQuests.getInstance();
 
@@ -218,12 +220,13 @@ public class DatabaseConnection {
    *
    * @param json json of the quest
    */
-  public static void insertQuest(JSONObject json){
-    String query = "INSERT INTO quests (data) VALUES (?)";
+  public static void insertQuest(JSONObject json) {
+    String query = "INSERT INTO quests (id, data) VALUES (?, ?)";
     LegendQuests instance = LegendQuests.getInstance();
     instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
       try (PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setString(1, json.toJSONString());
+        statement.setInt(1, Integer.parseInt((String) json.get("id")));
+        statement.setString(2, json.toJSONString());
         statement.executeUpdate();
       } catch (SQLException e) {
         throw new RuntimeException(e);
@@ -255,14 +258,15 @@ public class DatabaseConnection {
 
   /**
    * Delete the quest from the database
+   *
    * @param questBase the quest base of the quest
    */
-  public static void deleteQuest(QuestBase questBase){
+  public static void deleteQuest(QuestBase questBase) {
     String query = "DELETE FROM quests WHERE id = ?";
     LegendQuests instance = LegendQuests.getInstance();
     instance.getServer().getScheduler().runTaskAsynchronously(instance, () -> {
       try (PreparedStatement statement = connection.prepareStatement(query)) {
-        statement.setInt(1, Integer.parseInt(questBase.getQuestId())+1);
+        statement.setInt(1, Integer.parseInt(questBase.getQuestId()));
         statement.executeUpdate();
       } catch (SQLException e) {
         throw new RuntimeException(e);

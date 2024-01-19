@@ -328,6 +328,7 @@ public class QuestManager {
     PlayerQuest playerQuest = player.getPlayerQuestByQuestBase(questBase);
     if (player.getQuests().isEmpty()) {
       addBaseQuestToPlayer(player.getPlayer(), questBase);
+      return;
     }
 
     updatePlayerQuest(playerQuest);
@@ -363,9 +364,9 @@ public class QuestManager {
             playerKillCheckpoint.getCounter());
       } else {
         playerCheckpoint = new PlayerKillCheckpoint(quest, killCheckpoint.getType(),
-            killCheckpoint.getValue(), playerKillCheckpoint.isCompleted(),
+            killCheckpoint.getValue(), false,
             killCheckpoint.getAmount(),
-            killCheckpoint.getAmount());
+            0);
       }
     } else if (checkpoint.getType().equals(CheckPointTypeEnum.CONVERSATION)) {
       ConversationCheckpoint conversationCheckpoint = (ConversationCheckpoint) checkpoint;
