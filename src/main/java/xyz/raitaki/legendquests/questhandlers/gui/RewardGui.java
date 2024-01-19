@@ -5,7 +5,6 @@ import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.
 import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.XP;
 import static xyz.raitaki.legendquests.questhandlers.gui.QuestGui.EditTypeEnum;
 
-import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.GuiElement.Action;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
@@ -70,11 +69,11 @@ public class RewardGui {
     rewardGui.setFiller(questGui.getFiller());
 
     addStaticElement(new ItemStack(Material.PAPER), 't', click -> {
-      newType = nextType(newType);
-      updateRewardGui();
-      return true;
+          newType = nextType(newType);
+          updateRewardGui();
+          return true;
 
-    }, TextUtils.replaceColors("<SOLID:7d7d7d>Type: <SOLID:00ff08>" + newType),
+        }, TextUtils.replaceColors("<SOLID:7d7d7d>Type: <SOLID:00ff08>" + newType),
         TextUtils.replaceColors("<SOLID:7d7d7d>To change type, <SOLID:eaff00>LEFT CLICK"));
 
     if (newType == ITEM) {
@@ -149,6 +148,7 @@ public class RewardGui {
 
   /**
    * send message to the player
+   *
    * @param message the message to send
    */
   public void sendMessage(String message) {
@@ -157,10 +157,11 @@ public class RewardGui {
 
   /**
    * add static elemnt to the gui
-   * @param item the item of the element
-   * @param slot the slot of the element
+   *
+   * @param item   the item of the element
+   * @param slot   the slot of the element
    * @param action the action of the element
-   * @param text the text of the element
+   * @param text   the text of the element
    */
   public void addStaticElement(ItemStack item, char slot, Action action, String... text) {
     rewardGui.addElement(new StaticGuiElement(slot, item, 1, action, text));
@@ -168,6 +169,7 @@ public class RewardGui {
 
   /**
    * open the reward gui to the player
+   *
    * @param player player to open the gui
    */
   public void openRewardGUI(Player player) {
@@ -176,6 +178,7 @@ public class RewardGui {
 
   /**
    * open the reward gui to the player
+   *
    * @param player player to open the gui
    */
   public void openRewardGUI(HumanEntity player) {
@@ -184,7 +187,8 @@ public class RewardGui {
 
   /**
    * change the edit type of the reward
-   * @param clicker the player who clicked
+   *
+   * @param clicker  the player who clicked
    * @param editType the edit type to change to
    */
   public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
@@ -196,6 +200,7 @@ public class RewardGui {
 
   /**
    * get the next reward type
+   *
    * @param type the current type
    * @return the next type
    */
@@ -209,6 +214,7 @@ public class RewardGui {
 
   /**
    * set the values based on the chat message
+   *
    * @param message the message to set
    */
   public void setChatMessage(String message) {

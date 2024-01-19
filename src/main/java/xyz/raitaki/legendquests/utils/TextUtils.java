@@ -38,6 +38,7 @@ public class TextUtils {
   }
 
   //https://www.spigotmc.org/threads/free-code-sending-perfectly-centered-chat-message.95872/page-2
+
   /**
    * send a centered message to a player
    *
@@ -132,23 +133,21 @@ public class TextUtils {
    * @param text the text to parse
    * @return the time in milliseconds
    */
-  public static long parseStringToTime(String text){
+  public static long parseStringToTime(String text) {
     long time = 0;
     text = text.replace(",", "");
     String[] split = text.split(" ");
 
-    for(String s : split){
-      if(s.contains("Y")){
+    for (String s : split) {
+      if (s.contains("Y")) {
         time += Integer.parseInt(s.replace("Y", "")) * 31536000000L;
-      }
-      else if(s.contains("D")){
+      } else if (s.contains("D")) {
         time += Integer.parseInt(s.replace("D", "")) * 86400000L;
-      }
-      else if(s.contains("H")){
+      } else if (s.contains("H")) {
         time += Integer.parseInt(s.replace("H", "")) * 3600000L;
-      }else if(s.contains("M")){
+      } else if (s.contains("M")) {
         time += Integer.parseInt(s.replace("M", "")) * 60000L;
-      }else if(s.contains("S")){
+      } else if (s.contains("S")) {
         time += Integer.parseInt(s.replace("S", "")) * 1000L;
       }
     }

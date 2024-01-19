@@ -18,7 +18,8 @@ public class QuestBase {
   private String nextQuestName;
   private String questId;
 
-  public QuestBase(String questId, String name, String description, long time, String nextQuestName) {
+  public QuestBase(String questId, String name, String description, long time,
+      String nextQuestName) {
     this.name = name;
     this.questId = questId;
     this.description = description;
@@ -47,6 +48,7 @@ public class QuestBase {
 
   /**
    * add the reward to the quest
+   *
    * @param reward the reward to add
    */
   public void addReward(QuestReward reward) {
@@ -55,6 +57,7 @@ public class QuestBase {
 
   /**
    * add the reward to the quest
+   *
    * @param checkPoint the checkpoint to add
    */
   public void addCheckpoint(QuestCheckpoint checkPoint) {
@@ -131,6 +134,7 @@ public class QuestBase {
 
   /**
    * show the GUI to the player
+   *
    * @param player the player to show the GUI
    */
   public void showGui(Player player) {

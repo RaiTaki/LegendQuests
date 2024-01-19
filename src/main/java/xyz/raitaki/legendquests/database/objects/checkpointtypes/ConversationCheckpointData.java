@@ -8,6 +8,7 @@ public class ConversationCheckpointData extends CheckpointData {
   private String npcName;
   private String acceptText;
   private String declineText;
+
   public ConversationCheckpointData(JSONObject data, boolean player) {
     super(data, player);
     npcName = (String) data.get("npcName");

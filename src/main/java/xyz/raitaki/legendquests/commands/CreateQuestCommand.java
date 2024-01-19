@@ -10,9 +10,11 @@ public class CreateQuestCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    if(!sender.hasPermission("legendquests.createquest")) return false;
+    if (!sender.hasPermission("legendquests.createquest")) {
+      return false;
+    }
 
-    if(args.length == 0) {
+    if (args.length == 0) {
       sender.sendMessage("§cUsage: /createquest <name>");
       return false;
     }

@@ -33,6 +33,7 @@ public class EconomyUtils {
 
   /**
    * add money to a player
+   *
    * @param player the player to check
    * @param amount the amount to give
    */

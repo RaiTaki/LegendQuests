@@ -1,19 +1,18 @@
 package xyz.raitaki.legendquests.database.objects.checkpointtypes;
 
-import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.database.objects.CheckpointData;
-import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 
 public class KillCheckpointData extends CheckpointData {
 
   private int amount;
   private int counter;
+
   public KillCheckpointData(JSONObject data, boolean player) {
     super(data, player);
     amount = (int) (long) data.get("amount");
 
-    if(player) {
+    if (player) {
       counter = (int) (long) data.get("counter");
     }
   }

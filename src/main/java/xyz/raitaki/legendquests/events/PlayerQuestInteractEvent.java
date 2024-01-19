@@ -55,6 +55,7 @@ public class PlayerQuestInteractEvent extends Event implements Cancellable {
 
   /**
    * sets whether the event is cancelled
+   *
    * @param cancel whether to cancel the event
    */
   @Override

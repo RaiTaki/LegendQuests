@@ -11,7 +11,9 @@ public class QuestInfoCommand implements CommandExecutor {
 
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-    if(!(sender instanceof Player player)) return false;
+    if (!(sender instanceof Player player)) {
+      return false;
+    }
 
     QuestPlayer questPlayer = QuestManager.getQuestPlayerByPlayer(player);
     questPlayer.sendQuestInfoChat();

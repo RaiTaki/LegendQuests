@@ -8,6 +8,7 @@ public class ItemUtils {
 
   /**
    * Serialize an item to a string
+   *
    * @param item the item to serialize
    * @return the serialized item as a string
    */
@@ -19,6 +20,7 @@ public class ItemUtils {
 
   /**
    * Deserialize an item from a string
+   *
    * @param string the string to deserialize
    * @return the deserialized item
    */

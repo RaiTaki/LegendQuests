@@ -1,6 +1,5 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints;
 
-import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;

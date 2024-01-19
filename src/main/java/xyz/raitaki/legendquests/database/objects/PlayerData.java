@@ -6,9 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
-import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 
 public class PlayerData {
 
@@ -38,9 +36,9 @@ public class PlayerData {
     LinkedList<QuestData> quests = new LinkedList<>();
     int index = 0;
 
-    if(data.isEmpty()) {
+    if (data.isEmpty()) {
       Player player = Bukkit.getPlayer(UUID.fromString(uuid));
-      if(player == null) {
+      if (player == null) {
         return quests;
       }
 

@@ -1,8 +1,5 @@
 package xyz.raitaki.legendquests.utils.config;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.raitaki.legendquests.LegendQuests;
 

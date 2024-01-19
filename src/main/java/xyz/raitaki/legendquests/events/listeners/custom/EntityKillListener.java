@@ -22,7 +22,7 @@ public class EntityKillListener implements Listener {
     if (quest == null) {
       return;
     }
-    if(quest.isCompleted()){
+    if (quest.isCompleted()) {
       return;
     }
 

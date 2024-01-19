@@ -16,8 +16,6 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
-import xyz.raitaki.legendquests.database.DatabaseConnection;
-import xyz.raitaki.legendquests.database.objects.QuestData;
 import xyz.raitaki.legendquests.events.PlayerQuestInteractEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;

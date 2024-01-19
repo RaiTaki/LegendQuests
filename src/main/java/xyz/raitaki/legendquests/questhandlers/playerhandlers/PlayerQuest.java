@@ -9,7 +9,6 @@ import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.events.PlayerNextCheckpointEvent;
 import xyz.raitaki.legendquests.events.PlayerQuestEndEvent;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
-import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.utils.TextUtils;
 
@@ -64,7 +63,7 @@ public class PlayerQuest {
 
       if (nextQuestName != null) {
         QuestBase nextQuest = QuestManager.getQuestBaseByName(nextQuestName);
-        if(nextQuest == null) {
+        if (nextQuest == null) {
           return;
         }
         QuestManager.addBaseQuestToPlayer(player.getPlayer(), nextQuest);
@@ -157,7 +156,7 @@ public class PlayerQuest {
         continue;
       }
       this.checkpoint = checkpoint;
-      if(this.checkpoint.getType() == CONVERSATION && !isCompleted() && load) {
+      if (this.checkpoint.getType() == CONVERSATION && !isCompleted() && load) {
         this.checkpoint = checkpoints.get(checkpoints.indexOf(checkpoint) - 1);
         this.checkpoint.setCompleted(false);
         this.completed = false;
@@ -165,7 +164,7 @@ public class PlayerQuest {
       return;
     }
 
-    if(this.checkpoint == null || this.checkpoint.isCompleted() && !this.completed) {
+    if (this.checkpoint == null || this.checkpoint.isCompleted() && !this.completed) {
       nextCheckPoint();
     }
   }

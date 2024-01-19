@@ -13,6 +13,7 @@ public class PacketUtils {
 
   /**
    * get the add entity packet
+   *
    * @param as the text display
    * @return the packet
    */
@@ -22,15 +23,18 @@ public class PacketUtils {
 
   /**
    * get the set entity data packet
+   *
    * @param textDisplay the text display
    * @return the packet
    */
   public static ClientboundSetEntityDataPacket getSetEntityDataPacket(TextDisplay textDisplay) {
-    return new ClientboundSetEntityDataPacket(textDisplay.getId(), textDisplay.getEntityData().getNonDefaultValues());
+    return new ClientboundSetEntityDataPacket(textDisplay.getId(),
+        textDisplay.getEntityData().getNonDefaultValues());
   }
 
   /**
    * get the remove entity packet
+   *
    * @param textDisplay the text display
    * @return the packet
    */
@@ -40,6 +44,7 @@ public class PacketUtils {
 
   /**
    * get the teleport entity packet
+   *
    * @param textDisplay the text display
    * @return the packet
    */
@@ -49,7 +54,8 @@ public class PacketUtils {
 
   /**
    * send a packet to a player
-   * @param p the player to send the packet to
+   *
+   * @param p      the player to send the packet to
    * @param packet the packet to send
    */
   public static void sendPacket(Player p, Packet packet) {

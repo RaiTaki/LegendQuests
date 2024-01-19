@@ -1,6 +1,5 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.events.PlayerAnswerEvent;
@@ -82,8 +81,9 @@ public class PlayerConversationCheckpoint extends PlayerCheckpoint {
       }
 
       String text = acceptText;
-      if(getQuest().getCheckpoints().indexOf(this) == getQuest().getCheckpoints().size() -1)
+      if (getQuest().getCheckpoints().indexOf(this) == getQuest().getCheckpoints().size() - 1) {
         text = "&a&lYou completed the quest!";
+      }
       TextUtils.sendCenteredMessage(player,
           "&m                                                                    ");
       TextUtils.sendCenteredMessage(player, text);

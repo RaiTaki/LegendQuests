@@ -4,8 +4,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import xyz.raitaki.legendquests.events.PlayerNextCheckpointEvent;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerCheckpoint;
-import xyz.raitaki.legendquests.questhandlers.playerhandlers.PlayerQuest;
-import xyz.raitaki.legendquests.questhandlers.playerhandlers.QuestPlayer;
 import xyz.raitaki.legendquests.questhandlers.playerhandlers.checkpoints.PlayerConversationCheckpoint;
 
 public class PlayerCheckpointListener implements Listener {

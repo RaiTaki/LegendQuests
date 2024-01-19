@@ -3,7 +3,6 @@ package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 import java.util.LinkedList;
 import java.util.UUID;
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;

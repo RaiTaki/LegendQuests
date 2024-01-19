@@ -1,9 +1,7 @@
 package xyz.raitaki.legendquests.database.objects;
 
 import java.util.LinkedList;
-import java.util.LinkedList;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.database.objects.checkpointtypes.ConversationCheckpointData;

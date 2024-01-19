@@ -10,7 +10,6 @@ import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.world.entity.Display.BillboardConstraints;
 import net.minecraft.world.entity.Display.TextDisplay;
 import net.minecraft.world.entity.EntityType;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
@@ -54,6 +53,7 @@ public class PacketDisplay {
 
   /**
    * set the text of the text display
+   *
    * @param text the text to set
    */
   public void setText(String text) {
@@ -66,6 +66,7 @@ public class PacketDisplay {
 
   /**
    * send the data packets to player
+   *
    * @param spawn if the spawn packet should be sent
    */
   public void sendDataPacket(boolean spawn) {
@@ -116,6 +117,7 @@ public class PacketDisplay {
 
   /**
    * set the location of the text display
+   *
    * @param location the location to set
    */
   public void setLocation(Location location) {
