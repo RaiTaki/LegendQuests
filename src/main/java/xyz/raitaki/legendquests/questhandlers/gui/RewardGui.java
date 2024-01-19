@@ -36,13 +36,14 @@ public class RewardGui {
   private InventoryGui rewardGui;
   private boolean saved = false;
   private EditTypeEnum editTypeEnum;
+  String[] guiSetup;
 
   public RewardGui(QuestBase quest, QuestGui questGui, QuestReward reward) {
     this.questBase = quest;
     this.questGui = questGui;
     this.reward = reward;
 
-    String[] guiSetup = {
+    guiSetup = new String[]{
         "         ",
         "  t   v  ",
         "    c    ",
@@ -64,22 +65,17 @@ public class RewardGui {
    * builds the reward gui based on the selected reward
    */
   public void buildRewardGUI() {
+    rewardGui = new InventoryGui(LegendQuests.getInstance(), "Quest: " + questBase.getName(),
+        guiSetup);
     rewardGui.setFiller(questGui.getFiller());
 
-    rewardGui.addElement(new DynamicGuiElement('t', (viewer) -> {
-      return new StaticGuiElement('t',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            newType = nextType(newType);
-            buildRewardGUI();
-            rewardGui.draw();
-            return true;
-          },
-          TextUtils.replaceColors("<SOLID:7d7d7d>Type: <SOLID:00ff08>" + newType),
-          TextUtils.replaceColors("<SOLID:7d7d7d>To change type, <SOLID:eaff00>LEFT CLICK")
-      );
-    }));
+    addStaticElement(new ItemStack(Material.PAPER), 't', click -> {
+      newType = nextType(newType);
+      updateRewardGui();
+      return true;
+
+    }, TextUtils.replaceColors("<SOLID:7d7d7d>Type: <SOLID:00ff08>" + newType),
+        TextUtils.replaceColors("<SOLID:7d7d7d>To change type, <SOLID:eaff00>LEFT CLICK"));
 
     if (newType == ITEM) {
       ItemStack itemStack = null;
@@ -97,7 +93,7 @@ public class RewardGui {
         itemStack.setItemMeta(itemMeta);
       }
 
-      addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
+      addStaticElement(itemStack, 'c', click -> {
         if (click.getCursor() == null) {
           sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Invalid item! Hold Item on cursor!"));
           return false;
@@ -144,7 +140,7 @@ public class RewardGui {
         sendMessage(TextUtils.replaceColors("<SOLID:ff0000>Reward not saved!"));
         questGui.setEditGuiType(null);
       }
-      questGui.openCheckpointGUI(close.getPlayer());
+      questGui.openRewardGUI(close.getPlayer());
       questGui.setEditedReward(null);
       questGui.setEditGuiType(null);
       return true;

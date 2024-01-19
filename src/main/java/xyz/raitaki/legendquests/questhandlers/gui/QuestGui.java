@@ -19,6 +19,7 @@ import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint;
 import xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.QuestManager;
 import xyz.raitaki.legendquests.questhandlers.QuestReward;
+import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum;
 import xyz.raitaki.legendquests.questhandlers.checkpoints.ConversationCheckpoint;
 import xyz.raitaki.legendquests.utils.PacketDisplay;
 import xyz.raitaki.legendquests.utils.TextUtils;
@@ -99,7 +100,7 @@ public class QuestGui {
         TextUtils.replaceColors(
             "<SOLID:7d7d7d>Shift + Right click to edit next quest: <SOLID:9ADB4F>"
                 + questBase.getNextQuestName()),
-        TextUtils.replaceColors("SOLID<ff0000>Middle click to delete the quest"));
+        TextUtils.replaceColors("<SOLID:ff0000>Middle click to delete the quest"));
 
     //DETAILS
 
@@ -361,6 +362,11 @@ public class QuestGui {
     for (QuestReward reward : questBase.getRewards()) {
       int finalI = i;
 
+      String rewardText = reward.getValue();
+      if (reward.getType() == RewardTypeEnum.ITEM) {
+        rewardText = "To see it, edit the reward";
+      }
+
       group.addElement(new StaticGuiElement('g', new ItemStack(Material.PAPER), i + 1,
           click -> {
             if (click.getType() == ClickType.LEFT) {
@@ -374,13 +380,23 @@ public class QuestGui {
             } else if (click.getType() == ClickType.SHIFT_RIGHT) {
               moveForward(questBase.getRewards(), finalI);
               updateRewardGUI();
+            } else if (click.getType() == ClickType.MIDDLE) {
+              questBase.getRewards().remove(finalI);
+              updateRewardGUI();
             }
             return true;
           },
           TextUtils.replaceColors("<SOLID:7d7d7d>Reward " + (i + 1)),
           TextUtils.replaceColors(
               "<SOLID:7d7d7d>Type: <SOLID:9ADB4F>" + reward.getType().toString()),
-          TextUtils.replaceColors("<SOLID:7d7d7d>Value: <SOLID:9ADB4F>" + reward.getValue())
+          TextUtils.replaceColors("<SOLID:7d7d7d>Value: <SOLID:9ADB4F>" + rewardText),
+          TextUtils.replaceColors("<SOLID:7d7d7d>To edit, <SOLID:eaff00>LEFT CLICK"),
+          TextUtils.replaceColors(
+              "<SOLID:7d7d7d>To cycle back through list, <SOLID:eaff00>RIGHT CLICK"),
+          TextUtils.replaceColors("<SOLID:7d7d7d>To cycle forward through list, <SOLID:eaff00>"
+              + "SHIFT + RIGHT CLICK"),
+          TextUtils.replaceColors("<SOLID:7d7d7d>To delete, <SOLID:eaff00>MIDDLE CLICK")
+
       ));
       i++;
     }

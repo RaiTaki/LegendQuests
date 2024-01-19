@@ -3,6 +3,7 @@ package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 import java.util.LinkedList;
 import java.util.UUID;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 import xyz.raitaki.legendquests.questhandlers.QuestBase;
@@ -62,7 +63,8 @@ public class QuestPlayer {
    */
   public PlayerQuest getPlayerQuestByCheckpointType(QuestCheckpoint.CheckPointTypeEnum type) {
     for (PlayerQuest quest : quests) {
-      if (quest.getCheckpoint().getType().equals(type) && !quest.isCompleted()) {
+      PlayerCheckpoint checkpoint = quest.getCheckpoint();
+      if (checkpoint.getType().equals(type) && !quest.isCompleted() && !checkpoint.isCompleted()) {
         return quest;
       }
     }

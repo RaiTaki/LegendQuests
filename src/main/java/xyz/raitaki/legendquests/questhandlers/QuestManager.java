@@ -79,7 +79,7 @@ public class QuestManager {
 
     quest.setCompleted(data.isCompleted());
     updatePlayerQuest(quest);
-    quest.updateCheckpoint();
+    quest.updateCheckpoint(true);
     questPlayer.addQuest(quest);
   }
 
@@ -310,7 +310,7 @@ public class QuestManager {
     }
     playerQuest.setQuestName(questBase.getName());
     playerQuest.setDescription(questBase.getDescription());
-    playerQuest.updateCheckpoint();
+    playerQuest.updateCheckpoint(false);
   }
 
   /**
@@ -321,6 +321,10 @@ public class QuestManager {
    */
   public static void updatePlayerQuestBaseQuest(QuestPlayer player, QuestBase questBase) {
     PlayerQuest playerQuest = player.getPlayerQuestByQuestBase(questBase);
+    if (player.getQuests().isEmpty()) {
+      addBaseQuestToPlayer(player.getPlayer(), questBase);
+    }
+
     updatePlayerQuest(playerQuest);
   }
 
@@ -361,7 +365,7 @@ public class QuestManager {
     } else if (checkpoint.getType().equals(CheckPointTypeEnum.CONVERSATION)) {
       ConversationCheckpoint conversationCheckpoint = (ConversationCheckpoint) checkpoint;
       boolean isCompleted = false;
-      if(playerCheckpoint != null){
+      if (playerCheckpoint != null) {
         isCompleted = playerCheckpoint.isCompleted();
       }
       playerCheckpoint = new PlayerConversationCheckpoint(quest, conversationCheckpoint.getType(),
@@ -372,7 +376,7 @@ public class QuestManager {
       InteractionCheckpoint interactionCheckpoint = (InteractionCheckpoint) checkpoint;
 
       boolean isCompleted = false;
-      if(playerCheckpoint != null){
+      if (playerCheckpoint != null) {
         isCompleted = playerCheckpoint.isCompleted();
       }
       playerCheckpoint = new PlayerInteractionCheckpoint(quest, interactionCheckpoint.getType(),
@@ -384,9 +388,10 @@ public class QuestManager {
 
   /**
    * This method to delete QuestBase
+   *
    * @param quest - QuestBase
    */
-  public static void deleteQuest(QuestBase quest){
+  public static void deleteQuest(QuestBase quest) {
     quests.remove(quest);
     DatabaseConnection.deleteQuest(quest);
   }
@@ -418,11 +423,11 @@ public class QuestManager {
     return questPlayers;
   }
 
-  public static String getNextQuestId(){
+  public static String getNextQuestId() {
     int questId = 0;
-    for(QuestBase quest : quests){
+    for (QuestBase quest : quests) {
       int id = Integer.parseInt(quest.getQuestId());
-      if(id > questId){
+      if (id > questId) {
         questId = id;
       }
     }

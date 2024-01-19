@@ -1,5 +1,7 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
+import static xyz.raitaki.legendquests.questhandlers.QuestCheckpoint.CheckPointTypeEnum.CONVERSATION;
+
 import java.util.LinkedList;
 import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
@@ -73,10 +75,6 @@ public class PlayerQuest {
       PlayerNextCheckpointEvent event = new PlayerNextCheckpointEvent(player, this, checkpoint,
           checkpoints.get(index + 1));
       Bukkit.getPluginManager().callEvent(event);
-      if (event.isCancelled()) {
-        checkpoint = checkpoints.get(index);
-        checkpoint.setCompleted(false);
-      }
     }
   }
 
@@ -153,13 +151,13 @@ public class PlayerQuest {
   /**
    * update the checkpoint of the quest
    */
-  public void updateCheckpoint() {
+  public void updateCheckpoint(boolean load) {
     for (PlayerCheckpoint checkpoint : checkpoints) {
       if (checkpoint.isCompleted()) {
         continue;
       }
       this.checkpoint = checkpoint;
-      if(this.checkpoint.getType() == CheckPointTypeEnum.CONVERSATION && !isCompleted()) {
+      if(this.checkpoint.getType() == CONVERSATION && !isCompleted() && load) {
         this.checkpoint = checkpoints.get(checkpoints.indexOf(checkpoint) - 1);
         this.checkpoint.setCompleted(false);
         this.completed = false;

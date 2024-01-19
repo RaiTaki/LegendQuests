@@ -2,7 +2,9 @@ package xyz.raitaki.legendquests.questhandlers;
 
 import static xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum.ITEM;
 
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
+import xyz.raitaki.legendquests.utils.ItemUtils;
 
 public class QuestReward {
 
@@ -38,7 +40,11 @@ public class QuestReward {
    */
   public String getValue() {
     if (type == ITEM) {
-      return "To see it edit the reward";
+      ItemStack item = ItemUtils.stringToItem(value);
+      if (item == null) {
+        return "To see it edit the reward";
+      }
+      return value;
     }
     return value;
   }

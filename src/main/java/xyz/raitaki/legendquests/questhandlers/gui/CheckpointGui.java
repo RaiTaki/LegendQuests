@@ -11,6 +11,7 @@ import de.themoep.inventorygui.DynamicGuiElement;
 import de.themoep.inventorygui.GuiElement.Action;
 import de.themoep.inventorygui.InventoryGui;
 import de.themoep.inventorygui.StaticGuiElement;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +33,6 @@ public class CheckpointGui {
   private QuestGui questGUI;
   private QuestCheckpoint checkpoint;
   private QuestCheckpoint newCheckpoint;
-
   private CheckPointTypeEnum newType;
   private String newValue = "";
   private String newNpcName = "";
@@ -43,13 +43,14 @@ public class CheckpointGui {
   private TextTypeEnum textType;
   private String newAcceptText = "";
   private String newDeclineText = "";
+  private String[] guiSetup;
 
   public CheckpointGui(QuestBase quest, QuestGui questGUI, QuestCheckpoint checkpoint) {
     this.questBase = quest;
     this.questGUI = questGUI;
     this.checkpoint = checkpoint;
 
-    String[] guiSetup = {
+    guiSetup = new String[]{
         "         ",
         "  t   v  ",
         "    c    ",
@@ -81,42 +82,42 @@ public class CheckpointGui {
    * builds the reward gui based on the selected reward
    */
   public void buildCheckpointGUI() {
+    checkpointGUI = new InventoryGui(LegendQuests.getInstance(), "Quest: " + questBase.getName(),
+        guiSetup);
     checkpointGUI.setFiller(questGUI.getFiller());
 
-    checkpointGUI.addElement(new DynamicGuiElement('t', (viewer) -> {
-      return new StaticGuiElement('t',
-          new ItemStack(Material.PAPER),
-          1,
-          click -> {
-            newType = nextType(newType);
-            buildCheckpointGUI();
-            checkpointGUI.draw();
-            return true;
-          },
-          TextUtils.replaceColors("<SOLID:7d7d7d>Type: <SOLID:00ff08>" + newType),
-          TextUtils.replaceColors("<SOLID:7d7d7d>To change type, <SOLID:eaff00>LEFT CLICK")
-      );
-    }));
+    addStaticElement(new ItemStack(Material.PAPER), 't', click -> {
+          newType = nextType(newType);
+          checkpointGUI.close(click.getWhoClicked());
+          buildCheckpointGUI();
+          openCheckpointGUI();
+          return true;
+
+        },
+        TextUtils.replaceColors("<SOLID:7d7d7d>Type: <SOLID:00ff08>" + newType),
+        TextUtils.replaceColors("<SOLID:7d7d7d>To change type, <SOLID:eaff00>LEFT CLICK"));
 
     addStaticElement(new ItemStack(Material.PAPER), 'v', click -> {
       setChangeType(click.getWhoClicked(), VALUE);
       return true;
 
-    }, TextUtils.replaceColors("<SOLID:7d7d7d>Text: <SOLID:9ADB4F>" + newValue));
+    }, TextUtils.replaceColors("<SOLID:7d7d7d>Value: <SOLID:9ADB4F>" + newValue));
 
     if (newType == CheckPointTypeEnum.KILL) {
       addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
         setChangeType(click.getWhoClicked(), AMOUNT);
         return true;
 
-      }, TextUtils.replaceColors("<SOLID:7d7d7d>Amount: <SOLID:9ADB4F>" + newValue));
+      }, TextUtils.replaceColors("<SOLID:7d7d7d>Amount: <SOLID:9ADB4F>" + newAmount));
+
     } else if (newType == CheckPointTypeEnum.INTERACT) {
       addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
         setChangeType(click.getWhoClicked(), NPC_NAME);
         return true;
 
       }, TextUtils.replaceColors("<SOLID:7d7d7d>NPC Name: <SOLID:9ADB4F>" + newNpcName));
-    } else {
+
+    } else if (newType == CheckPointTypeEnum.CONVERSATION) {
       addStaticElement(new ItemStack(Material.PAPER), 'c', click -> {
         setChangeType(click.getWhoClicked(), NPC_NAME);
         return true;
@@ -176,10 +177,11 @@ public class CheckpointGui {
 
   /**
    * adds a static element to the gui
-   * @param item the item of the element
-   * @param slot the slot of the element
+   *
+   * @param item   the item of the element
+   * @param slot   the slot of the element
    * @param action the action of the element
-   * @param text the text of the element
+   * @param text   the text of the element
    */
   public void addStaticElement(ItemStack item, char slot, Action action, String... text) {
     checkpointGUI.addElement(new StaticGuiElement(slot, item, 1, action, text));
@@ -187,6 +189,7 @@ public class CheckpointGui {
 
   /**
    * send message to the player
+   *
    * @param message the message to send
    */
   public void sendMessage(String message) {
@@ -195,6 +198,7 @@ public class CheckpointGui {
 
   /**
    * sets the value of based on message
+   *
    * @param message the message to set
    */
   public void setChatMessage(String message) {
@@ -221,7 +225,8 @@ public class CheckpointGui {
 
   /**
    * sets the type of the value
-   * @param clicker the player who clicked
+   *
+   * @param clicker  the player who clicked
    * @param editType the edit type to change to
    */
   public void setChangeType(HumanEntity clicker, EditTypeEnum editType) {
@@ -252,6 +257,7 @@ public class CheckpointGui {
 
   /**
    * get the next checkpoint type
+   *
    * @param type the current type
    * @return the next type
    */

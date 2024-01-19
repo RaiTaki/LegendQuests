@@ -1,7 +1,9 @@
 package xyz.raitaki.legendquests.questhandlers.playerhandlers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONObject;
 import xyz.raitaki.legendquests.questhandlers.QuestReward.RewardTypeEnum;
 import xyz.raitaki.legendquests.utils.EconomyUtils;
@@ -47,8 +49,22 @@ public class PlayerQuestReward {
         }
         player.getInventory().addItem(itemStack);
         String item = languageConfig.getString("reward.item.give");
+        String itemName = "";
+        if (itemStack.getItemMeta() == null) {
+          itemName = itemStack.getType().name();
+        } else {
+          ItemMeta itemMeta = itemStack.getItemMeta();
+          if (itemMeta.hasDisplayName()) {
+            itemName = itemMeta.getDisplayName();
+          } else {
+            itemName = itemStack.getType().name();
+          }
+          if (itemName.isEmpty()) {
+            itemName = itemStack.getType().name();
+          }
+        }
         item = TextUtils.replaceStrings(item, true, "{itemname}",
-            itemStack.getItemMeta().getDisplayName());
+            itemName);
         TextUtils.sendCenteredMessage(player, item);
         break;
       case XP:
